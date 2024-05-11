@@ -1,14 +1,12 @@
 <!DOCTYPE html>
 <html lang="es">
 <script> // Ingresar links de sitios web(como documentos o sitios que puedan ser cargados):
-	let urlRowIframes = (window.parent.urlRowIframes) ? window.parent.urlRowIframes : [[""]];
+	var urlRowIframes = (window.parent.urlRowIframes) ? window.parent.urlRowIframes : [[""]];
 </script>
 <head>
+	<link href="style.css" rel="stylesheet" type="text/css">
 	<style>
-		html, body, iframe, div, button, span { margin: 0; padding: 0;
-			scroll-behavior: smooth; border: none; overflow: hidden; 
-			font-size: 3vh; line-height: 3.5vh; color: #fffb; } body { background-color: #242424;}
-		iframe { display: block; overflow: visible; width: 100vw; height: 100vh; } input {display: none;}
+		input {display: none;}
 		#iframe-container { display: flex; flex-wrap: wrap; transition: transform 0.5s ease;
 			z-index: -1; transform: translate(0vw, 0vh);}
 		#pivot-btns { position: absolute; overflow: visible; cursor: pointer;
@@ -19,32 +17,20 @@
 		  #scroll-left { left:calc(-45vw + 0px); animation: start_leftButton 1s ease-in-out;} #scroll-right {left: calc(45vw + 0px); animation: start_rightButton 1s ease-in-out;} #scroll-up {top: calc(-45vh + 0px); animation: start_upButton 1s ease-in-out;} #scroll-down {top: calc(45vh + 0px); animation: start_downButton 1s ease-in-out;}
 		  #scroll-hideButtons {z-index: 0; left: 47.5vw; top: 46vh; width: 2.5vw; height: 2.5vw; overflow: visible; opacity:0.5; animation: solidify 1s ease-in-out;} #import_loadjson { left: -4vh; top: -4vh; width:3vw; height:3vw; }
 		  @keyframes start_leftButton { 0%{opacity:0.35;left:0;top:0;}
-			100%{opacity:0.7;left:calc(-45vw + 0px);}}
+			100%{opacity:0.7;left:calc(-45vw + 0px);} }
 		  @keyframes start_rightButton { 0%{opacity:0.35;left:0;top:0;}
-			100%{opacity:0.7;left:calc(45vw + 0px);}}
+			100%{opacity:0.7;left:calc(45vw + 0px);} }
 		  @keyframes start_upButton { 0%{opacity:0.35;left:0;top:0;}
-			100%{opacity:0.7;top:calc(-45vh + 0px);}}
+			100%{opacity:0.7;top:calc(-45vh + 0px);} }
 		  @keyframes start_downButton { 0%{opacity:0.35;left:0;top:0;}
-			100%{opacity:0.7;top:calc(45vh + 0px);}}
+			100%{opacity:0.7;top:calc(45vh + 0px);} }
 		  @keyframes solidify { 0%{opacity:0.05;} 
-			100%{opacity:0.5;}}
+			100%{opacity:0.55;} }
 	</style>
 	<!--<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>-->
 	<script>
 		let externalDataLoaded=false; let buttonsNowVisible=false, showJSONButton=true;
 		rowLength = 0;
-		function getRowsFile() {
-			const xhr = new XMLHttpRequest();
-			xhr.open('GET', 'rowsIframes.json', true);
-			xhr.onreadystatechange = function() {
-				if (xhr.readyState === 4 && xhr.status === 200) {
-					externalDataLoaded=true;
-					const data = JSON.parse(xhr.responseText); // Parsea el JSON
-					console.log(data.length); // Haz algo con los datos (por ejemplo, muestra en la consola)
-					urlRowIframes=data;
-				}
-			}; xhr.send();
-		}
 		function checkIfMoreRows() { if (!buttonsNowVisible) {
 			btn.style.display = "block";
 			btnJSON.style.display = (showJSONButton) ? "none" : "block";
@@ -96,7 +82,7 @@
 	<link rel="icon" href="https://assets.msn.com/statics/icons/favicon_newtabpage.png" type="image/png" crossorigin="anonymous" sizes="32x32">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
-<body onload="getRowsFile();"><script>load_urls(); addRowIframes();</script>
+<body onload=""><script>load_urls(); addRowIframes();</script>
 	<div id="pivot-btns">
 		<!-- Botones de dirreción -->
 		<button type="button" class="gray-circle scroll-btn" id="scroll-left"><span>&#9664;</span></button>
@@ -256,7 +242,7 @@
 				const lector = new FileReader();
 				lector.onload = function(event) {
 					urlRowIframes = JSON.parse(event.target.result);
-					console.log("Mi variable con los datos:", urlRowIframes);
+					//console.log("Mi variable con los datos:", urlRowIframes);
 				};
 				lector.readAsText(archivo);
 			} else {

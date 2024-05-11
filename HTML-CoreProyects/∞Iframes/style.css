@@ -1,0 +1,4 @@
+html, body, iframe, div, button, span { margin: 0; padding: 0;
+    scroll-behavior: smooth; border: none; overflow: hidden; 
+    font-size: 3vh; line-height: 3.5vh; color: #fffb; } body { background-color: #242424;}
+iframe { display: block; overflow: visible; width: 100vw; height: 100vh; }
