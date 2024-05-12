@@ -237,12 +237,11 @@
 	</script>
 	<script>
 		function import_loadjson() {
-			const archivo = document.getElementById("import_loadjson").files[0];
+			const archivo = document.getElementById("import_trigger").files[0];
 			if (archivo) {
 				const lector = new FileReader();
 				lector.onload = function(event) {
 					urlRowIframes = JSON.parse(event.target.result);
-					//console.log("Mi variable con los datos:", urlRowIframes);
 				};
 				lector.readAsText(archivo);
 			} else {
