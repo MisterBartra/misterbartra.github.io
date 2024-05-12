@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <script>
-	var urlRowIframes = (window.location.search!=="") ? JSON.parse(decodeURIComponent(new URLSearchParams(window.location.search).get('urlRowIframes'))) : [["",""],["",""]]; window.location.search="";
+	var urlRowIframes = (window.location.search!=="") ? JSON.parse(decodeURIComponent(new URLSearchParams(window.location.search).get('urlRowIframes'))) : [["",""],["",""]];
 </script>
 <head>
 	<link href="style.css" rel="stylesheet" type="text/css">
@@ -237,6 +237,7 @@
 	</script>
 	<script>
 		function import_loadjson() {
+			window.location.search="";
 			const archivo = document.getElementById("import_trigger").files[0];
 			if (archivo) {
 				const lector = new FileReader();
