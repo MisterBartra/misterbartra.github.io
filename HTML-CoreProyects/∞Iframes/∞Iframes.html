@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <script> // Ingresar links de sitios web(como documentos o sitios que puedan ser cargados):
-	var urlRowIframes = (window.location.search=="") ? JSON.parse(decodeURIComponent(new URLSearchParams(window.location.search).get('urlRowIframes'))) : [["",""],["",""]];
+	var urlRowIframes = (window.location.search!=="") ? JSON.parse(decodeURIComponent(new URLSearchParams(window.location.search).get('urlRowIframes'))) : [["",""],["",""]];
 	console.log(urlRowIframes);
 </script>
 <head>
