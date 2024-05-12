@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="es">
 <script> // Ingresar links de sitios web(como documentos o sitios que puedan ser cargados):
-	var urlRowIframes = (window.parent.urlRowIframes) ? window.parent.urlRowIframes : [["",""],["",""]];
+	//var urlRowIframes = (window.parent.urlRowIframes) ? window.parent.urlRowIframes : [["",""],["",""]];
+	var urlRowIframes = JSON.parse(decodeURIComponent(window.location.search))
 </script>
 <head>
 	<link href="style.css" rel="stylesheet" type="text/css">
@@ -25,7 +26,7 @@
 			100%{opacity:0.7;top:calc(-45vh + 0px); } }
 		  @keyframes start_downButton { 0%{opacity:0.35; left: 0vw; top: 0vh; }
 			100%{opacity:0.7;top:calc(45vh + 0px); } }
-		  @keyframes solidify { 0%{opacity:0.05; } 
+		  @keyframes solidify { 0%{opacity:0.05; }
 			100%{opacity:0.55; } }
 	</style>
 	<script>
