@@ -32,7 +32,7 @@
 		let externalDataLoaded=false; let buttonsNowVisible=false, showJSONButton=true;
 		rowLength = 0;
 		function checkIfMoreRows() { if (!buttonsNowVisible) {
-			btn.style.display = "block";
+			btnSwitch.style.display = "block";
 			btnJSON.style.display = (showJSONButton) ? "none" : "block";
 			return showJSONButton = (showJSONButton) ? false : true;
 		}}
@@ -113,8 +113,9 @@
 		const btnRight = document.getElementById("scroll-right");
 		const btnUp = document.getElementById("scroll-up");
 		const btnDown = document.getElementById("scroll-down");
+		let btnPivotCenter = btnLeft.style.width/2;
 		
-		const btn = document.getElementById("scroll-hideButtons");
+		const btnSwitch = document.getElementById("scroll-hideButtons");
 		const btnJSON = document.getElementById("import_loadjson");
 		displayIDBtnAlternation();
 		let currentXIndex = 0, currentYIndex = 0;
@@ -148,7 +149,7 @@
 				});
 				btnLeft.addEventListener('mousemove', lbtn => {
 					if (isClickedBtn) {
-						btnLeft.style.left = pivotOffset(lbtn.clientX-16, "w", -2.5);
+						btnLeft.style.left = pivotOffset(lbtn.clientX, "w", btnPivotCenter);
 						btnLeft.style.top = pivotOffset(lbtn.clientY, "h");
 						isDraggedBtn=true;
 					}
@@ -168,7 +169,7 @@
 				});
 				btnRight.addEventListener('mousemove', rbtn => {
 					if (isClickedBtn) {
-						btnRight.style.left = pivotOffset(rbtn.clientX-16, "w", -2.5);
+						btnRight.style.left = pivotOffset(rbtn.clientX, "w", -btnPivotCenter);
 						btnRight.style.top = pivotOffset(rbtn.clientY, "h");
 						isDraggedBtn=true;
 					}
@@ -188,7 +189,7 @@
 				});
 				btnUp.addEventListener('mousemove', ubtn => {
 					if (isClickedBtn) {
-						btnUp.style.left = pivotOffset(ubtn.clientX-16, "w", -2.5);
+						btnUp.style.left = pivotOffset(ubtn.clientX, "w", btnPivotCenter);
 						btnUp.style.top = pivotOffset(ubtn.clientY, "h");
 						isDraggedBtn=true;
 					}
@@ -208,27 +209,27 @@
 				});
 				btnDown.addEventListener('mousemove', dbtn => {
 					if (isClickedBtn) {
-						btnDown.style.left = pivotOffset(dbtn.clientX-16, "w", -2.5);
+						btnDown.style.left = pivotOffset(dbtn.clientX, "w", -btnPivotCenter);
 						btnDown.style.top = pivotOffset(dbtn.clientY, "h");
 						isDraggedBtn=true;
 					}
 				});
 			});
-			btn.addEventListener("click", function () {
-				if (isClickedBtn) { btn.addEventListener('mouseleave', function () {isDraggedBtn = updateFrameContainerPosition(true, 0, 1);});}
-				btn.addEventListener('mouseup', () => {
+			btnSwitch.addEventListener("click", function () {
+				if (isClickedBtn) { btnSwitch.addEventListener('mouseleave', function () {isDraggedBtn = updateFrameContainerPosition(true, 0, 1);});}
+				btnSwitch.addEventListener('mouseup', () => {
 					if (isClickedBtn) displayIDBtnAlternation(); return isClickedBtn=false;
 				});
-				btn.addEventListener('mousedown', () => {
+				btnSwitch.addEventListener('mousedown', () => {
 					if (!isClickedBtn) {
 						currentYIndex = (currentYIndex + 1 + urlRowIframes.length) % urlRowIframes.length;
 						isClickedBtn = true;
 					}
 				});
-				btn.addEventListener('mousemove', dbutton => {
+				btnSwitch.addEventListener('mousemove', dbutton => {
 					if (isClickedBtn) {
-						btn.style.left = pivotOffset(dbutton.clientX-16, "w", -2.5);
-						btn.style.top = pivotOffset(dbutton.clientY, "h");
+						btnSwitch.style.left = pivotOffset(dbutton.clientX, "w", -1);
+						btnSwitch.style.top = pivotOffset(dbutton.clientY, "h", -1);
 						isDraggedBtn=true;
 					}
 				});
