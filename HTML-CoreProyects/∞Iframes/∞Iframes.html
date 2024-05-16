@@ -243,12 +243,9 @@
 			if (archivo) {
 				const lector = new FileReader();
 				lector.onload = function(event) {
-					urlRowIframes = JSON.parse(event.target.result);
-				};
-				lector.readAsText(archivo);
-			} else {
-				console.error("No se seleccionó ningún archivo.");
-			}
+					window.location.href=`https://misterbartra.github.io/HTML-CoreProyects/%E2%88%9EIframes/%E2%88%9EIframes.html?urlRowIframes=${encodeURIComponent(JSON.stringify(event.target.result))}`;
+				};	
+			} else {console.error("No se seleccionó ningún archivo.");}
 			displayIDBtnAlternation(false);
 			return addRowIframes();
 		}
