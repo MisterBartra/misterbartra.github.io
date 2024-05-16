@@ -242,8 +242,8 @@
 			const archivo = document.getElementById("import_trigger").files[0];
 			if (archivo) {
 				const lector = new FileReader();
-				lector.onload = function(event) {
-					window.location.href=`https://misterbartra.github.io/HTML-CoreProyects/%E2%88%9EIframes/%E2%88%9EIframes.html?urlRowIframes=${encodeURIComponent(JSON.stringify(event.target.result))}`;
+				lector.onload = function(datafile) {
+					window.location.href=`https://misterbartra.github.io/HTML-CoreProyects/%E2%88%9EIframes/%E2%88%9EIframes.html?urlRowIframes=${encodeURIComponent(JSON.stringify(datafile.target.result))}`;
 				};	
 			} else {console.error("No se seleccionó ningún archivo.");}
 			displayIDBtnAlternation(false);
