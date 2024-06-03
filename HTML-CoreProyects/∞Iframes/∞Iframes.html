@@ -71,7 +71,7 @@
 				}
 			});
 			return Object.keys(urlRowIframes).map(rowKey => {
-				return Object.keys(urlRowIframes[rowKey]).map(iframeID => `<iframe title="Frame#${iframeID}" src="${urlRowIframes[rowKey][iframeID]}" frameborder="0" scrolling="yes"></iframe>`).join("");
+				return Object.keys(urlRowIframes[rowKey]).map(iframeID => `<iframe title="RowFrameCol#${iframeID}" src="${urlRowIframes[rowKey][iframeID]}" frameborder="0" scrolling="yes"></iframe>`).join("");
 			}).join("");
 		}
 		function addRowIframes() { rowLength = Math.max(...Object.values(urlRowIframes).map(row => Object.keys(row).length));
