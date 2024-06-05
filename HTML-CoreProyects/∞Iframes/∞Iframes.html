@@ -244,7 +244,7 @@
 			if (archivo) {
 				const lector = new FileReader();
 				lector.onload = function(datafile) {
-					loadIframes();
+					return loadIframes();
 				};	
 			} else {console.error("No se seleccionó ningún archivo.");}
 			displayIDBtnAlternation(false);
