@@ -1,0 +1,117 @@
+/* Importación de fuentes:*/
+/* Asi las respectivas fuentes de Google hace de referencias con los estilos indicados. */
+
+/* Asi se define las reglas de estilos para los elementos */
+#logo {
+	height:58px;
+	transition:all .25s ease-in-out;
+	animation: li-move-down 0.75s ease-in-out;
+} #logo:hover{
+	transform:scale(1.175);
+}
+#tresrayas-distance a {
+	margin-left:5px;
+	margin-right:-5px;
+	transition:all .175s ease-in-out;
+	color:#212529;
+} #tresrayas-distance a:hover{
+	color:#FD4766;
+	transform:scale(1.175);
+}
+#bg {
+	background-image:url("../images/bg/happyman.jpg");
+	background-attachment:fixed;
+}
+#bg-us {
+	background-image:url("../images/bg/contact-us.jpg")!important;
+}
+#service-area {
+	margin:auto 0;
+}
+#about-area h2.title, #team-area h2.title, #videoclient-area h2.title {
+	font-size:51px;
+	font-weight:700;
+	letter-spacing:0.35px;
+	line-height:54px;
+	margin-top:30px;
+	margin-bottom:45px;	
+}
+#about-area .section-title p {
+	margin-bottom:27.25px;
+	line-height:27.75px;
+}
+#team-area {}
+.for-videos {
+	background-color:#eaeaea;
+    color:#ffffff;
+}
+.for-videos h2 {
+	padding-top:30px;
+	font-size:30px;
+	text-decoration:underline;
+}
+.forvideos video {
+	width: 100%;
+}
+#insidevideotext {
+	position:absolute;
+	top:17px;
+	left:127px;
+	z-index:10;
+}
+#pa-arriba {
+	background-color: #ff0000;
+    color: #ffffff;
+    font-size: 20px;
+    padding: 12px 17px;
+    border-radius: 50%;
+    position: fixed;
+    right: 30px;
+    bottom: 50px;
+    transition: .5s all ease-in-out;
+    animation: ir-page-top 1.55s ease-in-out infinite;
+}
+#workerin{
+	padding-top:0px;
+}
+#oficinas-area h2{
+	margin-bottom: 0px;
+}
+#miTabla{
+	width: 100%;
+	background-color: #ffcccc;
+	border:solid #b13146 5px;
+	border-collapse: collapse;
+	color:#eee;
+ }
+#miTabla thead {
+	background-color:#b13146;
+	text-decoration: underline;
+}
+#miTabla tbody {
+	background-color:#f13453;
+}
+#miTabla tbody tr td,#miTabla thead th {
+	padding:2px 12px;
+} #miTabla thead th {
+	padding-bottom:4px;
+}
+
+#miTabla tbody tr td:first-child, #miTabla th:first-child {
+	background-color:#b13146;
+	text-align:center;
+	padding:2px 0px;
+}
+#miTabla tbody tr td:last-child,#miTabla th:last-child {
+	text-align: right;
+}
+#miTabla tbody tr {
+	border:1px solid #ca385064;
+}
+#miTabla tbody tr:hover{
+	background-color:#db3248;
+}
+.bside{
+	border-left:solid 10px #000;
+	border-right:solid 10px #000;
+}
