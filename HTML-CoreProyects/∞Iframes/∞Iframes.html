@@ -1,15 +1,16 @@
 <!DOCTYPE html>
 <html lang="es">
-<script> var urlRowIframes = (window.location.search!=="") ? JSON.parse(decodeURIComponent(new URLSearchParams(window.location.search).get('urlRowIframes'))) : [["",""],["",""]]; </script>
+<script>dataSearch = new URLSearchParams(window.location.search)</script>
+<script> var urlRowIframes = (dataSearch=="") ? JSON.parse(decodeURIComponent(dataSearch.get('urlRowIframes'))) : [["",""],["",""]]; </script>
 <head>
 	<style>
 		html, body, iframe, div, button, span { margin: 0; padding: 0;
-		scroll-behavior: smooth; border: none; overflow: hidden; 
+		scroll-behavior: smooth; border: none; overflow: hidden;
 		font-size: 3vh; line-height: 3.5vh; color: #fffb; } body { background-color: #242424;}
 		iframe { display: block; overflow: visible; width: 100vw; height: 100vh; }
 		input { display: none; }
 		#iframe-container { display: flex; flex-wrap: wrap; position: absolute; top:0vw; left:0vw;
-			z-index: -1; transition: transform 0.5s ease-in-out;}
+			z-index: -1; transition: transform 0.5s ease-in-out; }
 		#pivot-btns { position: fixed; overflow: visible; cursor: pointer;
 			z-index: 0; left: 47.5vw; top: 46vh; }
 		.circle {resize: none; position: absolute; border-radius: 50%;}
@@ -62,7 +63,7 @@
 			}
 		}
 		function IframeCoroutineInvoker() {
-			document.write(`<title>${urlRowIframes.length*rowLength} pestañas en un solo sitio web :o</title>`)
+			document.write(`<title>${(dataSearch.get('title') == null) ? `${urlRowIframes.length*rowLenth} pestañas en un solo sitio web :o` : dataSearch.get('title')}</title>`)
 			Object.keys(urlRowIframes).forEach(rowKey => {
 				const crrow = urlRowIframes[rowKey];
 				const crrowLength = Array.from(crrow).length;
