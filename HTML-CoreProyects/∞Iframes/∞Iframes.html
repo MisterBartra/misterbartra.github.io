@@ -16,9 +16,14 @@
 		.circle {resize: none; position: absolute; border-radius: 50%;}
 		.gray { background-color: #3a3a3a;}
 		.light-gray { background-color: #4c538b;}
-		.scroll-btn { z-index: 1; left: 0vw; top: 0vh; width: 8vh; height: 8vh; display: none; opacity:0.7; transition: ease-in-out;}
+		.scroll-btn { z-index: 1; left: 0vw; top: 0vh; width: 8vh; height: 8vh; display: none; opacity:0.7; transition: ease-in-out; border:0px;}
 		.scroll-btn:hover {background-color: #3b3b3b73;}
 		  #scroll-left { left:calc(-45vw + 0px); animation: start_leftButton 0.5s ease-in-out;} #scroll-right {left: calc(45vw + 0px); animation: start_rightButton 0.5s ease-in-out;} #scroll-up {top: calc(-45vh + 0px); animation: start_upButton 0.5s ease-in-out;} #scroll-down {top: calc(45vh + 0px); animation: start_downButton 0.5s ease-in-out;}
+		  button[class="scroll-btn"] .hitbox { position: fixed; z-index: 1; left: -0%; right:0; top:-0%; bottom:0; }
+		  button[id="scroll-left"] .hitbox, button[id="scroll-right"] .hitbox {width: 10%; height: 100vh;}
+		  button[id="scroll-right"] .hitbox {right: -0%;}
+		  button[id="scroll-up"] .hitbox, button[id="scroll-down"] .hitbox {width: 100vw; height: 5%;}
+		  button[id="scroll-down"] .hitbox {bottom: -0%;}
 		  #scroll-hideButtons {z-index: 0; left: 47.5vw; top: 46vh; width: 2.5vw; height: 2.5vw; overflow: visible; opacity:0.5; animation: solidify 1s ease-in-out;} #import_loadjson { left: -4vh; top: -4vh; width:3vw; height:3vw; }
 		  @keyframes start_leftButton { 0%{opacity:0.35; left: 0vw; top: 0vh; }
 			100%{opacity:0.7;left:calc(-45vw + 0px); } }
@@ -88,10 +93,10 @@
 <body onload="adjustDynamicWindow()"><script>load_urls(); addRowIframes();</script>
 	<div id="pivot-btns">
 		<!-- Botones de dirreción -->
-		<button type="button" class="scroll-btn circle gray" id="scroll-left"><span>&#9664;</span></button>
-		<button type="button" class="scroll-btn circle gray" id="scroll-right"><span>&#9658;</span></button>
-		<button type="button" class="scroll-btn circle gray" id="scroll-up"><span>&#9650;</span></button>
-		<button type="button" class="scroll-btn circle gray" id="scroll-down"><span>&#9660;</span></button>
+		<button type="button" class="scroll-btn circle gray" id="scroll-left"><span>&#9664;</span><div class="hitbox"></div></button>
+		<button type="button" class="scroll-btn circle gray" id="scroll-right"><span>&#9658;</span><div class="hitbox"></div></button>
+		<button type="button" class="scroll-btn circle gray" id="scroll-up"><span>&#9650;</span><div class="hitbox"></div></button>
+		<button type="button" class="scroll-btn circle gray" id="scroll-down"><span>&#9660;</span><div class="hitbox"></div></button>
 		<button type="button" class="scroll-btn circle gray" id="scroll-hideButtons"><span>&#5159;</span>
 			<label for="import_trigger" class="scroll-btn circle gray" id="import_loadjson"><svg style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 -128 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M640 170.666667v85.333333h128v512h-128v85.333333h213.333333V170.666667M170.666667 170.666667v682.666666h213.333333v-85.333333H256V256h128V170.666667H170.666667z" fill="" /></svg></label>
 			<input id="import_trigger" type="file" placeholder="[]" title="Importar And Load RowFrames" accept=".json" onchange="import_loadjson();">
