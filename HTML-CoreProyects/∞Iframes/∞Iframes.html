@@ -1,26 +1,11 @@
 <!DOCTYPE html><html lang="es"><script>dataSearch = new URLSearchParams(window.location.search)</script>
 <script> var urlRowIframes = (dataSearch!="") ? JSON.parse(decodeURIComponent(dataSearch.get('urlRowIframes'))) : [[""]]; </script>
-<head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" src="../src/style.css">
 	<link rel="icon" href="https://upload-icon.s3.us-east-2.amazonaws.com/uploads/icons/png/8120467831595452485-512.png" type="image/png" crossorigin="anonymous" sizes="32x32">
 	<script src="../src/IframeMachine.js">//load_urls();</script>
 </head>
 <body onload="adjustDynamicWindow()"><script>addRowIframes();</script>
-	<div id="pivot-btns">
-		<!-- Botones de dirreción -->
-		<button type="button" class="scroll-btn circle gray" id="scroll-left"><span>&#9664;</span><div class="hitbox"></div></button>
-		<button type="button" class="scroll-btn circle gray" id="scroll-right"><span>&#9658;</span><div class="hitbox"></div></button>
-		<button type="button" class="scroll-btn circle gray" id="scroll-up"><span>&#9650;</span><div class="hitbox"></div></button>
-		<button type="button" class="scroll-btn circle gray" id="scroll-down"><span>&#9660;</span><div class="hitbox"></div></button>
-		<button type="button" class="scroll-btn circle gray" id="scroll-hideButtons"><span>&#5159;</span>
-			<label for="import_trigger" class="scroll-btn circle gray" id="import_loadjson"><svg style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 -128 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M640 170.666667v85.333333h128v512h-128v85.333333h213.333333V170.666667M170.666667 170.666667v682.666666h213.333333v-85.333333H256V256h128V170.666667H170.666667z" fill="" /></svg></label>
-			<input id="import_trigger" type="file" placeholder="[]" title="Importar And Load RowFrames" accept=".json" onchange="import_loadjson();">
-			<!-- <input type="button" class="scroll-btn" id="export-json" onclick="export_json()" title="Exportar RowFrames"> -->
-		</button>
-	</div>
-	<script src="../src/script.js"></script>
-	<script src="../src/ButtonListener.js"></script>
+	<script src="../src/setButtons.js"></script><script src="../src/script.js"></script><script src="../src/ButtonListener.js"></script>
 </body>
 </html>
