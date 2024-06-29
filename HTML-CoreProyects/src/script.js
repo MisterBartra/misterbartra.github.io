@@ -3,7 +3,9 @@
 
 const iframeContainer = document.getElementById("iframe-container"), iframes = document.querySelectorAll("iframe");
 const btns = document.getElementsByClassName("scroll-btn");
+const btnsHitbox = document.getElementsByClassName("hitbox");
 const btnLeft = btns[0], btnRight = btns[1], btnUp = btns[2], btnDown = btns[3], btnSwitch = btns[4];
+const btnLeftHitbox = btnsHitbox[0], btnRightHitbox = btnsHitbox[1], btnUpHitbox = btnsHitbox[2], btnDownHitbox = btnsHitbox[3];
 let btnPivotCenter = btnLeft.style.width/2;
 const btnJSON = document.getElementById("import_loadjson");
 
@@ -14,6 +16,41 @@ if (document.parentNode) {
 }
 //let externalDataLoaded=false;
 let buttonsNowVisible=false, showJSONButton=true;
+
+function showButtonListener(htmlElement, showPos, hiddenPos, axis, timeout=0, updatePosition=false) {
+	switch (axis) {
+		case "x":
+			setTimeout(() => {
+				htmlElement.style.transform = `translate(${showPos}00%,${htmlElement.style.transform.y}px)`;
+			}, timeout);
+			setTimeout(() => {
+				htmlElement.style.transform = `translate(${hiddenPos}00%,${htmlElement.style.transform.y}px)`;
+			}, timeout*2);
+		case "y":
+			setTimeout(() => {
+				htmlElement.style.transform = `translate(${htmlElement.style.transform.x}px,${showPos}00%)`;
+			}, timeout);
+			setTimeout(() => {
+				htmlElement.style.transform = `translate(${htmlElement.style.transform.x}px,${hiddenPos}00%)`;
+			}, timeout*2);
+	}
+	if (updatePosition) {
+		btnsPosition = {
+			"left": {x: btnLeft.style.transform.x, y: btnLeft.style.transform.y},
+			"right": {x: btnRight.style.transform.x, y: btnRight.style.transform.y},
+			"up": {x: btnUp.style.transform.x, y: btnUp.style.transform.y},
+			"down": {x: btnDown.style.transform.x, y: btnDown.style.transform.y}
+		}
+	}
+	return updatePosition;
+}
+function initButtonProcess() {
+	showButtonListener(btns[0], 3, -3, "x", 375);
+	showButtonListener(btns[1], 3, -3, "x", 375, true);
+	showButtonListener(btns[2], 3, -3, "y", 375);
+	showButtonListener(btns[3], 3, -3, "y", 375, true);
+}
+
 function checkIfMoreRows() { if (!buttonsNowVisible) {
 	btnSwitch.style.display = "block";
 	btnJSON.style.display = (showJSONButton) ? "none" : "block";
@@ -21,9 +58,10 @@ function checkIfMoreRows() { if (!buttonsNowVisible) {
 }}
 function displayIDBtnAlternation(activeAlternation=true) {
 	let currentDisplay = (buttonsNowVisible) ? "none" : "block";
+	initButtonProcess();
 	if (urlRowIframes[0].length > 1) { btnLeft.style.display = currentDisplay; btnRight.style.display = currentDisplay; }
 	if (urlRowIframes.length > 1) { btnUp.style.display = currentDisplay; btnDown.style.display = currentDisplay; }
-		checkIfMoreRows();
+	checkIfMoreRows();
 	if (activeAlternation) { buttonsNowVisible = (buttonsNowVisible) ? false : true; }
 } displayIDBtnAlternation();
 
@@ -57,4 +95,8 @@ function import_loadjson() {
 	displayIDBtnAlternation(false);
 	return addRowIframes();
 }
-function adjustDynamicWindow() { return iframeContainer.style.transform = `translateX(-0px)`; }
+
+function adjustDynamicWindow() {
+	initButtonProcess();
+	return iframeContainer.style.transform = `translateX(-0px)`;
+}
