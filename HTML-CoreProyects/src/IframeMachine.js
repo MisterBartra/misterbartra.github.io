@@ -21,7 +21,7 @@
 //}
 rowLength = 0;
 function IframeCoroutineInvoker() {
-	document.write(`<title>${(dataSearch.get('title') == null) ? `${urlRowIframes.length*rowLenth} pestañas en un solo sitio web :o` : dataSearch.get('title')}</title>`)
+	document.write(`<title>${(dataSearch.get('title') == null) ? `${urlRowIframes.length*rowLength} pestañas en un solo sitio web :o` : dataSearch.get('title')}</title>`)
 	Object.keys(urlRowIframes).forEach(rowKey => {
 		const crrow = urlRowIframes[rowKey];
 		const crrowLength = Array.from(crrow).length;
@@ -38,3 +38,4 @@ function IframeCoroutineInvoker() {
 function addRowIframes() { rowLength = Math.max(...Object.values(urlRowIframes).map(row => Object.keys(row).length));
 	document.write(`<div id="iframe-container" style="min-width:${rowLength}00%; min-height:${urlRowIframes.length}00%;">${IframeCoroutineInvoker()}</div>`);
 }
+addRowIframes();
