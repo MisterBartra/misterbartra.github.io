@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
 
-	// Retroceder al iframe izquierdo:
+// Retroceder al iframe izquierdo:
 	btnLeft.addEventListener("click", function () {
 		if (isClickedBtn) { btnLeft.addEventListener('mouseleave', function () {isDraggedBtn = updateFrameContainerPosition(true, 1, 0);});}
 		btnLeft.addEventListener('mouseup', () => {
@@ -22,9 +22,11 @@ document.addEventListener("DOMContentLoaded", function () {
 			}
 		});
 	});
+	btnLeftHitbox.addEventListener('mouseenter', () => {
+        showButtonListener(btnLeft, 2, -2, "x", 3000);
+    });
 	
-
-	// Avanzar al iframe derecho:
+// Avanzar al iframe derecho:
 	btnRight.addEventListener("click", function () {
 		if (isClickedBtn) { btnRight.addEventListener('mouseleave', function () {isDraggedBtn = updateFrameContainerPosition(true, -1, 0);});}
 		btnRight.addEventListener('mouseup', () => {
@@ -46,8 +48,11 @@ document.addEventListener("DOMContentLoaded", function () {
 			}
 		});
 	});
+	btnRightHitbox.addEventListener('mouseenter', () => {
+        showButtonListener(btnRight, 2, -2, "x", 3000);
+    });
 
-	// Subir al iframe de arriba:
+// Subir al iframe de arriba:
 	btnUp.addEventListener("click", function () {
 		if (isClickedBtn) { btnUp.addEventListener('mouseleave', function () {isDraggedBtn = updateFrameContainerPosition(true, 0, 1);});}
 		btnUp.addEventListener('mouseup', () => {
@@ -69,8 +74,11 @@ document.addEventListener("DOMContentLoaded", function () {
 			}
 		});
 	});
+	btnUpHitbox.addEventListener('mouseenter', () => {
+        showButtonListener(btnUp, 2, -2, "x", 3000);
+    });
 
-	// Bajar al iframe de abajo:
+// Bajar al iframe de abajo:
 	btnDown.addEventListener("click", function () {
 		if (isClickedBtn) { btnDown.addEventListener('mouseleave', function () {isDraggedBtn = updateFrameContainerPosition(true, 0, 1);});}
 		btnDown.addEventListener('mouseup', () => {
@@ -92,6 +100,11 @@ document.addEventListener("DOMContentLoaded", function () {
 			}
 		});
 	});
+	btnDownHitbox.addEventListener('mouseenter', () => {
+        showButtonListener(btn, 2, -2, "x", 3000);
+    });
+
+
 	btnSwitch.addEventListener("click", function () {
 		if (isClickedBtn) { btnSwitch.addEventListener('mouseleave', function () {isDraggedBtn = updateFrameContainerPosition(true, 0, 1);});}
 		btnSwitch.addEventListener('mouseup', () => {
