@@ -16,39 +16,47 @@ if (document.parentNode) {
 }
 //let externalDataLoaded=false;
 let buttonsNowVisible=false, showJSONButton=true;
+let btnsPosition = {
+	"left": "",
+	"right": "",
+	"up": "",
+	"down": ""
+}
 
 function showButtonListener(htmlElement, showPos, hiddenPos, axis, timeout=0, updatePosition=false) {
 	switch (axis) {
 		case "x":
 			setTimeout(() => {
-				htmlElement.style.transform = `translate(${showPos}00%,${htmlElement.style.transform.y}px)`;
+				htmlElement.style.transform = `translate(${showPos}vw,${htmlElement.style.transform.y}px)`;
 			}, timeout);
 			setTimeout(() => {
-				htmlElement.style.transform = `translate(${hiddenPos}00%,${htmlElement.style.transform.y}px)`;
+				htmlElement.style.transform = `translate(${hiddenPos}vw,${htmlElement.style.transform.y}px)`;
 			}, timeout*2);
+			break;
 		case "y":
 			setTimeout(() => {
-				htmlElement.style.transform = `translate(${htmlElement.style.transform.x}px,${showPos}00%)`;
+				htmlElement.style.transform = `translate(${htmlElement.style.transform.x}px,${showPos}vh)`;
 			}, timeout);
 			setTimeout(() => {
-				htmlElement.style.transform = `translate(${htmlElement.style.transform.x}px,${hiddenPos}00%)`;
+				htmlElement.style.transform = `translate(${htmlElement.style.transform.x}px,${hiddenPos}vh)`;
 			}, timeout*2);
+			break;
 	}
 	if (updatePosition) {
 		btnsPosition = {
-			"left": {x: btnLeft.style.transform.x, y: btnLeft.style.transform.y},
-			"right": {x: btnRight.style.transform.x, y: btnRight.style.transform.y},
-			"up": {x: btnUp.style.transform.x, y: btnUp.style.transform.y},
-			"down": {x: btnDown.style.transform.x, y: btnDown.style.transform.y}
+			"left": btnLeft.style.transform,
+			"right": btnRight.style.transform,
+			"up": btnUp.style.transform,
+			"down": btnDown.style.transform
 		}
 	}
 	return updatePosition;
 }
 function initButtonProcess() {
-	showButtonListener(btns[0], 3, -3, "x", 375);
-	showButtonListener(btns[1], 3, -3, "x", 375, true);
-	showButtonListener(btns[2], 3, -3, "y", 375);
-	showButtonListener(btns[3], 3, -3, "y", 375, true);
+	showButtonListener(btnLeft, 2, -2, "x", 375);
+	showButtonListener(btnRight, 2, -2, "x", 375, true);
+	showButtonListener(btnUp, 2, -2, "y", 375);
+	showButtonListener(btnDown, 2, -2, "y", 375, true);
 }
 
 function checkIfMoreRows() { if (!buttonsNowVisible) {
@@ -64,17 +72,11 @@ function displayIDBtnAlternation(activeAlternation=true) {
 	checkIfMoreRows();
 	if (activeAlternation) { buttonsNowVisible = (buttonsNowVisible) ? false : true; }
 } displayIDBtnAlternation();
-
+// Indices
 let currentXIndex = 0, currentYIndex = 0;
-let btnsPosition = {
-	"left": {x: "0", y: "0"},
-	"right": {x: "0", y: "0"},
-	"up": {x: "0", y: "0"},
-	"down": {x: "0", y: "0"}
-}
-
 // Arrastrar los botones
 let isClickedBtn = isDraggedBtn = false;
+function pivotTranslation(coordPosX, coordPosY, a=0) { return `translate(-${50+a}vw + calc(${coordPosX}px, ${coordPosY}vh)`; }
 function pivotOffset(coordPos, v, a=0) { return `calc(${coordPos}px - ${50+a}v${v})`; }
 // Actualizar la posición del contenedor
 function updateFrameContainerPosition(isDraggedBtn, directionX=0, directionY=0) {

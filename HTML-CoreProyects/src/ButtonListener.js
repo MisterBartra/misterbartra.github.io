@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", function () {
-
 // Retroceder al iframe izquierdo:
 	btnLeft.addEventListener("click", function () {
 		if (isClickedBtn) { btnLeft.addEventListener('mouseleave', function () {isDraggedBtn = updateFrameContainerPosition(true, 1, 0);});}
@@ -14,16 +13,14 @@ document.addEventListener("DOMContentLoaded", function () {
 		});
 		btnLeft.addEventListener('mousemove', lbtn => {
 			if (isClickedBtn) {
-				btnLeft.style.left = pivotOffset(lbtn.clientX, "w", btnPivotCenter);
-				btnsPosition.left.x = btnLeft.style.left;
-				btnLeft.style.top = pivotOffset(lbtn.clientY, "h");
-				btnsPosition.left.y = btnLeft.style.top;
+				btnLeft.style.transform = `translate(calc(${lbtn.clientX}px - 50vw), calc(${lbtn.clientY}px - 50vh))`;
+				btnsPosition.left = btnLeft.style.transform;
 				isDraggedBtn=true;
 			}
 		});
 	});
 	btnLeftHitbox.addEventListener('mouseenter', () => {
-        showButtonListener(btnLeft, 2, -2, "x", 3000);
+		//showButtonListener(btnLeft, -2, "x", 3000);
     });
 	
 // Avanzar al iframe derecho:
@@ -40,16 +37,14 @@ document.addEventListener("DOMContentLoaded", function () {
 		});
 		btnRight.addEventListener('mousemove', rbtn => {
 			if (isClickedBtn) {
-				btnRight.style.left = pivotOffset(rbtn.clientX, "w", -btnPivotCenter);
-				btnsPosition.right.x = btnRight.style.left;
-				btnRight.style.top = pivotOffset(rbtn.clientY, "h");
-				btnsPosition.right.y = btnRight.style.top;
+				btnRight.style.transform = `translate(calc(${lbtn.clientX}px - 50vw), calc(${lbtn.clientY}px - 50vh))`;
+				btnsPosition.right = btnRight.style.transform;
 				isDraggedBtn=true;
 			}
 		});
 	});
 	btnRightHitbox.addEventListener('mouseenter', () => {
-        showButtonListener(btnRight, 2, -2, "x", 3000);
+        showButtonListener(btnRight, -2, "x", 3000);
     });
 
 // Subir al iframe de arriba:
@@ -66,16 +61,14 @@ document.addEventListener("DOMContentLoaded", function () {
 		});
 		btnUp.addEventListener('mousemove', ubtn => {
 			if (isClickedBtn) {
-				btnUp.style.left = pivotOffset(ubtn.clientX, "w", btnPivotCenter);
-				btnsPosition.up.x = btnUp.style.left;
-				btnUp.style.top = pivotOffset(ubtn.clientY, "h");
-				btnsPosition.up.y = btnUp.style.top;
+				btnUp.style.transform = `translate(calc(${lbtn.clientX}px - 50vw), calc(${lbtn.clientY}px - 50vh))`;
+				btnsPosition.up = btnUp.style.transform;
 				isDraggedBtn=true;
 			}
 		});
 	});
 	btnUpHitbox.addEventListener('mouseenter', () => {
-        showButtonListener(btnUp, 2, -2, "x", 3000);
+        showButtonListener(btnUp, -2, "x", 3000);
     });
 
 // Bajar al iframe de abajo:
@@ -92,16 +85,14 @@ document.addEventListener("DOMContentLoaded", function () {
 		});
 		btnDown.addEventListener('mousemove', dbtn => {
 			if (isClickedBtn) {
-				btnDown.style.left = pivotOffset(dbtn.clientX, "w", -btnPivotCenter);
-				btnsPosition.down.x = btnDown.style.left;
-				btnDown.style.top = pivotOffset(dbtn.clientY, "h");
-				btnsPosition.down.y = btnDown.style.top;
+				btnDown.style.transform = `translate(calc(${lbtn.clientX}px - 50vw), calc(${lbtn.clientY}px - 50vh))`;
+				btnsPosition.down = btnDown.style.transform;
 				isDraggedBtn=true;
 			}
 		});
 	});
 	btnDownHitbox.addEventListener('mouseenter', () => {
-        showButtonListener(btn, 2, -2, "x", 3000);
+        showButtonListener(btnDown, -2, "x", 3000);
     });
 
 
@@ -118,8 +109,7 @@ document.addEventListener("DOMContentLoaded", function () {
 		});
 		btnSwitch.addEventListener('mousemove', dbutton => {
 			if (isClickedBtn) {
-				btnSwitch.style.left = pivotOffset(dbutton.clientX, "w", -1);
-				btnSwitch.style.top = pivotOffset(dbutton.clientY, "h", -1);
+				btnSwitch.style.transform = `translate(calc(${lbtn.clientX}px - 50vw), calc(${lbtn.clientY}px - 50vh))`;
 				isDraggedBtn=true;
 			}
 		});
