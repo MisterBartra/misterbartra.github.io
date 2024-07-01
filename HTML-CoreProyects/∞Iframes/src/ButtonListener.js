@@ -78,7 +78,7 @@ document.addEventListener("DOMContentLoaded", function () {
 	btnUpHitbox.addEventListener('mouseenter', () => {
 		btnUp.style.transform = `translateY(${-45.5}vh)`;
 		setTimeout(() => {
-			btnUp.style.transform = `translateY(${-54}vh)`;
+			btnUp.style.transform = `translateY(${-55}vh)`;
 		}, 1250);
     });
 
@@ -105,7 +105,7 @@ document.addEventListener("DOMContentLoaded", function () {
 	btnDownHitbox.addEventListener('mouseenter', () => {
 		btnDown.style.transform = `translateY(${45.5}vh)`;
 		setTimeout(() => {
-			btnDown.style.transform = `translateY(${54}vh)`;
+			btnDown.style.transform = `translateY(${55}vh)`;
 		}, 1250);
     });
 
