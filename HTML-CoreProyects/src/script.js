@@ -28,6 +28,7 @@ function showButtonListener(htmlElement, showPos, hiddenPos, axis, timeout=0, up
 		case "x":
 			setTimeout(() => {
 				htmlElement.style.transform = `translate(${showPos}vw,${htmlElement.style.transform.y}px)`;
+				console.log("Left X");
 			}, timeout);
 			setTimeout(() => {
 				htmlElement.style.transform = `translate(${hiddenPos}vw,${htmlElement.style.transform.y}px)`;
@@ -42,21 +43,25 @@ function showButtonListener(htmlElement, showPos, hiddenPos, axis, timeout=0, up
 			}, timeout*2);
 			break;
 	}
+	console.log("Entra");
 	if (updatePosition) {
+		updatePos();
+	}
+	return updatePosition;
+}
+function updatePos() {
+	setTimeout(() => {
 		btnsPosition = {
 			"left": btnLeft.style.transform,
 			"right": btnRight.style.transform,
 			"up": btnUp.style.transform,
 			"down": btnDown.style.transform
 		}
-	}
-	return updatePosition;
+	}, 1000);
 }
+
 function initButtonProcess() {
-	showButtonListener(btnLeft, 2, -2, "x", 375);
-	showButtonListener(btnRight, 2, -2, "x", 375, true);
-	showButtonListener(btnUp, 2, -2, "y", 375);
-	showButtonListener(btnDown, 2, -2, "y", 375, true);
+	updatePos();
 }
 
 function checkIfMoreRows() { if (!buttonsNowVisible) {
@@ -76,8 +81,6 @@ function displayIDBtnAlternation(activeAlternation=true) {
 let currentXIndex = 0, currentYIndex = 0;
 // Arrastrar los botones
 let isClickedBtn = isDraggedBtn = false;
-function pivotTranslation(coordPosX, coordPosY, a=0) { return `translate(-${50+a}vw + calc(${coordPosX}px, ${coordPosY}vh)`; }
-function pivotOffset(coordPos, v, a=0) { return `calc(${coordPos}px - ${50+a}v${v})`; }
 // Actualizar la posición del contenedor
 function updateFrameContainerPosition(isDraggedBtn, directionX=0, directionY=0) {
 	if (isDraggedBtn) {
