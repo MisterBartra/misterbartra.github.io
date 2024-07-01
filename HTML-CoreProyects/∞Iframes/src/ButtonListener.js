@@ -1,5 +1,17 @@
 document.addEventListener("DOMContentLoaded", function () {
 // Retroceder al iframe izquierdo:
+	btnLeftHitbox.addEventListener('mouseenter', () => {
+	//	btnLeft.addEventListener('mouseleave', () => {
+		btnLeft.style.transform = `translateX(${-45.5}vw)`;	
+	//	});
+    });
+	if (!isDraggedBtn) {
+		btnLeftHitbox.addEventListener('mouseleave', () => {
+			setTimeout(() => {
+				btnLeft.style.transform = `translateX(${-55}vw)`;
+			}, 250);
+		});
+	}
 	btnLeft.addEventListener("click", function () {
 		if (isClickedBtn) { btnLeft.addEventListener('mouseleave', function () {isDraggedBtn = updateFrameContainerPosition(true, 1, 0);});}
 		btnLeft.addEventListener('mouseup', () => {
@@ -20,18 +32,19 @@ document.addEventListener("DOMContentLoaded", function () {
 		});
 	});
 
-	btnLeftHitbox.addEventListener('mouseenter', () => {
-	//	btnLeft.addEventListener('mouseleave', () => {
-		btnLeft.style.transform = `translateX(${-45.5}vw)`;	
-	//	});
-    });
-	btnLeftHitbox.addEventListener('mouseleave', () => {
-		setTimeout(() => {
-			btnLeft.style.transform = `translateX(${-55}vw)`;
-		}, 250);
-	});
-
 // Avanzar al iframe derecho:
+	btnRightHitbox.addEventListener('mouseenter', () => {
+	//		btnRight.addEventListener('mouseleave', () => {
+		btnRight.style.transform = `translateX(${45.5}vw)`;
+		//		});
+	});
+	if (!isDraggedBtn) {
+		btnRightHitbox.addEventListener('mouseleave', () => {
+			setTimeout(() => {
+				btnRight.style.transform = `translateX(${55}vw)`;
+			}, 250);
+		});
+	}
 	btnRight.addEventListener("click", function () {
 		if (isClickedBtn) { btnRight.addEventListener('mouseleave', function () {isDraggedBtn = updateFrameContainerPosition(true, -1, 0);});}
 		btnRight.addEventListener('mouseup', () => {
@@ -51,18 +64,20 @@ document.addEventListener("DOMContentLoaded", function () {
 			}
 		});
 	});
-	btnRightHitbox.addEventListener('mouseenter', () => {
-//		btnRight.addEventListener('mouseleave', () => {
-		btnRight.style.transform = `translateX(${45.5}vw)`;
-	//		});
-	});
-	btnRightHitbox.addEventListener('mouseleave', () => {
-		setTimeout(() => {
-			btnRight.style.transform = `translateX(${55}vw)`;
-		}, 250);
-	});
 
 // Subir al iframe de arriba:
+	btnUpHitbox.addEventListener('mouseenter', () => {
+	//		btnUp.addEventListener('mouseleave', () => {
+		btnUp.style.transform = `translateY(${-45.5}vh)`;
+		//		});
+	});
+	if (!isDraggedBtn) {
+		btnUpHitbox.addEventListener('mouseleave', () => {
+			setTimeout(() => {
+				btnUp.style.transform = `translateY(${-55}vh)`;
+			}, 250);
+		});
+	}
 	btnUp.addEventListener("click", function () {
 		if (isClickedBtn) { btnUp.addEventListener('mouseleave', function () {isDraggedBtn = updateFrameContainerPosition(true, 0, 1);});}
 		btnUp.addEventListener('mouseup', () => {
@@ -82,18 +97,20 @@ document.addEventListener("DOMContentLoaded", function () {
 			}
 		});
 	});
-	btnUpHitbox.addEventListener('mouseenter', () => {
-//		btnUp.addEventListener('mouseleave', () => {
-		btnUp.style.transform = `translateY(${-45.5}vh)`;
-	//		});
-	});
-	btnUpHitbox.addEventListener('mouseleave', () => {
-		setTimeout(() => {
-			btnUp.style.transform = `translateY(${-55}vh)`;
-		}, 250);
-	});
 
 // Bajar al iframe de abajo:
+	btnDownHitbox.addEventListener('mouseenter', () => {
+	//	btnDown.addEventListener('mouseleave', () => {
+		btnDown.style.transform = `translateY(${45.5}vh)`;
+	//	});
+	});
+	if (!isDraggedBtn) {
+		btnDownHitbox.addEventListener('mouseleave', () => {
+			setTimeout(() => {
+			btnDown.style.transform = `translateY(${55}vh)`;
+			}, 250);
+		});
+	}
 	btnDown.addEventListener("click", function () {
 		if (isClickedBtn) { btnDown.addEventListener('mouseleave', function () {isDraggedBtn = updateFrameContainerPosition(true, 0, 1);});}
 		btnDown.addEventListener('mouseup', () => {
@@ -112,16 +129,6 @@ document.addEventListener("DOMContentLoaded", function () {
 				isDraggedBtn=true;
 			}
 		});
-	});
-	btnDownHitbox.addEventListener('mouseenter', () => {
-//		btnDown.addEventListener('mouseleave', () => {
-		btnDown.style.transform = `translateY(${45.5}vh)`;
-	//		});
-	});
-	btnDownHitbox.addEventListener('mouseleave', () => {
-		setTimeout(() => {
-			btnDown.style.transform = `translateY(${55}vh)`;
-		}, 250);
 	});
 
 
