@@ -19,15 +19,18 @@ document.addEventListener("DOMContentLoaded", function () {
 			}
 		});
 	});
+
 	btnLeftHitbox.addEventListener('mouseenter', () => {
-		btnLeft.style.transform = `translateX(${-45.5}vw)`;
-		btnLeft.addEventListener('mouseleave', () => {
-			setTimeout(() => {
-				btnLeft.style.transform = `translateX(${-54}vw)`;
-			}, 1250);
-		});
+	//	btnLeft.addEventListener('mouseleave', () => {
+		btnLeft.style.transform = `translateX(${-45.5}vw)`;	
+	//	});
     });
-	
+	btnLeftHitbox.addEventListener('mouseleave', () => {
+		setTimeout(() => {
+			btnLeft.style.transform = `translateX(${-55}vw)`;
+		}, 250);
+	});
+
 // Avanzar al iframe derecho:
 	btnRight.addEventListener("click", function () {
 		if (isClickedBtn) { btnRight.addEventListener('mouseleave', function () {isDraggedBtn = updateFrameContainerPosition(true, -1, 0);});}
@@ -49,11 +52,15 @@ document.addEventListener("DOMContentLoaded", function () {
 		});
 	});
 	btnRightHitbox.addEventListener('mouseenter', () => {
+//		btnRight.addEventListener('mouseleave', () => {
 		btnRight.style.transform = `translateX(${45.5}vw)`;
+	//		});
+	});
+	btnRightHitbox.addEventListener('mouseleave', () => {
 		setTimeout(() => {
-			btnRight.style.transform = `translateX(${54}vw)`;
-		}, 1250);
-    });
+			btnRight.style.transform = `translateX(${55}vw)`;
+		}, 250);
+	});
 
 // Subir al iframe de arriba:
 	btnUp.addEventListener("click", function () {
@@ -76,11 +83,15 @@ document.addEventListener("DOMContentLoaded", function () {
 		});
 	});
 	btnUpHitbox.addEventListener('mouseenter', () => {
+//		btnUp.addEventListener('mouseleave', () => {
 		btnUp.style.transform = `translateY(${-45.5}vh)`;
+	//		});
+	});
+	btnUpHitbox.addEventListener('mouseleave', () => {
 		setTimeout(() => {
 			btnUp.style.transform = `translateY(${-55}vh)`;
-		}, 1250);
-    });
+		}, 250);
+	});
 
 // Bajar al iframe de abajo:
 	btnDown.addEventListener("click", function () {
@@ -103,11 +114,15 @@ document.addEventListener("DOMContentLoaded", function () {
 		});
 	});
 	btnDownHitbox.addEventListener('mouseenter', () => {
+//		btnDown.addEventListener('mouseleave', () => {
 		btnDown.style.transform = `translateY(${45.5}vh)`;
+	//		});
+	});
+	btnDownHitbox.addEventListener('mouseleave', () => {
 		setTimeout(() => {
 			btnDown.style.transform = `translateY(${55}vh)`;
-		}, 1250);
-    });
+		}, 250);
+	});
 
 
 	btnSwitch.addEventListener("click", function () {
