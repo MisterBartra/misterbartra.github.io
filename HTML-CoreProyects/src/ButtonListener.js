@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", function () {
 		});
 	});
 	btnLeftHitbox.addEventListener('mouseenter', () => {
-		btnLeft.style.transform = `translateX(${-46}vw)`;
+		btnLeft.style.transform = `translateX(${-45.5}vw)`;
 		btnLeft.addEventListener('mouseleave', () => {
 			setTimeout(() => {
 				btnLeft.style.transform = `translateX(${-54}vw)`;
@@ -49,7 +49,7 @@ document.addEventListener("DOMContentLoaded", function () {
 		});
 	});
 	btnRightHitbox.addEventListener('mouseenter', () => {
-		btnRight.style.transform = `translateX(${46}vw)`;
+		btnRight.style.transform = `translateX(${45.5}vw)`;
 		setTimeout(() => {
 			btnRight.style.transform = `translateX(${54}vw)`;
 		}, 1250);
@@ -76,7 +76,7 @@ document.addEventListener("DOMContentLoaded", function () {
 		});
 	});
 	btnUpHitbox.addEventListener('mouseenter', () => {
-		btnUp.style.transform = `translateY(${-46}vh)`;
+		btnUp.style.transform = `translateY(${-45.5}vh)`;
 		setTimeout(() => {
 			btnUp.style.transform = `translateY(${-54}vh)`;
 		}, 1250);
@@ -103,7 +103,7 @@ document.addEventListener("DOMContentLoaded", function () {
 		});
 	});
 	btnDownHitbox.addEventListener('mouseenter', () => {
-		btnDown.style.transform = `translateY(${46}vh)`;
+		btnDown.style.transform = `translateY(${45.5}vh)`;
 		setTimeout(() => {
 			btnDown.style.transform = `translateY(${54}vh)`;
 		}, 1250);
