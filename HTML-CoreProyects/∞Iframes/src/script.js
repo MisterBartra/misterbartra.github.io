@@ -102,6 +102,6 @@ function import_loadjson() {
 }
 
 function adjustDynamicWindow() {
-	initButtonProcess();
+	updatePos();
 	return iframeContainer.style.transform = `translateX(-0px)`;
 }
