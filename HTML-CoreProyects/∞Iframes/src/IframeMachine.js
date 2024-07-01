@@ -20,6 +20,8 @@
 //	}
 //}
 rowLength = 0;
+const dataSearch = new URLSearchParams(window.location.search);
+urlRowIframes = (urlRowIframes) ? ((dataSearch!="") ? JSON.parse(decodeURIComponent(dataSearch.get('urlRowIframes'))) : [["",""],["",""]]) : urlRowIframes;
 function IframeCoroutineInvoker() {
 	document.write(`<title>${(dataSearch.get('title') == null) ? `${urlRowIframes.length*rowLength} pestañas en un solo sitio web :o` : dataSearch.get('title')}</title>`)
 	Object.keys(urlRowIframes).forEach(rowKey => {
