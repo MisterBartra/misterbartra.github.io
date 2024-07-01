@@ -23,46 +23,46 @@ let btnsPosition = {
 	"down": ""
 }
 
-function showButtonListener(htmlElement, showPos, hiddenPos, axis, timeout=0, updatePosition=false) {
-	switch (axis) {
-		case "x":
-			setTimeout(() => {
-				htmlElement.style.transform = `translate(${showPos}vw,${htmlElement.style.transform.y}px)`;
-				console.log("Left X");
-			}, timeout);
-			setTimeout(() => {
-				htmlElement.style.transform = `translate(${hiddenPos}vw,${htmlElement.style.transform.y}px)`;
-			}, timeout*2);
-			break;
-		case "y":
-			setTimeout(() => {
-				htmlElement.style.transform = `translate(${htmlElement.style.transform.x}px,${showPos}vh)`;
-			}, timeout);
-			setTimeout(() => {
-				htmlElement.style.transform = `translate(${htmlElement.style.transform.x}px,${hiddenPos}vh)`;
-			}, timeout*2);
-			break;
-	}
-	console.log("Entra");
-	if (updatePosition) {
-		updatePos();
-	}
-	return updatePosition;
-}
-function updatePos() {
-	setTimeout(() => {
-		btnsPosition = {
-			"left": btnLeft.style.transform,
-			"right": btnRight.style.transform,
-			"up": btnUp.style.transform,
-			"down": btnDown.style.transform
-		}
-	}, 1000);
-}
-
-function initButtonProcess() {
-	updatePos();
-}
+//function showButtonListener(htmlElement, showPos, hiddenPos, axis, timeout=0, updatePosition=false) {
+//	switch (axis) {
+//		case "x":
+//			setTimeout(() => {
+//				htmlElement.style.transform = `translate(${showPos}vw,${htmlElement.style.transform.y}px)`;
+//				console.log("Left X");
+//			}, timeout);
+//			setTimeout(() => {
+//				htmlElement.style.transform = `translate(${hiddenPos}vw,${htmlElement.style.transform.y}px)`;
+//			}, timeout*2);
+//			break;
+//		case "y":
+//			setTimeout(() => {
+//				htmlElement.style.transform = `translate(${htmlElement.style.transform.x}px,${showPos}vh)`;
+//			}, timeout);
+//			setTimeout(() => {
+//				htmlElement.style.transform = `translate(${htmlElement.style.transform.x}px,${hiddenPos}vh)`;
+//			}, timeout*2);
+//			break;
+//	}
+//	console.log("Entra");
+//	if (updatePosition) {
+//		updatePos();
+//	}
+//	return updatePosition;
+//}
+//function updatePos() {
+//	setTimeout(() => {
+//		btnsPosition = {
+//			"left": btnLeft.style.transform,
+//			"right": btnRight.style.transform,
+//			"up": btnUp.style.transform,
+//			"down": btnDown.style.transform
+//		}
+//	}, 1000);
+//}
+//
+//function initButtonProcess() {
+//	updatePos();
+//}
 
 function checkIfMoreRows() { if (!buttonsNowVisible) {
 	btnSwitch.style.display = "block";
