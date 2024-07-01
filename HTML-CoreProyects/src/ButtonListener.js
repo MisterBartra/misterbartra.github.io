@@ -20,7 +20,12 @@ document.addEventListener("DOMContentLoaded", function () {
 		});
 	});
 	btnLeftHitbox.addEventListener('mouseenter', () => {
-		//showButtonListener(btnLeft, -2, "x", 3000);
+		btnLeft.style.transform = `translateX(${-46}vw)`;
+		btnLeft.addEventListener('mouseleave', () => {
+			setTimeout(() => {
+				btnLeft.style.transform = `translateX(${-54}vw)`;
+			}, 1250);
+		});
     });
 	
 // Avanzar al iframe derecho:
@@ -44,7 +49,10 @@ document.addEventListener("DOMContentLoaded", function () {
 		});
 	});
 	btnRightHitbox.addEventListener('mouseenter', () => {
-        showButtonListener(btnRight, -2, "x", 3000);
+		btnRight.style.transform = `translateX(${46}vw)`;
+		setTimeout(() => {
+			btnRight.style.transform = `translateX(${54}vw)`;
+		}, 1250);
     });
 
 // Subir al iframe de arriba:
@@ -68,7 +76,10 @@ document.addEventListener("DOMContentLoaded", function () {
 		});
 	});
 	btnUpHitbox.addEventListener('mouseenter', () => {
-        showButtonListener(btnUp, -2, "x", 3000);
+		btnUp.style.transform = `translateY(${-46}vh)`;
+		setTimeout(() => {
+			btnUp.style.transform = `translateY(${-54}vh)`;
+		}, 1250);
     });
 
 // Bajar al iframe de abajo:
@@ -92,7 +103,10 @@ document.addEventListener("DOMContentLoaded", function () {
 		});
 	});
 	btnDownHitbox.addEventListener('mouseenter', () => {
-        showButtonListener(btnDown, -2, "x", 3000);
+		btnDown.style.transform = `translateY(${46}vh)`;
+		setTimeout(() => {
+			btnDown.style.transform = `translateY(${54}vh)`;
+		}, 1250);
     });
 
 
