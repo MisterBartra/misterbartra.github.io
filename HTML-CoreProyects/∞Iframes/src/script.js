@@ -49,20 +49,17 @@ let btnsPosition = {
 //	}
 //	return updatePosition;
 //}
-//function updatePos() {
-//	setTimeout(() => {
-//		btnsPosition = {
-//			"left": btnLeft.style.transform,
-//			"right": btnRight.style.transform,
-//			"up": btnUp.style.transform,
-//			"down": btnDown.style.transform
-//		}
-//	}, 1000);
-//}
-//
-//function initButtonProcess() {
-//	updatePos();
-//}
+function updatePos() {
+	setTimeout(() => {
+		btnsPosition = {
+			"left": btnLeft.style.transform,
+			"right": btnRight.style.transform,
+			"up": btnUp.style.transform,
+			"down": btnDown.style.transform
+		}
+	}, 1000);
+}
+
 
 function checkIfMoreRows() { if (!buttonsNowVisible) {
 	btnSwitch.style.display = "block";
@@ -71,7 +68,7 @@ function checkIfMoreRows() { if (!buttonsNowVisible) {
 }}
 function displayIDBtnAlternation(activeAlternation=true) {
 	let currentDisplay = (buttonsNowVisible) ? "none" : "block";
-	initButtonProcess();
+	updatePos();
 	if (urlRowIframes[0].length > 1) { btnLeft.style.display = currentDisplay; btnRight.style.display = currentDisplay; }
 	if (urlRowIframes.length > 1) { btnUp.style.display = currentDisplay; btnDown.style.display = currentDisplay; }
 	checkIfMoreRows();
