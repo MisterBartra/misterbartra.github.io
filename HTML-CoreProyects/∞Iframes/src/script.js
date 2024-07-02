@@ -57,7 +57,7 @@ function updatePos() {
 			"up": btnUp.style.transform,
 			"down": btnDown.style.transform
 		}
-	}, 1000);
+	}, 1250);
 }
 
 
@@ -99,6 +99,12 @@ function import_loadjson() {
 }
 
 function adjustDynamicWindow() {
+	btnLeft.style.transform = `translateX(${-55}vw)`;
+	btnRight.style.transform = `translateX(${55}vw)`;
+	btnUp.style.transform = `translateY(${-55}vw)`;
+	btnDown.style.transform = `translateY(${55}vw)`;
 	updatePos();
-	return iframeContainer.style.transform = `translateX(-0px)`;
+	return document.onload = setTimeout(() => {
+		iframeContainer.style.transform = `translate(-0px,-0px)`;
+	},1250);
 }
