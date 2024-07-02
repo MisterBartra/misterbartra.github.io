@@ -106,5 +106,5 @@ function adjustDynamicWindow() {
 	updatePos();
 	return document.onload = setTimeout(() => {
 		iframeContainer.style.transform = `translate(-0px,-0px)`;
-	},1250);
+	}, 900 * (urlRowIframes.length + rowLength));
 }
