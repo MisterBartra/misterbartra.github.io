@@ -57,7 +57,7 @@ function updatePos() {
 			"up": btnUp.style.transform,
 			"down": btnDown.style.transform
 		}
-	}, 1250);
+	}, 1500);
 }
 
 
@@ -99,12 +99,12 @@ function import_loadjson() {
 }
 
 function adjustDynamicWindow() {
-	btnLeft.style.transform = `translateX(${-55}vw)`;
-	btnRight.style.transform = `translateX(${55}vw)`;
-	btnUp.style.transform = `translateY(${-55}vw)`;
-	btnDown.style.transform = `translateY(${55}vw)`;
+	btnLeft.style.transform = `translateX(${-54}vw)`;
+	btnRight.style.transform = `translateX(${54}vw)`;
+	btnUp.style.transform = `translateY(${-54}vh)`;
+	btnDown.style.transform = `translateY(${54}vh)`;
 	updatePos();
-	return document.onload = setTimeout(() => {
+	setTimeout(() => {
 		iframeContainer.style.transform = `translate(-0px,-0px)`;
-	}, 900 * (urlRowIframes.length + rowLength));
+	}, 900 * (urlRowIframes.length + rowLength) / 10);
 }
