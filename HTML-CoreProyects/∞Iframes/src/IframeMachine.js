@@ -21,11 +21,8 @@
 //}
 rowLength = 0;
 const dataSearch = new URLSearchParams(window.location.search);
-//if (urlRowIframes) {
-//	urlRowIframes = (!urlRowIframes) ? ((dataSearch!="") ? JSON.parse(decodeURIComponent(dataSearch.get('urlRowIframes'))) : [["",""],["",""]]) : urlRowIframes;
-//} else {
+//if (urlRowIframes) {urlRowIframes = (!urlRowIframes) ? ((dataSearch!="") ? JSON.parse(decodeURIComponent(dataSearch.get('urlRowIframes'))) : [["",""],["",""]]) : urlRowIframes; } else {//}
 var urlRowIframes = (urlRowIframes) ? urlRowIframes : ((dataSearch!="") ? JSON.parse(decodeURIComponent(dataSearch.get('urlRowIframes'))) : [["",""],["",""]]);
-//}
 
 function IframeCoroutineInvoker() {
 	document.write(`<title>${(dataSearch.get('title') == null) ? `${urlRowIframes.length*rowLength} pestañas en un solo sitio web :o` : dataSearch.get('title')}</title>`)
@@ -44,7 +41,7 @@ function IframeCoroutineInvoker() {
 }
 function addRowIframes() { rowLength = Math.max(...Object.values(urlRowIframes).map(row => Object.keys(row).length));
 	document.write(`<div id="iframe-container" style="min-width:${rowLength}00%; min-height:${urlRowIframes.length}00%;">${IframeCoroutineInvoker()}</div>`);
+	document.write(`<div id="hitboxes"><div class="hitbox" id="hitbox-left"></div><div class="hitbox" id="hitbox-right"></div><div class="hitbox" id="hitbox-up"></div><div class="hitbox" id="hitbox-down"></div></div>`);
+	document.write(`<div id="pivot-btns"><!-- Botones de dirección --><button type="button" class="scroll-btn circle gray" id="scroll-left"><span>&#9664;</span></button><button type="button" class="scroll-btn circle gray" id="scroll-right"><span>&#9658;</span></button><button type="button" class="scroll-btn circle gray" id="scroll-up"><span>&#9650;</span></button><button type="button" class="scroll-btn circle gray" id="scroll-down"><span>&#9660;</span></button><button type="button" class="scroll-btn circle gray" id="scroll-hideButtons"><span>&#5159;</span><label for="import_trigger" class="scroll-btn circle gray" id="import_loadjson"><svg style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 -128 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M640 170.666667v85.333333h128v512h-128v85.333333h213.333333V170.666667M170.666667 170.666667v682.666666h213.333333v-85.333333H256V256h128V170.666667H170.666667z" fill="" /></svg></label><input id="import_trigger" type="file" placeholder="[]" title="Importar And Load RowFrames" accept=".json" onchange="import_loadjson();"></button></div>`);
 }
 addRowIframes();
-document.write(`<div id="hitboxes"><div class="hitbox" id="hitbox-left"></div><div class="hitbox" id="hitbox-right"></div><div class="hitbox" id="hitbox-up"></div><div class="hitbox" id="hitbox-down"></div></div>`);
-document.write(`<div id="pivot-btns"><!-- Botones de dirección --><button type="button" class="scroll-btn circle gray" id="scroll-left"><span>&#9664;</span></button><button type="button" class="scroll-btn circle gray" id="scroll-right"><span>&#9658;</span></button><button type="button" class="scroll-btn circle gray" id="scroll-up"><span>&#9650;</span></button><button type="button" class="scroll-btn circle gray" id="scroll-down"><span>&#9660;</span></button><button type="button" class="scroll-btn circle gray" id="scroll-hideButtons"><span>&#5159;</span><label for="import_trigger" class="scroll-btn circle gray" id="import_loadjson"><svg style="width: 1em; height: 1em;vertical-align: middle;fill: currentColor;overflow: hidden;" viewBox="0 -128 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M640 170.666667v85.333333h128v512h-128v85.333333h213.333333V170.666667M170.666667 170.666667v682.666666h213.333333v-85.333333H256V256h128V170.666667H170.666667z" fill="" /></svg></label><input id="import_trigger" type="file" placeholder="[]" title="Importar And Load RowFrames" accept=".json" onchange="import_loadjson();"></button></div>`);

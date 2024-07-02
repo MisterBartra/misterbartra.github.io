@@ -2,14 +2,14 @@ document.addEventListener("DOMContentLoaded", function () {
 // Retroceder al iframe izquierdo:
 	btnLeftHitbox.addEventListener('mouseenter', () => {
 	//	btnLeft.addEventListener('mouseleave', () => {
-		btnLeft.style.transform = `translateX(${-45.5}vw)`;	
+		btnLeft.style.transform = `translateX(${-46.5}vw)`;	
 	//	});
     });
 	if (!isDraggedBtn) {
 		btnLeftHitbox.addEventListener('mouseleave', () => {
 			setTimeout(() => {
 				btnLeft.style.transform = `translateX(${-55}vw)`;
-			}, 250);
+			}, 4500);
 		});
 	}
 	btnLeft.addEventListener("click", function () {
@@ -35,14 +35,14 @@ document.addEventListener("DOMContentLoaded", function () {
 // Avanzar al iframe derecho:
 	btnRightHitbox.addEventListener('mouseenter', () => {
 	//		btnRight.addEventListener('mouseleave', () => {
-		btnRight.style.transform = `translateX(${45.5}vw)`;
+		btnRight.style.transform = `translateX(${46.5}vw)`;
 		//		});
 	});
 	if (!isDraggedBtn) {
 		btnRightHitbox.addEventListener('mouseleave', () => {
 			setTimeout(() => {
 				btnRight.style.transform = `translateX(${55}vw)`;
-			}, 250);
+			}, 4500);
 		});
 	}
 	btnRight.addEventListener("click", function () {
@@ -68,14 +68,14 @@ document.addEventListener("DOMContentLoaded", function () {
 // Subir al iframe de arriba:
 	btnUpHitbox.addEventListener('mouseenter', () => {
 	//		btnUp.addEventListener('mouseleave', () => {
-		btnUp.style.transform = `translateY(${-45.5}vh)`;
+		btnUp.style.transform = `translateY(${-46.5}vh)`;
 		//		});
 	});
 	if (!isDraggedBtn) {
 		btnUpHitbox.addEventListener('mouseleave', () => {
 			setTimeout(() => {
 				btnUp.style.transform = `translateY(${-55}vh)`;
-			}, 250);
+			}, 4500);
 		});
 	}
 	btnUp.addEventListener("click", function () {
@@ -101,14 +101,14 @@ document.addEventListener("DOMContentLoaded", function () {
 // Bajar al iframe de abajo:
 	btnDownHitbox.addEventListener('mouseenter', () => {
 	//	btnDown.addEventListener('mouseleave', () => {
-		btnDown.style.transform = `translateY(${45.5}vh)`;
+		btnDown.style.transform = `translateY(${46.5}vh)`;
 	//	});
 	});
 	if (!isDraggedBtn) {
 		btnDownHitbox.addEventListener('mouseleave', () => {
 			setTimeout(() => {
 			btnDown.style.transform = `translateY(${55}vh)`;
-			}, 250);
+			}, 4500);
 		});
 	}
 	btnDown.addEventListener("click", function () {
