@@ -10,7 +10,7 @@ input { display: none; }
 .circle {resize: none; position: absolute; border-radius: 50%; box-shadow: rgba(121, 119, 119, 0.55) 0px 0px 20px 10px;}
 .gray { background-color: #3a3a3a;}
 .light-gray { background-color: #4c538b;}
-.scroll-btn { z-index: 1; left: 0vw; top: 0vh; width: 8vh; height: 8vh; display: none; opacity:0.7; transition: transform 0.175s ease-in; border:0px;}
+.scroll-btn { z-index: 1; left: 0vw; top: 0vh; width: 8vh; height: 8vh; display: none; opacity:0.7; transition: transform 0.075s ease-out; border:0px;}
  .scroll-btn:hover {background-color: #3b3b3b73;}
  #scroll-left { transform: translate(-45vw, 0); animation: start_leftButton 0.5s ease-in-out;} #scroll-right { transform: translate(45vw, 0); animation: start_rightButton 0.5s ease-in-out;} #scroll-up { transform: translate(0, -45vh); animation: start_upButton 0.5s ease-in-out;} #scroll-down { transform: translate(0, 45vh); animation: start_downButton 0.5s ease-in-out;}
  #hitboxes { overflow: visible; }
