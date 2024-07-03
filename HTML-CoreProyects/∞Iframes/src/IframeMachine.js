@@ -21,10 +21,10 @@
 //}
 rowLength = 0;
 const dataSearch = new URLSearchParams(window.location.search);
-var urlRowIframes = (urlRowIframes != [["",""],["",""]]) ? ((dataSearch.get('urlRowIframes') != null) ? JSON.parse(decodeURIComponent(dataSearch.get('urlRowIframes'))) : [[""]]) : urlRowIframes;
+var urlRowIframes = (urlRowIframes != [["",""],["",""]]) ? ((dataSearch.get('urlRowIframes') != null) ? JSON.parse(decodeURIComponent(dataSearch.get('urlRowIframes'))) : urlRowIframes) : urlRowIframes;
 
 function IframeCoroutineInvoker() {
-	document.write(`<title>${(title != "") ? ((dataSearch.get('title') == null) ? title : `${urlRowIframes.length*rowLength} pestañas en un solo sitio web :o`) : dataSearch.get('title')}</title>`)
+	document.write(`<title>${(title != "") ? ((dataSearch.get('title') == null) ? title : dataSearch.get('title')) : `${urlRowIframes.length*rowLength} pestañas en un solo sitio web :o`}</title>`)
 	Object.keys(urlRowIframes).forEach(rowKey => {
 		const crrow = urlRowIframes[rowKey];
 		const crrowLength = Array.from(crrow).length;
@@ -38,6 +38,7 @@ function IframeCoroutineInvoker() {
 		return Object.keys(urlRowIframes[rowKey]).map(iframeID => `<iframe title="RowFrameCol#${iframeID}" src="${urlRowIframes[rowKey][iframeID]}" frameborder="0" scrolling="yes"></iframe>`).join("");
 	}).join("");
 }
+
 function addRowIframes() { rowLength = Math.max(...Object.values(urlRowIframes).map(row => Object.keys(row).length));
 	document.write(`<div id="iframe-container" style="min-width:${rowLength}00%; min-height:${urlRowIframes.length}00%;">${IframeCoroutineInvoker()}</div>`);
 	document.write(`<div id="hitboxes"><div class="hitbox" id="hitbox-left"></div><div class="hitbox" id="hitbox-right"></div><div class="hitbox" id="hitbox-up"></div><div class="hitbox" id="hitbox-down"></div></div>`);
