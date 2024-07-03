@@ -21,7 +21,6 @@
 //}
 rowLength = 0;
 const dataSearch = new URLSearchParams(window.location.search);
-//if (urlRowIframes) {urlRowIframes = (!urlRowIframes) ? ((dataSearch!="") ? JSON.parse(decodeURIComponent(dataSearch.get('urlRowIframes'))) : [["",""],["",""]]) : urlRowIframes; } else {//}
 var urlRowIframes = (urlRowIframes == [["",""],["",""]]) ? urlRowIframes : ((dataSearch!="") ? JSON.parse(decodeURIComponent(dataSearch.get('urlRowIframes'))) : [[""]]);
 
 function IframeCoroutineInvoker() {
