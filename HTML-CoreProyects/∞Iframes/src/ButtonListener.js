@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", function () {
 // Retroceder al iframe izquierdo:
 	btnLeftHitbox.addEventListener('mouseenter', () => {
 	//	btnLeft.addEventListener('mouseleave', () => {
-		btnLeft.style.transform = `translateX(${-46.5}vw)`;	
+		btnLeft.style.transform = `translateX(${-47.5}vw)`;	
 	//	});
     });
 	if (!isDraggedBtn) {
@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", function () {
 // Avanzar al iframe derecho:
 	btnRightHitbox.addEventListener('mouseenter', () => {
 	//		btnRight.addEventListener('mouseleave', () => {
-		btnRight.style.transform = `translateX(${46.5}vw)`;
+		btnRight.style.transform = `translateX(${47.5}vw)`;
 		//		});
 	});
 	if (!isDraggedBtn) {
@@ -58,7 +58,7 @@ document.addEventListener("DOMContentLoaded", function () {
 		});
 		btnRight.addEventListener('mousemove', rbtn => {
 			if (isClickedBtn) {
-				btnRight.style.transform = `translate(calc(${lbtn.clientX}px - 50vw), calc(${lbtn.clientY}px - 50vh))`;
+				btnRight.style.transform = `translate(calc(${rbtn.clientX}px - 50vw), calc(${rbtn.clientY}px - 50vh))`;
 				btnsPosition.right = btnRight.style.transform;
 				isDraggedBtn=true;
 			}
@@ -68,14 +68,16 @@ document.addEventListener("DOMContentLoaded", function () {
 // Subir al iframe de arriba:
 	btnUpHitbox.addEventListener('mouseenter', () => {
 	//		btnUp.addEventListener('mouseleave', () => {
-		btnUp.style.transform = `translateY(${-46.5}vh)`;
+		btnUp.style.transform = `translateY(${-47.5}vh)`;
 		//		});
 	});
 	if (!isDraggedBtn) {
 		btnUpHitbox.addEventListener('mouseleave', () => {
-			setTimeout(() => {
-				btnUp.style.transform = `translateY(${-55}vh)`;
-			}, 4500);
+			btnUp.addEventListener('mouseleave', () => {
+				setTimeout(() => {
+					btnUp.style.transform = `translateY(${-55}vh)`;
+				}, 5000);
+			});
 		});
 	}
 	btnUp.addEventListener("click", function () {
@@ -91,7 +93,7 @@ document.addEventListener("DOMContentLoaded", function () {
 		});
 		btnUp.addEventListener('mousemove', ubtn => {
 			if (isClickedBtn) {
-				btnUp.style.transform = `translate(calc(${lbtn.clientX}px - 50vw), calc(${lbtn.clientY}px - 50vh))`;
+				btnUp.style.transform = `translate(calc(${ubtn.clientX}px - 50vw), calc(${ubtn.clientY}px - 50vh))`;
 				btnsPosition.up = btnUp.style.transform;
 				isDraggedBtn=true;
 			}
@@ -101,14 +103,16 @@ document.addEventListener("DOMContentLoaded", function () {
 // Bajar al iframe de abajo:
 	btnDownHitbox.addEventListener('mouseenter', () => {
 	//	btnDown.addEventListener('mouseleave', () => {
-		btnDown.style.transform = `translateY(${46.5}vh)`;
+		btnDown.style.transform = `translateY(${47.5}vh)`;
 	//	});
 	});
 	if (!isDraggedBtn) {
 		btnDownHitbox.addEventListener('mouseleave', () => {
-			setTimeout(() => {
-			btnDown.style.transform = `translateY(${55}vh)`;
-			}, 4500);
+			btnDown.addEventListener('mouseleave', () => {
+				setTimeout(() => {
+				btnDown.style.transform = `translateY(${55}vh)`;
+				}, 5000);
+			});
 		});
 	}
 	btnDown.addEventListener("click", function () {
@@ -124,7 +128,7 @@ document.addEventListener("DOMContentLoaded", function () {
 		});
 		btnDown.addEventListener('mousemove', dbtn => {
 			if (isClickedBtn) {
-				btnDown.style.transform = `translate(calc(${lbtn.clientX}px - 50vw), calc(${lbtn.clientY}px - 50vh))`;
+				btnDown.style.transform = `translate(calc(${dbtn.clientX}px - 50vw), calc(${dbtn.clientY}px - 50vh))`;
 				btnsPosition.down = btnDown.style.transform;
 				isDraggedBtn=true;
 			}
