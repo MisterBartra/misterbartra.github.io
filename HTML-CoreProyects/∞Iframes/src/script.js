@@ -69,8 +69,12 @@ function checkIfMoreRows() { if (!buttonsNowVisible) {
 function displayIDBtnAlternation(activeAlternation=true) {
 	let currentDisplay = (buttonsNowVisible) ? "none" : "block";
 	updatePos();
-	if (urlRowIframes[0].length > 1) { btnLeft.style.display = currentDisplay; btnRight.style.display = currentDisplay; }
-	if (urlRowIframes.length > 1) { btnUp.style.display = currentDisplay; btnDown.style.display = currentDisplay; }
+	if (urlRowIframes[0].length > 1) { btnLeft.style.display = currentDisplay; btnRight.style.display = currentDisplay;
+		btnLeftHitbox.style.display = currentDisplay; btnRightHitbox.style.display = currentDisplay;
+	}
+	if (urlRowIframes.length > 1) { btnUp.style.display = currentDisplay; btnDown.style.display = currentDisplay;
+		btnUpHitbox.style.display = currentDisplay; btnDownHitbox.style.display = currentDisplay;
+	}
 	checkIfMoreRows();
 	if (activeAlternation) { buttonsNowVisible = (buttonsNowVisible) ? false : true; }
 } displayIDBtnAlternation();
