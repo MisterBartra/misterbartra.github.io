@@ -103,12 +103,12 @@ function import_loadjson() {
 }
 
 function adjustDynamicWindow() {
-	btnLeft.style.transform = `translateX(${-54}vw)`;
-	btnRight.style.transform = `translateX(${54}vw)`;
-	btnUp.style.transform = `translateY(${-54}vh)`;
-	btnDown.style.transform = `translateY(${54}vh)`;
+	btnLeft.style.transform = `translateX(${-55}vw)`;
+	btnRight.style.transform = `translateX(${55}vw)`;
+	btnUp.style.transform = `translateY(${-55}vh)`;
+	btnDown.style.transform = `translateY(${55}vh)`;
 	updatePos();
 	setTimeout(() => {
 		iframeContainer.style.transform = `translate(-0px,-0px)`;
-	}, 1000 * (urlRowIframes.length + rowLength) / 8);
+	}, 10 * (urlRowIframes.length + rowLength));
 }
