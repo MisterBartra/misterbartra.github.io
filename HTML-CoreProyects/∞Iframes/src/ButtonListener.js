@@ -2,8 +2,8 @@ document.addEventListener("DOMContentLoaded", function () {
 // Retroceder al iframe izquierdo:
 	btnLeftHitbox.addEventListener('mouseenter', () => {
 	//	btnLeft.addEventListener('mouseleave', () => {
-		//btnLeft.style.transform = `translateX(${-47.5}vw)`;
-		btnLeft.style.transform = `translate(${btnsPosition.left})`;
+		btnLeft.style.transform = `translateX(${-47.5}vw)`;
+		//btnLeft.style.transform = `translate(${btnsPosition.left})`;
 	//	});
     });
 	if (!isDraggedBtn) {
@@ -36,8 +36,8 @@ document.addEventListener("DOMContentLoaded", function () {
 // Avanzar al iframe derecho:
 	btnRightHitbox.addEventListener('mouseenter', () => {
 	//		btnRight.addEventListener('mouseleave', () => {
-	//	btnRight.style.transform = `translateX(${47.5}vw)`;
-		btnRight.style.transform = `translate(${btnsPosition.right})`;
+		btnRight.style.transform = `translateX(${47.5}vw)`;
+	//	btnRight.style.transform = `translate(${btnsPosition.right})`;
 		//		});
 	});
 	if (!isDraggedBtn) {
@@ -70,8 +70,8 @@ document.addEventListener("DOMContentLoaded", function () {
 // Subir al iframe de arriba:
 	btnUpHitbox.addEventListener('mouseenter', () => {
 	//		btnUp.addEventListener('mouseleave', () => {
-	//	btnUp.style.transform = `translateY(${-47.5}vh)`;
-		btnUp.style.transform = `translate(${btnsPosition.up})`;
+		btnUp.style.transform = `translateY(${-47.5}vh)`;
+	//	btnUp.style.transform = `translate(${btnsPosition.up})`;
 		//		});
 	});
 	if (!isDraggedBtn) {
@@ -106,8 +106,8 @@ document.addEventListener("DOMContentLoaded", function () {
 // Bajar al iframe de abajo:
 	btnDownHitbox.addEventListener('mouseenter', () => {
 	//	btnDown.addEventListener('mouseleave', () => {
-	//	btnDown.style.transform = `translateY(${47.5}vh)`;
-		btnDown.style.transform = `translate(${btnsPosition.down})`;
+		btnDown.style.transform = `translateY(${47.5}vh)`;
+	//	btnDown.style.transform = `translate(${btnsPosition.down})`;
 		//	});
 	});
 	if (!isDraggedBtn) {
