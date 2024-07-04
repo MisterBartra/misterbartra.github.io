@@ -2,14 +2,15 @@ document.addEventListener("DOMContentLoaded", function () {
 // Retroceder al iframe izquierdo:
 	btnLeftHitbox.addEventListener('mouseenter', () => {
 	//	btnLeft.addEventListener('mouseleave', () => {
-		btnLeft.style.transform = `translateX(${-47.5}vw)`;	
+		//btnLeft.style.transform = `translateX(${-47.5}vw)`;
+		btnLeft.style.transform = `translate(${btnsPosition.left})`;
 	//	});
     });
 	if (!isDraggedBtn) {
 		btnLeftHitbox.addEventListener('mouseleave', () => {
 			setTimeout(() => {
 				btnLeft.style.transform = `translateX(${-55}vw)`;
-			}, 4500);
+			}, 5000);
 		});
 	}
 	btnLeft.addEventListener("click", function () {
@@ -35,14 +36,15 @@ document.addEventListener("DOMContentLoaded", function () {
 // Avanzar al iframe derecho:
 	btnRightHitbox.addEventListener('mouseenter', () => {
 	//		btnRight.addEventListener('mouseleave', () => {
-		btnRight.style.transform = `translateX(${47.5}vw)`;
+	//	btnRight.style.transform = `translateX(${47.5}vw)`;
+		btnRight.style.transform = `translate(${btnsPosition.right})`;
 		//		});
 	});
 	if (!isDraggedBtn) {
 		btnRightHitbox.addEventListener('mouseleave', () => {
 			setTimeout(() => {
 				btnRight.style.transform = `translateX(${55}vw)`;
-			}, 4500);
+			}, 5000);
 		});
 	}
 	btnRight.addEventListener("click", function () {
@@ -68,7 +70,8 @@ document.addEventListener("DOMContentLoaded", function () {
 // Subir al iframe de arriba:
 	btnUpHitbox.addEventListener('mouseenter', () => {
 	//		btnUp.addEventListener('mouseleave', () => {
-		btnUp.style.transform = `translateY(${-47.5}vh)`;
+	//	btnUp.style.transform = `translateY(${-47.5}vh)`;
+		btnUp.style.transform = `translate(${btnsPosition.up})`;
 		//		});
 	});
 	if (!isDraggedBtn) {
@@ -103,8 +106,9 @@ document.addEventListener("DOMContentLoaded", function () {
 // Bajar al iframe de abajo:
 	btnDownHitbox.addEventListener('mouseenter', () => {
 	//	btnDown.addEventListener('mouseleave', () => {
-		btnDown.style.transform = `translateY(${47.5}vh)`;
-	//	});
+	//	btnDown.style.transform = `translateY(${47.5}vh)`;
+		btnDown.style.transform = `translate(${btnsPosition.down})`;
+		//	});
 	});
 	if (!isDraggedBtn) {
 		btnDownHitbox.addEventListener('mouseleave', () => {
