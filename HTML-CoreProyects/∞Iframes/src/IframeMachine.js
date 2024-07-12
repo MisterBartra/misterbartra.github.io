@@ -24,7 +24,7 @@ const dataSearch = new URLSearchParams(window.location.search);
 var urlRowIframes = (urlRowIframes != [["",""],["",""]]) ? ((dataSearch.get('urlRowIframes') != null) ? JSON.parse(decodeURIComponent(dataSearch.get('urlRowIframes'))) : urlRowIframes) : urlRowIframes;
 
 function IframeCoroutineInvoker() {
-	document.write(`<title>${(title != "") ? ((dataSearch.get('title') == null) ? title : dataSearch.get('title')) : `${urlRowIframes.length*rowLength} pestañas en un solo sitio web :o`}</title>`)
+	document.write(`<title>${(title) ? ((dataSearch.get('title') == null) ? title : dataSearch.get('title')) : `${urlRowIframes.length*rowLength} pestañas en un solo sitio web :o`}</title>`);
 	Object.keys(urlRowIframes).forEach(rowKey => {
 		const crrow = urlRowIframes[rowKey];
 		const crrowLength = Array.from(crrow).length;
