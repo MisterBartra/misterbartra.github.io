@@ -9,3 +9,14 @@ sections[1].addEventListener("click", function () {
 sections[2].addEventListener("click", function () {
     scrollContainer.style.transform = `translateY(-200vh)`;
 });
+
+
+btnSections = ["",""]
+divboxes = [
+    {
+        section: "",
+        theme: "",
+        desc: "",
+        link: ""
+    }
+]
