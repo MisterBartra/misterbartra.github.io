@@ -107,8 +107,8 @@ function import_loadjson() {
 function adjustDynamicWindow() {
 	btnLeft.style.transform = `translateX(${-54.5}vw)`;
 	btnRight.style.transform = `translateX(${54.5}vw)`;
-	btnUp.style.transform = `translateY(${-47.5}vh)`;
-	btnDown.style.transform = `translateY(${47.5}vh)`;
+	btnUp.style.transform = `translateY(${-44.5}vh)`;
+	btnDown.style.transform = `translateY(${44.5}vh)`;
 	setCurrentButtonPos();
 	hashVector = (window.location.hash != "") ? window.location.hash.split(".") : [-0, -0];
 	setTimeout(() => {
