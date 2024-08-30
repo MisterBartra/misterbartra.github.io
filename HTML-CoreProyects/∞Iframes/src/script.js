@@ -23,7 +23,7 @@ let btnsPosition = {
 	"down": ""
 }
 
-//function showButtonListener(htmlElement, showPos, hiddenPos, axis, timeout=0, updatePosition=false) {
+//function showButtonListener(htmlElement, showPos, hiddenPos, axis, timeout=0, setCurrentButtonPosition=false) {
 //	switch (axis) {
 //		case "x":
 //			setTimeout(() => {
@@ -44,12 +44,13 @@ let btnsPosition = {
 //			break;
 //	}
 //	console.log("Entra");
-//	if (updatePosition) {
-//		updatePos();
+//	if (setCurrentButtonPosition) {
+//		setCurrentButtonPos();
 //	}
-//	return updatePosition;
+//	return setCurrentButtonPosition;
 //}
-function updatePos() {
+function setCurrentButtonPos() {
+
 	setTimeout(() => {
 		btnsPosition = {
 			"left": btnLeft.style.transform,
@@ -57,7 +58,7 @@ function updatePos() {
 			"up": btnUp.style.transform,
 			"down": btnDown.style.transform
 		}
-	}, 1500);
+	}, 2000);
 }
 
 
@@ -68,7 +69,7 @@ function checkIfMoreRows() { if (!buttonsNowVisible) {
 }}
 function displayIDBtnAlternation(activeAlternation=true) {
 	let currentDisplay = (buttonsNowVisible) ? "none" : "block";
-	updatePos();
+	setCurrentButtonPos();
 	if (urlRowIframes[0].length > 1) { btnLeft.style.display = currentDisplay; btnRight.style.display = currentDisplay;
 		btnLeftHitbox.style.display = currentDisplay; btnRightHitbox.style.display = currentDisplay;
 	}
@@ -84,6 +85,7 @@ let currentXIndex = 0, currentYIndex = 0;
 let isClickedBtn = isDraggedBtn = false;
 // Actualizar la posición del contenedor
 function updateFrameContainerPosition(isDraggedBtn, directionX=0, directionY=0) {
+	window.location.href=`#${currentXIndex}.${currentYIndex}`;
 	if (isDraggedBtn) {
 		currentXIndex = (directionX==0) ? currentXIndex : ((currentXIndex + directionX + rowLength) % rowLength);
 		currentYIndex = (directionY==0) ? currentYIndex : ((currentYIndex + directionY + rowLength) % rowLength);
@@ -103,12 +105,16 @@ function import_loadjson() {
 }
 
 function adjustDynamicWindow() {
-	btnLeft.style.transform = `translateX(${-55}vw)`;
-	btnRight.style.transform = `translateX(${55}vw)`;
-	btnUp.style.transform = `translateY(${-55}vh)`;
-	btnDown.style.transform = `translateY(${55}vh)`;
-	updatePos();
+	btnLeft.style.transform = `translateX(${-54.5}vw)`;
+	btnRight.style.transform = `translateX(${54.5}vw)`;
+	btnUp.style.transform = `translateY(${-47.5}vh)`;
+	btnDown.style.transform = `translateY(${47.5}vh)`;
+	setCurrentButtonPos();
+	hashVector = (window.location.hash != "") ? window.location.hash.split(".") : [-0, -0];
 	setTimeout(() => {
-		iframeContainer.style.transform = `translate(-0px,-0px)`;
-	}, 50 * (urlRowIframes.length * rowLength));
+		iframeContainer.style.transform = `translate(${hashVector[0]*100}px,${hashVector[1]*100}px)`;
+	}, 1.5 * (urlRowIframes.length * rowLength));
+}
+function btnActivity(htmlElement=HTMLElement, num) {
+	return;
 }
