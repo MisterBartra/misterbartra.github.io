@@ -85,11 +85,11 @@ let currentXIndex = 0, currentYIndex = 0;
 let isClickedBtn = isDraggedBtn = false;
 // Actualizar la posición del contenedor
 function updateFrameContainerPosition(isDraggedBtn, directionX=0, directionY=0) {
-	window.location.href=`#${currentXIndex}.${currentYIndex}`;
 	if (isDraggedBtn) {
 		currentXIndex = (directionX==0) ? currentXIndex : ((currentXIndex + directionX + rowLength) % rowLength);
 		currentYIndex = (directionY==0) ? currentYIndex : ((currentYIndex + directionY + rowLength) % rowLength);
 	} else { iframeContainer.style.transform = `translate(${-currentXIndex * 100}vw, ${-currentYIndex * 100}vh)`; }
+	window.location.href=`#${currentXIndex}.${currentYIndex}`;
 	return false;
 }
 function import_loadjson() {

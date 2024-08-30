@@ -9,8 +9,12 @@ document.addEventListener("DOMContentLoaded", function () {
 	if (!isDraggedBtn) {
 		btnLeftHitbox.addEventListener('mouseleave', () => {
 			setTimeout(() => {
-				btnLeft.style.transform = `translateX(${-55}vw)`;
-			}, 5000);
+				if (isDraggedBtn) {
+					setTimeout(() => {
+						btnLeft.style.transform = `translateX(${-55}vw)`;
+					}, 6000);
+				}
+			}, 4000);
 		});
 	}
 	btnLeft.addEventListener("click", function () {
