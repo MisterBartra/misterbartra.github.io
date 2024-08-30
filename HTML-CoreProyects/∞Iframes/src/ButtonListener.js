@@ -3,18 +3,22 @@ document.addEventListener("DOMContentLoaded", function () {
 	btnLeftHitbox.addEventListener('mouseenter', () => {
 	//	btnLeft.addEventListener('mouseleave', () => {
 		btnLeft.style.transform = `translateX(${-47.5}vw)`;
+		btnSwitch.style.opacity = 0.3
 		//btnLeft.style.transform = `translate(${btnsPosition.left})`;
 	//	});
     });
 	if (!isDraggedBtn) {
 		btnLeftHitbox.addEventListener('mouseleave', () => {
 			setTimeout(() => {
-				if (isDraggedBtn) {
+				if (!isClickedBtn) {
 					setTimeout(() => {
 						btnLeft.style.transform = `translateX(${-55}vw)`;
-					}, 6000);
+					}, 5000);
+				} else {
+					btnLeft.style.transform = `translateX(${-55}vw)`;
 				}
-			}, 4000);
+				btnSwitch.style.opacity = 0.0
+			}, 2500);
 		});
 	}
 	btnLeft.addEventListener("click", function () {
@@ -41,14 +45,22 @@ document.addEventListener("DOMContentLoaded", function () {
 	btnRightHitbox.addEventListener('mouseenter', () => {
 	//		btnRight.addEventListener('mouseleave', () => {
 		btnRight.style.transform = `translateX(${47.5}vw)`;
+		btnSwitch.style.opacity = 0.3
 	//	btnRight.style.transform = `translate(${btnsPosition.right})`;
 		//		});
 	});
 	if (!isDraggedBtn) {
 		btnRightHitbox.addEventListener('mouseleave', () => {
 			setTimeout(() => {
-				btnRight.style.transform = `translateX(${55}vw)`;
-			}, 5000);
+				if (!isClickedBtn) {
+					setTimeout(() => {
+						btnRight.style.transform = `translateX(${55}vw)`;
+					}, 5000);
+				} else {
+					btnRight.style.transform = `translateX(${55}vw)`;
+				}
+				btnSwitch.style.opacity = 0.0
+			}, 2500);
 		});
 	}
 	btnRight.addEventListener("click", function () {
@@ -75,16 +87,22 @@ document.addEventListener("DOMContentLoaded", function () {
 	btnUpHitbox.addEventListener('mouseenter', () => {
 	//		btnUp.addEventListener('mouseleave', () => {
 		btnUp.style.transform = `translateY(${-47.5}vh)`;
+		btnSwitch.style.opacity = 0.3
 	//	btnUp.style.transform = `translate(${btnsPosition.up})`;
 		//		});
 	});
 	if (!isDraggedBtn) {
 		btnUpHitbox.addEventListener('mouseleave', () => {
-			btnUp.addEventListener('mouseleave', () => {
-				setTimeout(() => {
+			setTimeout(() => {
+				if (!isClickedBtn) {
+					setTimeout(() => {
+						btnUp.style.transform = `translateY(${-55}vh)`;
+					}, 5000);
+				} else {
 					btnUp.style.transform = `translateY(${-55}vh)`;
-				}, 5000);
-			});
+				}
+				btnSwitch.style.opacity = 0.0
+			}, 2500);
 		});
 	}
 	btnUp.addEventListener("click", function () {
@@ -111,16 +129,22 @@ document.addEventListener("DOMContentLoaded", function () {
 	btnDownHitbox.addEventListener('mouseenter', () => {
 	//	btnDown.addEventListener('mouseleave', () => {
 		btnDown.style.transform = `translateY(${47.5}vh)`;
+		btnSwitch.style.opacity = 0.3
 	//	btnDown.style.transform = `translate(${btnsPosition.down})`;
 		//	});
 	});
 	if (!isDraggedBtn) {
 		btnDownHitbox.addEventListener('mouseleave', () => {
-			btnDown.addEventListener('mouseleave', () => {
-				setTimeout(() => {
-				btnDown.style.transform = `translateY(${55}vh)`;
-				}, 5000);
-			});
+			setTimeout(() => {
+				if (!isClickedBtn) {
+					setTimeout(() => {
+						btnDown.style.transform = `translateY(${55}vh)`;
+					}, 5000);
+				} else {
+					btnDown.style.transform = `translateY(${55}vh)`;
+				}
+				btnSwitch.style.opacity = 0.0
+			}, 2500);
 		});
 	}
 	btnDown.addEventListener("click", function () {
