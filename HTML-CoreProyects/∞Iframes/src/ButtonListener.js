@@ -86,7 +86,7 @@ document.addEventListener("DOMContentLoaded", function () {
 // Subir al iframe de arriba:
 	btnUpHitbox.addEventListener('mouseenter', () => {
 	//		btnUp.addEventListener('mouseleave', () => {
-		btnUp.style.transform = `translateY(${-47.5}vh)`;
+		btnUp.style.transform = `translateY(${-45}vh)`;
 		btnSwitch.style.opacity = 0.3
 	//	btnUp.style.transform = `translate(${btnsPosition.up})`;
 		//		});
@@ -128,7 +128,7 @@ document.addEventListener("DOMContentLoaded", function () {
 // Bajar al iframe de abajo:
 	btnDownHitbox.addEventListener('mouseenter', () => {
 	//	btnDown.addEventListener('mouseleave', () => {
-		btnDown.style.transform = `translateY(${47.5}vh)`;
+		btnDown.style.transform = `translateY(${45}vh)`;
 		btnSwitch.style.opacity = 0.3
 	//	btnDown.style.transform = `translate(${btnsPosition.down})`;
 		//	});
