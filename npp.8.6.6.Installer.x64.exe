@@ -1,0 +1,58 @@
+
+public class SLoadData : MonoBehaviour
+{
+    public static SLoadData sLoadData;
+    GameObject[] allGameObjects;
+    public GameObject[] keepGameObjects;
+    public string toScene = string.Empty;
+    private void Awake()
+    {
+        allGameObjects = FindObjectsByType<GameObject>(FindObjectsSortMode.InstanceID);
+        if (sLoadData != null && sLoadData != this) // Existe otro que no es este
+        {
+            RemoveObjectsFromRoom();
+            LoadInNextScene();
+            Destroy(this.gameObject);
+        } else {
+            sLoadData = this;
+            DontDestroyOnLoad(this);
+            for (int i = 0; i < keepGameObjects.Length; i++)
+            {
+                if(keepGameObjects[i].gameObject != null) DontDestroyOnLoad(keepGameObjects[i].gameObject);
+
+            }
+        }
+    }
+
+    void LoadInNextScene()
+    {
+        for (int i = 0; i < keepGameObjects.Length; i++)
+        {
+            Instantiate(keepGameObjects[i].gameObject);
+            keepGameObjects[i].gameObject.name.Substring(0, keepGameObjects[i].gameObject.name.Length-4);
+        }
+    }
+
+    private void RemoveObjectsFromRoom()
+    {
+
+        foreach (GameObject objToRemove in keepGameObjects)
+        {
+            if (objToRemove != null && ArrayContains(allGameObjects, objToRemove))
+            {
+                Destroy(objToRemove);
+            }
+        }
+    }
+    private bool ArrayContains(GameObject[] array, GameObject gameObject)
+    {
+        foreach (GameObject obj in array) {
+            if (obj == gameObject) return true;
+        }
+        return false;
+    }
+    public static void nextScene(string sceneName)
+    {
+        UESceneManager.goToScene(FindObjectOfType<SLoadData>().toScene = sceneName);
+    }
+}

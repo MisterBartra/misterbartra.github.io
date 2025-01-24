@@ -1,93 +1,55 @@
-public class Player : Monosehaviour
-public flont speed;
-Layerflask obstacteMase;
-Vector2 torgetPos; Transform GFX;
-Float filpx;
-boot isMoving:
-void Start () (
-obstacleMask LayerMask.GetMask("hmll", "Enemy"); GFX - GetComponentInChildren<SpriteRenderer>()-tronsform; fltpx - GFX.LocolScale.x;
-- System.Hatn.Stgn(InputGetaeisRon("Hortrontal")).
-floot vert = System.Math,Sign(Input.GetAxisRow("Vertical")); 1f(Mathf,Abs(hors) > 0 | | MathF Abs(vert) > 0) (
-if(Mathf,Abs(horz) > 0)
-GFX.tocotScole = new Vector2(Ftipx horz, GFX.LocatScate.y);
-if(:(smoking) (
-Lf(Mathif,Abs(horz) > 0) (
-targetPos = new Vector2(transform.position.x + horz, transform.position.y);
-else If(Hathf.Aps(vert) > B) (
-torgetPos - new Vector2(transform.position.x, transform.position.y = vert);
-Shock fur collix1enz,oe * 0.8; Vectorz hitsize - Vects Collider2D hit - Physics20.OvertapBox(targetPos, hitSize, 0, obstacteMask);
-coroutine(SmoothMove());
-IEnumerator SmootnMlove() (
-(Vector2.Distance(transform.position, targetPos) > 8.014) i
-ntastromsgorm porition, targetPos, spees Tiem.dettaTine))
-yield return mrll
-tronsform.porition - targetPos;
-istoving fulse
+// Utils
+using UnityEngine.SceneManagement;
+public static class SceneUtils {
+    public static void retryScene() => SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    public static void goToScene(string sceneName) => SceneManager.LoadScene(sceneName);
+    //public static void keepSceneValue(GameObject ) => ;
+}
+public static class Utils {
+    public static void shiftObject(this Transform t) {
+        int childCount = t.childCount;
+        for (int i = 0; i < childCount; i++) {
+            Object.DestroyImmediate(t.GetChild(0).gameObject);
+        }
+    }
+    public static Material createMaterial(this Color color, string shader = "Standard") => new Material(Shader.Find(shader)) { color = color };
+}
 
 
-poblic class TileSpawner : MonoBehaviour
-(
-bungeonManager dungtan;
-vold Awake() (
-dungilan = FindöbjectOfType<Dungeonilanager>() GameObject goFloor - Instantiote(dungton.floorPrefab, transform.position, Quaternion.identity) as GameObject; gofloor.name - dungtan,floorPrefab.name; gof loortransform.SetPorent(dangian, transform); if(tronsform.position.x > dungMan.maxx) ( dungian,maxx trunsform,position.x; if(tronsform.position.x < dungMon.minx) ( dunglan.minx = transform.position.x;
-if(tronsform.position.y > dungMon.maxY) ( dunglian,maxy - trunsform.position.yi
-if(tronsform.position.y < dungMon.minY) dunglian,minv - trunsform.position.ys
-void Stort() (
-LayerMask enylask - LayerMask.GetMash("Wall", "Floor");
-Vector2 hitSize - Vector2.one * D.SF; for(int × = -1; × <= 1; ×++) (
-for(int y = -1; y <= 1; yt+) (
-Vector2 targetPos - nnw Vector2(tronsform.position.x + x, tronsform.position.y + y): Collider20 hit - Physics20.OverLapBox(targetPos, hitSize, 0, envMask);
-LF(thit)
-// add a wall
-Gamrobject golall Instantlate(dunglan,wollPrefab, targetPos, Quaternion, identity) =s GameObject;
-goliall.nome - dunglon.wollPrefab.nume;
-gonall,transform:SetParent (dunyion.transform);
-Destroy(gume0bject);
-void OmDrawGizmos() (
-Gizmos.color - Color.white:
-Gizmos.DrowCube(tronsform.position, Vector3.one);
 
-public class DungeonManager : MonoBehaviour
-(
-public GameObject floorPrefab, wallPrefab, tilePrefub; public int totalFloorCount;
-[HideInInspector] public flout minx, maxX, minY, maxY;
-List<Vector3> floorList - new List<Vector3>();
-void Stort() (
-Randomialker();
-ad updateLon.isEditor if(Applicatis && Input.GetKeyDown(KeyCode.Bockspace)) ( SceneManager,LoadScene(SceneManager.GetActiveScene().name);
-vuid Mandomikalker() (
-Vector3 curPos - Vector3.zero; floortist.Add(curPos); hile(fioorList.Count < totolfloorCount) (
-switch(Random, Range(1, 5)) (
-case 1: curPos += Vector3.up; break;
-case 2: curPos += Vector3.right;break;
-case 3: curPos += Vector3.down; hreakg
-case 4: curPos +- Vector3.Left; break;
-bool infloorList = falseg
-forfint i - 0; i < floorkist.Count; 1++) (
-EF(Vector3.Equals(curPos, floorList[i])) {
-infloorList = (ruet break;
-1f(linFloorList) (
-floorList.Add(curPos);
-for(int = 0; 1 < floorList.Count; i++) {
-GameObject goTile - Instantiate(tilePrefob, floorlist[i], Quaternion identity) as GameObject;
-goTile.name - tilePrefab.name;
-goTile.tronsform.SetParent(transform);
 
-pisblic class Enemy : RonoBehaviour (
-public Vector2 patrol Interval; LayerHask obstacLerlask;
-Lstevecter2> available/ovenentList = nev ListsVector2>(): bool isMoving;
-void Stort () (
-obstacleMask - LayerMask.GetMask("Wall", "Enemy", "Player");
-vold Update () (
-if(listoving) ( Patrol():
-void
-rasvntist.Ctear()
-Vector2 size = Vector2.one 0.8f1 Collider20 hitup - Physics20.Overiap8ox(curPos + Vector2.up, size, B, obstocieMask); 1f(ihitup) { #vailableRovementList.Ad(Vector2.up); Collider20 hitRight - Physics20.OvertopBon(curPos + Vector2.right, size, 0, obstocleMosk); if(lhitRight) { availableMovementlist.Add(Vector2.right); ) Collider2D hitDowm = Physics2D.OverlapBox(curPos + Vector2.down, size, 8, obstacleMask) if(lhitDown) ( availobleMovementlist.Add(Vector2.down): ) Collider20 hitleft - Physics20.OverlapBox(curPos + Vector2.left, size, D, obstacleMosk);
-if(1hitLeft) { ovailobleMovementlist.Add(Vector2.Left); } if(availobleMovementlist.Count > 0) (
-int randomIndex - RandomRange(0, ovailobleMovementlist.Count); curPos += avoilobleMovementList[randomIndex];
-StortCoroutine(SmoothMove());
-IEnumerator Smoothlove() (
-isloving=t while(Vector2.Distance(transform.position, curPos) > 0.01f) (
-transform.position - Vettor2.MoveTowards(tronsform.position, curPos, 5f * Time.deltoTime); yield return
-transform.position - curPoss
-yield return new WaitforSeconds(Randoe. Range(patrol Interval.x, patrol Interval.y)); is/loving = fulse;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
