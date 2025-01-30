@@ -1,0 +1,55 @@
+// Utils
+using UnityEngine.SceneManagement;
+public static class SceneUtils {
+    public static void retryScene() => SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    public static void goToScene(string sceneName) => SceneManager.LoadScene(sceneName);
+    //public static void keepSceneValue(GameObject ) => ;
+}
+public static class Utils {
+    public static void shiftObject(this Transform t) {
+        int childCount = t.childCount;
+        for (int i = 0; i < childCount; i++) {
+            Object.DestroyImmediate(t.GetChild(0).gameObject);
+        }
+    }
+    public static Material createMaterial(this Color color, string shader = "Standard") => new Material(Shader.Find(shader)) { color = color };
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
