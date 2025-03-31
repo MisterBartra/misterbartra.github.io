@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1"
+      crossorigin="anonymous"
+    />
+    <title>Habla a texto</title>
+  </head>
+  <body class="container pt-5 bg-dark">
+    <div class="mt-4" id="div_language">
+      <h2 class="mb-3 text-light">Seleccionar lenguaje:</h2>
+      <select class="form-select bg-secondary text-light" id="select_language" onchange="updateCountry()"></select>
+      <select class="form-select bg-secondary text-light mt-2" id="select_dialect"></select>
+    </div>
+    <h2 class="mt-4 text-light">Transcripción</h2>
+    <div class="p-3" style="border: 1px solid gray; height: 300px; border-radius: 8px;">
+      <span id="final" class="text-light"></span>
+      <span id="interim" class="text-secondary"></span>
+    </div>
+    <div class="mt-4">
+      <button class="btn btn-success" id="start">Start</button>
+      <button class="btn btn-danger" id="stop">Stop</button>
+      <p id="status" class="lead mt-3 text-light" style="display: none">Escuchando ...</p>
+    </div>
+  </body>
+  <script>
+	if ("webkitSpeechRecognition" in window) {
+	  let speechRecognition = new webkitSpeechRecognition();
+	  let final_transcript = "";
+	  bool isListening = false;
+
+	  speechRecognition.continuous = true;
+	  speechRecognition.interimResults = true;
+	  speechRecognition.lang = document.querySelector("#select_dialect").value;
+
+	  speechRecognition.onstart = () => {
+		document.querySelector("#status").style.display = "block";
+	  };
+	  speechRecognition.onerror = () => {
+		document.querySelector("#status").style.display = "none";
+		console.log("Speech Recognition Error");
+	  };
+	  speechRecognition.onend = () => {
+		document.querySelector("#status").style.display = "none";
+		console.log("Speech Recognition Ended");
+	  };
+
+	  speechRecognition.onresult = (event) => {
+		let interim_transcript = "";
+
+		for (let i = event.resultIndex; i < event.results.length; ++i) {
+		  if (event.results[i].isFinal) {
+			final_transcript += event.results[i][0].transcript;
+		  } else {
+			interim_transcript += event.results[i][0].transcript;
+		  }
+		}
+		document.querySelector("#final").innerHTML = final_transcript;
+		document.querySelector("#interim").innerHTML = interim_transcript;
+	  };
+
+	  document.querySelector("#start").onclick = () => {
+		speechRecognition.lang = document.querySelector("#select_dialect").value;
+		document.querySelector("#start").style.display = (!isListening) ? 'none' : 'block';
+		speechRecognition.start();
+		isListening = true;
+	  };
+	  document.querySelector("#stop").onclick = () => {
+		document.querySelector("#stop").style.display = (isListening) ? 'none' : 'block';
+		speechRecognition.stop();
+		isListening = false;
+	  };
+	} else {
+	  console.log("Speech Recognition Not Available");
+	}
+  </script>
+  <script>
+	var langs =
+	[['Afrikaans',       ['af-ZA']],
+	 ['Bahasa Indonesia',['id-ID']],
+	 ['Bahasa Melayu',   ['ms-MY']],
+	 ['Català',          ['ca-ES']],
+	 ['Čeština',         ['cs-CZ']],
+	 ['Deutsch',         ['de-DE']],
+	 ['English',         ['en-AU', 'Australia'],
+						 ['en-CA', 'Canada'],
+						 ['en-IN', 'India'],
+						 ['en-NZ', 'New Zealand'],
+						 ['en-ZA', 'South Africa'],
+						 ['en-GB', 'United Kingdom'],
+						 ['en-US', 'United States']],
+	 ['Español',         ['es-AR', 'Argentina'],
+						 ['es-BO', 'Bolivia'],
+						 ['es-CL', 'Chile'],
+						 ['es-CO', 'Colombia'],
+						 ['es-CR', 'Costa Rica'],
+						 ['es-EC', 'Ecuador'],
+						 ['es-SV', 'El Salvador'],
+						 ['es-ES', 'España'],
+						 ['es-US', 'Estados Unidos'],
+						 ['es-GT', 'Guatemala'],
+						 ['es-HN', 'Honduras'],
+						 ['es-MX', 'México'],
+						 ['es-NI', 'Nicaragua'],
+						 ['es-PA', 'Panamá'],
+						 ['es-PY', 'Paraguay'],
+						 ['es-PE', 'Perú'],
+						 ['es-PR', 'Puerto Rico'],
+						 ['es-DO', 'República Dominicana'],
+						 ['es-UY', 'Uruguay'],
+						 ['es-VE', 'Venezuela']],
+	 ['Euskara',         ['eu-ES']],
+	 ['Français',        ['fr-FR']],
+	 ['Galego',          ['gl-ES']],
+	 ['Hrvatski',        ['hr_HR']],
+	 ['IsiZulu',         ['zu-ZA']],
+	 ['Íslenska',        ['is-IS']],
+	 ['Italiano',        ['it-IT', 'Italia'],
+						 ['it-CH', 'Svizzera']],
+	 ['Magyar',          ['hu-HU']],
+	 ['Nederlands',      ['nl-NL']],
+	 ['Norsk bokmål',    ['nb-NO']],
+	 ['Polski',          ['pl-PL']],
+	 ['Português',       ['pt-BR', 'Brasil'],
+						 ['pt-PT', 'Portugal']],
+	 ['Română',          ['ro-RO']],
+	 ['Slovenčina',      ['sk-SK']],
+	 ['Suomi',           ['fi-FI']],
+	 ['Svenska',         ['sv-SE']],
+	 ['Türkçe',          ['tr-TR']],
+	 ['български',       ['bg-BG']],
+	 ['Pусский',         ['ru-RU']],
+	 ['Српски',          ['sr-RS']],
+	 ['한국어',            ['ko-KR']],
+	 ['中文',             ['cmn-Hans-CN', '普通话 (中国大陆)'],
+						 ['cmn-Hans-HK', '普通话 (香港)'],
+						 ['cmn-Hant-TW', '中文 (台灣)'],
+						 ['yue-Hant-HK', '粵語 (香港)']],
+	 ['日本語',           ['ja-JP']],
+	 ['Lingua latīna',   ['la']]];
+
+	let select_language = document.querySelector('#select_language');
+	let select_dialect = document.querySelector('#select_dialect');
+
+	// Poblar el select_language con los idiomas
+	for (var i = 0; i < langs.length; i++) {
+	  select_language.options[i] = new Option(langs[i][0], i);
+	}
+
+	// Obtener el parámetro de dialecto desde la URL
+	const urlParams = new URLSearchParams(window.location.search);
+	const dialectParam = urlParams.get('dl'); // Dialecto
+
+	// Predeterminar idioma y dialecto si no hay parámetros
+	select_language.selectedIndex = 7; // Idioma predeterminado (Español)
+	updateCountry();
+	select_dialect.selectedIndex = 11; // Dialecto predeterminado (primero en la lista)
+
+	// Buscar el idioma y el dialecto correspondientes si el parámetro existe
+	if (dialectParam) {
+	  langs.forEach((lang, langIndex) => {
+		const dialectIndex = lang.slice(1).findIndex(dialect => dialect[0] === dialectParam);
+		if (dialectIndex !== -1) {
+		  select_language.selectedIndex = langIndex; // Seleccionar el idioma correspondiente
+		  updateCountry(); // Actualizar dialectos antes de seleccionarlo
+		  select_dialect.selectedIndex = dialectIndex; // Seleccionar dialecto correspondiente
+		}
+	  });
+	}
+
+	// Función para actualizar los dialectos del idioma seleccionado
+	function updateCountry() {
+	  // Eliminar las opciones existentes en select_dialect
+	  select_dialect.innerHTML = '';
+
+	  // Obtener la lista de dialectos del idioma seleccionado
+	  const list = langs[select_language.selectedIndex];
+
+	  // Agregar nuevas opciones al select_dialect
+	  for (let i = 1; i < list.length; i++) {
+		select_dialect.options.add(new Option(list[i][1], list[i][0]));
+	  }
+
+	  // Mostrar u ocultar el select_dialect según las opciones disponibles
+	  select_dialect.style.visibility = list.length > 1 ? 'visible' : 'hidden';
+	}
+  </script>
+</html>
