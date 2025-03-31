@@ -24,15 +24,15 @@
     </div>
     <div class="mt-4">
       <button class="btn btn-success" id="start">Start</button>
-      <button class="btn btn-danger" id="stop">Stop</button>
+      <button class="btn btn-danger" id="stop" style="display:none;">Stop</button>
       <p id="status" class="lead mt-3 text-light" style="display: none">Escuchando ...</p>
     </div>
   </body>
   <script>
+	bool isListening = false;
 	if ("webkitSpeechRecognition" in window) {
 	  let speechRecognition = new webkitSpeechRecognition();
 	  let final_transcript = "";
-	  bool isListening = false;
 
 	  speechRecognition.continuous = true;
 	  speechRecognition.interimResults = true;
@@ -66,14 +66,14 @@
 
 	  document.querySelector("#start").onclick = () => {
 		speechRecognition.lang = document.querySelector("#select_dialect").value;
-		document.querySelector("#start").style.display = (!isListening) ? 'none' : 'block';
+		document.querySelector("#start").style.display = (!this.isListening) ? 'none' : 'block';
 		speechRecognition.start();
-		isListening = true;
+		this.isListening = true;
 	  };
 	  document.querySelector("#stop").onclick = () => {
-		document.querySelector("#stop").style.display = (isListening) ? 'none' : 'block';
+		document.querySelector("#stop").style.display = (this.isListening) ? 'none' : 'block';
 		speechRecognition.stop();
-		isListening = false;
+		this.isListening = false;
 	  };
 	} else {
 	  console.log("Speech Recognition Not Available");
