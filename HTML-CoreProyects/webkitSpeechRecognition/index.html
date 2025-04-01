@@ -36,7 +36,7 @@
 		isListening = (isListening) ? false : true;
 	}
 	if ("webkitSpeechRecognition" in window) {
-	  let speechRecognition = new webkitSpeechRecognition();
+	  let speechRecognition = new SpeechRecognition || new webkitSpeechRecognition;
 	  let final_transcript = "";
 
 	  speechRecognition.continuous = true;
