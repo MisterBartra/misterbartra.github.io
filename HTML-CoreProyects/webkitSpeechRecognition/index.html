@@ -36,7 +36,7 @@
 		isListening = (isListening) ? false : true;
 	}
 	if ("webkitSpeechRecognition" in window) {
-	  let speechRecognition = new SpeechRecognition || new webkitSpeechRecognition;
+	  let speechRecognition = new webkitSpeechRecognition;
 	  let final_transcript = "";
 
 	  speechRecognition.continuous = true;
@@ -61,10 +61,10 @@
 		let interim_transcript = "";
 		for (let i = event.resultIndex; i < event.results.length; ++i) {
 		  if (event.results[i].isFinal) {
-			var currentDialog = document.createElement("text"); // Item que separa dialogos
-			currentDialog.innerHTML = event.results[i][0].transcript + "\n";
-			final_transcript.appendChild(currentDialog);
-			final_transcript += event.results[i][0].transcript + "\n";
+			//var currentDialog = document.createElement("text"); // Item que separa dialogos
+			//currentDialog.innerHTML = event.results[i][0].transcript + "\n";
+			//final_transcript.appendChild(currentDialog);
+			final_transcript += event.results[i][0].transcript;
 		  } else {
 			interim_transcript += event.results[i][0].transcript;
 		  }
