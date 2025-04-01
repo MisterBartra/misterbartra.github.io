@@ -31,9 +31,9 @@
   <script>
 	var isListening = false;
 	function listenSpeechLapsus() {
-		isListening = (isListening) ? false : true;
 		document.querySelector("#start").style.display = (isListening) ? 'block' : 'none';
 		document.querySelector("#stop").style.display = (isListening) ? 'none' : 'block';
+		isListening = (isListening) ? false : true;
 	}
 	if ("webkitSpeechRecognition" in window) {
 	  let speechRecognition = new webkitSpeechRecognition();
@@ -64,14 +64,14 @@
 			var currentDialog = document.createElement("text"); // Item que separa dialogos
 			currentDialog.innerHTML = event.results[i][0].transcript + "\n";
 			final_transcript.appendChild(currentDialog);
-			listenSpeechLapsus();
+			final_transcript += event.results[i][0].transcript + "\n";
 		  } else {
 			interim_transcript += event.results[i][0].transcript;
 		  }
 		}
 		console.log("Tiene resultado:\n " + final_transcript);
-		document.querySelector("#final").innerHTML += final_transcript;
-		document.querySelector("#interim").innerHTML += interim_transcript;
+		document.querySelector("#final").innerHTML = final_transcript;
+		document.querySelector("#interim").innerHTML = interim_transcript;
 	  };
 
 	  document.querySelector("#start").onclick = () => {
@@ -81,7 +81,6 @@
 	  };
 	  document.querySelector("#stop").onclick = () => {
 		speechRecognition.stop();
-		listenSpeechLapsus();
 	  };
 	} else {
 	  console.log("Speech Recognition Not Available");
@@ -187,7 +186,7 @@
 	  select_dialect.innerHTML = '';
 	  // Obtener la lista de dialectos del idioma seleccionado
 	  const list = langs[select_language.selectedIndex];
-
+	  //window.location.
 	  // Agregar nuevas opciones al select_dialect
 	  for (let i = 1; i < list.length; i++) {
 		select_dialect.options.add(new Option(list[i][1], list[i][0]));
