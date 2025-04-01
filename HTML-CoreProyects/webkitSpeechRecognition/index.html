@@ -12,13 +12,13 @@
     <title>Habla a texto</title>
   </head>
   <body class="container pt-5 bg-dark">
-    <div class="mt-4" id="div_language">
+    <div class="mt-4" id="div_language" style=" display: flex; justify-content: space-between; gap: 2.5vw; vertical-align: middle;">
       <h2 class="mb-3 text-light">Seleccionar lenguaje:</h2>
       <select class="form-select bg-secondary text-light" id="select_language" onchange="updateCountry()"></select>
-      <select class="form-select bg-secondary text-light mt-2" id="select_dialect"></select>
+      <select class="form-select bg-secondary text-light mt-2" id="select_dialect" style=" margin: .25rem !important;"></select>
     </div>
     <h2 class="mt-4 text-light">Transcripción</h2>
-    <div class="p-3" style="border: 1px solid gray; height: 300px; border-radius: 8px;">
+    <div class="p-3" style="border: 1px solid gray; /*height: 300px;*/ border-radius: 8px;">
       <span id="final" class="text-light"></span>
       <span id="interim" class="text-secondary"></span>
     </div>
@@ -169,9 +169,9 @@
 	if (dialectParam) {
 	  langs.forEach((lang, langIndex) => {
 		const dialectIndex = lang.slice(1).findIndex(dialect => dialect[0] === dialectParam);
-		updateCountry(); // Actualizar dialectos antes de seleccionarlo
 		if (dialectIndex !== -1) {
 		  select_language.selectedIndex = langIndex; // Seleccionar el idioma correspondiente
+		  updateCountry(); // Actualizar dialectos antes de seleccionarlo
 		  select_dialect.selectedIndex = dialectIndex; // Seleccionar dialecto correspondiente
 		}
 	  });
