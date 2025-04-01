@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -29,8 +29,14 @@
     </div>
   </body>
   <script>
-	bool isListening = false;
+	function buttonListenSpeech() {
+		document.querySelector("#stop").style.display = (isListening) ? 'none' : 'block';
+		document.querySelector("#start").style.display = (isListening) ? 'none' : 'block';
+		isListening = (isListening) ? false : true;
+	}
 	if ("webkitSpeechRecognition" in window) {
+	boolean isListening = false;
+
 	  let speechRecognition = new webkitSpeechRecognition();
 	  let final_transcript = "";
 
@@ -40,19 +46,22 @@
 
 	  speechRecognition.onstart = () => {
 		document.querySelector("#status").style.display = "block";
+		buttonListenSpeech()
 	  };
 	  speechRecognition.onerror = () => {
 		document.querySelector("#status").style.display = "none";
+		buttonListenSpeech()
 		console.log("Speech Recognition Error");
 	  };
 	  speechRecognition.onend = () => {
 		document.querySelector("#status").style.display = "none";
+		buttonListenSpeech()
 		console.log("Speech Recognition Ended");
 	  };
 
 	  speechRecognition.onresult = (event) => {
 		let interim_transcript = "";
-
+		buttonListenSpeech()
 		for (let i = event.resultIndex; i < event.results.length; ++i) {
 		  if (event.results[i].isFinal) {
 			final_transcript += event.results[i][0].transcript;
@@ -66,9 +75,7 @@
 
 	  document.querySelector("#start").onclick = () => {
 		speechRecognition.lang = document.querySelector("#select_dialect").value;
-		document.querySelector("#start").style.display = (!this.isListening) ? 'none' : 'block';
 		speechRecognition.start();
-		this.isListening = true;
 	  };
 	  document.querySelector("#stop").onclick = () => {
 		document.querySelector("#stop").style.display = (this.isListening) ? 'none' : 'block';
@@ -155,37 +162,37 @@
 	// Obtener el parámetro de dialecto desde la URL
 	const urlParams = new URLSearchParams(window.location.search);
 	const dialectParam = urlParams.get('dl'); // Dialecto
+	//updateCountry(); // Actualizar dialectos antes de seleccionarlo
 
-	// Predeterminar idioma y dialecto si no hay parámetros
-	select_language.selectedIndex = 7; // Idioma predeterminado (Español)
-	updateCountry();
-	select_dialect.selectedIndex = 11; // Dialecto predeterminado (primero en la lista)
-
-	// Buscar el idioma y el dialecto correspondientes si el parámetro existe
+		// Buscar el idioma y el dialecto correspondientes si el parámetro existe
 	if (dialectParam) {
 	  langs.forEach((lang, langIndex) => {
 		const dialectIndex = lang.slice(1).findIndex(dialect => dialect[0] === dialectParam);
+		updateCountry(); // Actualizar dialectos antes de seleccionarlo
 		if (dialectIndex !== -1) {
 		  select_language.selectedIndex = langIndex; // Seleccionar el idioma correspondiente
-		  updateCountry(); // Actualizar dialectos antes de seleccionarlo
 		  select_dialect.selectedIndex = dialectIndex; // Seleccionar dialecto correspondiente
 		}
 	  });
+	} else {
+		select_language.selectedIndex = 7; // Idioma predeterminado (Español)
+		updateCountry();
+		select_dialect.selectedIndex = 11; // Dialecto predeterminado (primero en la lista)	
 	}
 
 	// Función para actualizar los dialectos del idioma seleccionado
 	function updateCountry() {
-	  // Eliminar las opciones existentes en select_dialect
-	  select_dialect.innerHTML = '';
-
+	 //for (var i = select_dialect.options.length - 1; i >= 0; i--) { select_dialect.remove(i); }
+		select_dialect.innerHTML = '';
 	  // Obtener la lista de dialectos del idioma seleccionado
 	  const list = langs[select_language.selectedIndex];
+	  console.log("Entra");
 
 	  // Agregar nuevas opciones al select_dialect
 	  for (let i = 1; i < list.length; i++) {
 		select_dialect.options.add(new Option(list[i][1], list[i][0]));
 	  }
-
+	  select_dialect.style.display = (select_dialect.options.length > 1) ? 'block' : 'none';
 	  // Mostrar u ocultar el select_dialect según las opciones disponibles
 	  select_dialect.style.visibility = list.length > 1 ? 'visible' : 'hidden';
 	}
