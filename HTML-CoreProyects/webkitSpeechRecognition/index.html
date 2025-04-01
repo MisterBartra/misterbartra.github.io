@@ -24,19 +24,18 @@
     </div>
     <div class="mt-4">
       <button class="btn btn-success" id="start">Start</button>
-      <button class="btn btn-danger" id="stop" style="display:none;">Stop</button>
+      <button class="btn btn-danger" id="stop" style="display: none;">Stop</button>
       <p id="status" class="lead mt-3 text-light" style="display: none">Escuchando ...</p>
     </div>
   </body>
   <script>
-	function buttonListenSpeech() {
-		document.querySelector("#stop").style.display = (isListening) ? 'none' : 'block';
-		document.querySelector("#start").style.display = (isListening) ? 'none' : 'block';
+	var isListening = false;
+	function listenSpeechLapsus() {
 		isListening = (isListening) ? false : true;
+		document.querySelector("#start").style.display = (isListening) ? 'block' : 'none';
+		document.querySelector("#stop").style.display = (isListening) ? 'none' : 'block';
 	}
 	if ("webkitSpeechRecognition" in window) {
-	boolean isListening = false;
-
 	  let speechRecognition = new webkitSpeechRecognition();
 	  let final_transcript = "";
 
@@ -46,41 +45,41 @@
 
 	  speechRecognition.onstart = () => {
 		document.querySelector("#status").style.display = "block";
-		buttonListenSpeech()
 	  };
 	  speechRecognition.onerror = () => {
 		document.querySelector("#status").style.display = "none";
-		buttonListenSpeech()
 		console.log("Speech Recognition Error");
+		listenSpeechLapsus()
 	  };
 	  speechRecognition.onend = () => {
 		document.querySelector("#status").style.display = "none";
-		buttonListenSpeech()
+		listenSpeechLapsus()
 		console.log("Speech Recognition Ended");
 	  };
 
 	  speechRecognition.onresult = (event) => {
 		let interim_transcript = "";
-		buttonListenSpeech()
 		for (let i = event.resultIndex; i < event.results.length; ++i) {
 		  if (event.results[i].isFinal) {
-			final_transcript += event.results[i][0].transcript;
+			final_transcript += event.results[i][0].transcript + "\n";
+			listenSpeechLapsus();
 		  } else {
 			interim_transcript += event.results[i][0].transcript;
 		  }
 		}
-		document.querySelector("#final").innerHTML = final_transcript;
-		document.querySelector("#interim").innerHTML = interim_transcript;
+		console.log("Tiene resultado:\n " + final_transcript);
+		document.querySelector("#final").innerHTML += final_transcript;
+		document.querySelector("#interim").innerHTML += interim_transcript;
 	  };
 
 	  document.querySelector("#start").onclick = () => {
 		speechRecognition.lang = document.querySelector("#select_dialect").value;
 		speechRecognition.start();
+		listenSpeechLapsus();
 	  };
 	  document.querySelector("#stop").onclick = () => {
-		document.querySelector("#stop").style.display = (this.isListening) ? 'none' : 'block';
 		speechRecognition.stop();
-		this.isListening = false;
+		listenSpeechLapsus();
 	  };
 	} else {
 	  console.log("Speech Recognition Not Available");
@@ -186,7 +185,6 @@
 		select_dialect.innerHTML = '';
 	  // Obtener la lista de dialectos del idioma seleccionado
 	  const list = langs[select_language.selectedIndex];
-	  console.log("Entra");
 
 	  // Agregar nuevas opciones al select_dialect
 	  for (let i = 1; i < list.length; i++) {
