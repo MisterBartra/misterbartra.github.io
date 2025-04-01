@@ -61,7 +61,9 @@
 		let interim_transcript = "";
 		for (let i = event.resultIndex; i < event.results.length; ++i) {
 		  if (event.results[i].isFinal) {
-			final_transcript += event.results[i][0].transcript + "\n";
+			var currentDialog = document.createElement("text"); // Item que separa dialogos
+			currentDialog.innerHTML = event.results[i][0].transcript + "\n";
+			final_transcript.appendChild(currentDialog);
 			listenSpeechLapsus();
 		  } else {
 			interim_transcript += event.results[i][0].transcript;
