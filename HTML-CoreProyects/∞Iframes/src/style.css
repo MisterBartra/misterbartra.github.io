@@ -1,32 +1,713 @@
-html, body, iframe, div, button, span { margin: 0; padding: 0;
-scroll-behavior: smooth; border: none; overflow: hidden;
-font-size: 3vh; line-height: 3.5vh; color: #fffb; } body { background-color: #242424;}
-iframe { display: block; overflow: visible; width: 100vw; height: 100vh; }
-input { display: none; }
-#iframe-container { display: flex; flex-wrap: wrap; position: absolute; top:0vw; left:0vw;
-    z-index: -1; transition: transform 0.5s ease-in-out; }
-#pivot-btns { position: fixed; overflow: visible; cursor: pointer;
-    z-index: 0; left: 47.5vw; top: 46vh; }
-.circle {resize: none; position: absolute; border-radius: 50%; box-shadow: rgba(121, 119, 119, 0.55) 0px 0px 20px 10px;}
-.gray { background-color: #3a3a3a;}
-.light-gray { background-color: #4c538b;}
-.scroll-btn { z-index: 1; left: 0vw; top: 0vh; width: 8vh; height: 8vh; display: none; opacity:0.5; transition: transform 0.095s ease-out; border:0px;}
- .scroll-btn:hover {background-color: #3b3b3b73;}
- #scroll-left { transform: translate(-47vw, 0); animation: start_leftButton 0.5s ease-in-out;} #scroll-right { transform: translate(47vw, 0); animation: start_rightButton 0.5s ease-in-out;} #scroll-up { transform: translate(0, -47vh); animation: start_upButton 0.5s ease-in-out;} #scroll-down { transform: translate(0, 47vh); animation: start_downButton 0.5s ease-in-out;}
- #hitboxes { overflow: visible; }
- #hitboxes div { z-index: -1; position: absolute; display: none;}
- #hitboxes div:hover { background-color: #55525202;}
- #hitbox-left, #hitbox-up { left: 0vw; top: 0vh; } #hitbox-right, #hitbox-down { right: 0vw; bottom: 0vh; }
-  #hitbox-left, #hitbox-right { width: 8px; height: 100vh;} #hitbox-up, #hitbox-down { width: 100vw; height: 8px;}
-  #scroll-hideButtons {z-index: 1; left: 47.5vw; top: 46vh; width: 2.5vw; height: 2.5vw; overflow: visible; opacity:0.4; animation: solidify 1.5s ease-out;} #import_loadjson { left: -4vh; top: -4vh; width:3vw; height:3vw; }
-  @keyframes start_leftButton { 0%{opacity:0.35; transform: translate(0,0); }
-    100%{opacity:0.7;transform: translate(calc(-46.5vw + 0px), 0); } }
-  @keyframes start_rightButton { 0%{opacity:0.35; transform: translate(0,0); }
-    100%{opacity:0.7;transform: translate(calc(46.5vw + 0px), 0); } }
-  @keyframes start_upButton { 0%{opacity:0.35; transform: translate(0,0); }
-    100%{opacity:0.7;transform: translate(0, calc(-46.5vh + 0px)); } }
-  @keyframes start_downButton { 0%{opacity:0.35; transform: translate(0,0); }
-    100%{opacity:0.7;transform: translate(0, calc(46.5vh + 0px)); } }
-  @keyframes solidify { 0%{opacity:0.05; }
-    100%{opacity:0.4; } }
-    
+/* Variables de color inspiradas en shadcn */
+:root {
+	--background: 240 10% 3.9%;
+	--foreground: 0 0% 98%;
+	--card: 240 10% 3.9%;
+	--card-foreground: 0 0% 98%;
+	--popover: 240 10% 3.9%;
+	--popover-foreground: 0 0% 98%;
+	--primary: 240 5.9% 10%;
+	--primary-foreground: 0 0% 98%;
+	--secondary: 240 3.7% 15.9%;
+	--secondary-foreground: 0 0% 98%;
+	--muted: 240 3.7% 15.9%;
+	--muted-foreground: 240 5% 64.9%;
+	--accent: 240 3.7% 15.9%;
+	--accent-foreground: 0 0% 98%;
+	--destructive: 0 62.8% 30.6%;
+	--destructive-foreground: 0 0% 98%;
+	--border: 240 3.7% 15.9%;
+	--input: 240 3.7% 15.9%;
+	--ring: 240 4.9% 83.9%;
+	--radius: 0.5rem;
+}
+
+/* Estilos generales */
+html, body {
+	margin: 0;
+	padding: 0;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+	overflow: hidden;
+	background-color: hsl(var(--background));
+	color: hsl(var(--foreground));
+	height: 100%;
+	width: 100%;
+	transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Contenedor principal */
+#root {
+	width: 100%;
+	height: 100%;
+	position: relative;
+}
+
+/* Contenedor de iframes */
+.iframe-container {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	display: grid;
+	transition: transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Contenedor individual de iframe con inset */
+.iframe-cell {
+	position: relative;
+	width: 100vw;
+	height: 100vh;
+	overflow: hidden;
+	background-color: transparent; /* Inicialmente transparente */
+}
+
+/* Wrapper para cada iframe con inset */
+.iframe-wrapper {
+	position: absolute;
+	/* El inset se calculará dinámicamente basado en la profundidad */
+	border-radius: var(--radius);
+	overflow: hidden;
+	box-shadow: inset 0 0 0 1px hsl(var(--border) / 0.2);
+	background-color: transparent; /* Inicialmente transparente */
+	transition: background-color 0.5s ease, top 0.3s ease, left 0.3s ease, right 0.3s ease, bottom 0.3s ease;
+	z-index: 996; /* Añadir z-index menor que las hitboxes */
+	pointer-events: auto; /* Permitir interacción con el iframe */
+}
+
+/* Iframes */
+iframe {
+	border: none;
+	width: 100%;
+	height: 100%;
+	display: block;
+	overflow: visible;
+}
+
+/* Botones de navegación */
+.nav-button {
+	position: fixed;
+	width: 48px;
+	height: 48px;
+	border-radius: 12px;
+	background-color: rgba(255, 255, 255, 0.2);
+	color: #000;
+	border: 1px solid rgba(255, 255, 255, 0.3);
+	font-size: 20px;
+	cursor: pointer;
+	transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+	z-index: 1000;
+	opacity: 0;
+	pointer-events: none;
+	transform: translate(-50%, -50%);
+}
+
+.nav-button.visible {
+	opacity: 0.4;
+	pointer-events: auto;
+}
+
+.nav-button:hover {
+	background-color: rgba(255, 255, 255, 0.3);
+	transform: translate(-50%, -50%) scale(1.05);
+	opacity: 0.8;
+}
+
+/* Iconos SVG para los botones */
+.nav-button svg {
+	width: 24px;
+	height: 24px;
+	stroke: currentColor;
+	stroke-width: 2;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+	fill: none;
+}
+
+/* Botón de visibilidad siempre visible */
+.toggle-button {
+	position: fixed;
+	bottom: 20px;
+	right: 20px;
+	width: 48px;
+	height: 48px;
+	border-radius: 12px;
+	background-color: rgba(255, 255, 255, 0.2);
+	color: #000;
+	border: 1px solid rgba(255, 255, 255, 0.3);
+	font-size: 20px;
+	cursor: pointer;
+	transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+	z-index: 1001;
+	opacity: 0.5;
+	transform: none;
+}
+
+.toggle-button:hover {
+	background-color: rgba(255, 255, 255, 0.3);
+	transform: scale(1.05);
+	opacity: 0.8;
+}
+
+.toggle-button svg {
+	width: 24px;
+	height: 24px;
+	stroke: currentColor;
+	stroke-width: 2;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+	fill: none;
+}
+
+/* Detectores de esquina y bordes */
+.edge-detector {
+	position: fixed;
+	z-index: 997;
+	background-color: transparent;
+	transition: background-color 0.3s ease, top 0.3s ease, left 0.3s ease, right 0.3s ease, bottom 0.3s ease, width 0.3s ease, height 0.3s ease;
+}
+
+.edge-detector:hover {
+	background-color: hsl(var(--secondary) / 0.1);
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+	from { opacity: 0; }
+	to { opacity: 0.7; }
+}
+
+@keyframes fadeOut {
+	from { opacity: 0.7; }
+	to { opacity: 0; }
+}
+
+/* Estilos para el selector de JSON */
+.json-selector {
+	position: fixed;
+	bottom: 20px;
+	left: 20px;
+	z-index: 1000;
+	opacity: 0;
+	pointer-events: none;
+	transition: opacity 0.3s ease;
+}
+
+.json-selector.visible {
+	opacity: 0.7;
+	pointer-events: auto;
+}
+
+.json-button {
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	background-color: hsl(var(--secondary));
+	color: hsl(var(--secondary-foreground));
+	border: 1px solid hsl(var(--border));
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	box-shadow: 0 2px 10px hsl(var(--background) / 0.5);
+	transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.json-selector.visible .json-button:hover {
+	background-color: hsl(var(--accent));
+	transform: scale(1.1);
+	opacity: 1;
+}
+
+.json-input {
+	display: none;
+}
+
+/* Estilos para el modo claro */
+.light-mode {
+	--background: 0 0% 100%;
+	--foreground: 240 10% 3.9%;
+	--card: 0 0% 100%;
+	--card-foreground: 240 10% 3.9%;
+	--popover: 0 0% 100%;
+	--popover-foreground: 240 10% 3.9%;
+	--primary: 240 5.9% 10%;
+	--primary-foreground: 0 0% 98%;
+	--secondary: 240 4.8% 95.9%;
+	--secondary-foreground: 240 5.9% 10%;
+	--muted: 240 4.8% 95.9%;
+	--muted-foreground: 240 3.8% 46.1%;
+	--accent: 240 4.8% 95.9%;
+	--accent-foreground: 240 5.9% 10%;
+	--destructive: 0 84.2% 60.2%;
+	--destructive-foreground: 0 0% 98%;
+	--border: 240 5.9% 90%;
+	--input: 240 5.9% 90%;
+	--ring: 240 5.9% 10%;
+}
+
+/* Tooltip */
+.tooltip {
+	position: absolute;
+	background-color: hsl(var(--popover));
+	color: hsl(var(--popover-foreground));
+	padding: 5px 10px;
+	border-radius: var(--radius);
+	font-size: 14px;
+	pointer-events: none;
+	opacity: 0;
+	transition: opacity 0.2s ease;
+	box-shadow: 0 2px 10px hsl(var(--background) / 0.3);
+	border: 1px solid hsl(var(--border));
+	z-index: 1100;
+	white-space: nowrap;
+}
+
+/* Notificación */
+.notification {
+	position: fixed;
+	top: 20px;
+	right: 20px;
+	background-color: hsl(var(--secondary));
+	color: hsl(var(--secondary-foreground));
+	padding: 10px 20px;
+	border-radius: var(--radius);
+	box-shadow: 0 2px 10px hsl(var(--background) / 0.3);
+	border: 1px solid hsl(var(--border));
+	z-index: 1100;
+	opacity: 0;
+	transform: translateY(-20px);
+	transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.notification.show {
+	opacity: 0.6;
+	transform: translateY(0);
+}
+
+/* Loader */
+.loader {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: hsl(var(--background) / 0.7);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	z-index: 2000;
+	backdrop-filter: blur(5px);
+}
+
+.loader-spinner {
+	width: 50px;
+	height: 50px;
+	border: 5px solid hsl(var(--border));
+	border-top-color: hsl(var(--primary));
+	border-radius: 50%;
+	animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+	to { transform: rotate(360deg); }
+}
+
+/* Botón de modo oscuro/claro */
+.theme-toggle {
+	position: fixed;
+	top: 20px;
+	right: 20px;
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	background-color: hsl(var(--secondary));
+	color: hsl(var(--secondary-foreground));
+	border: 1px solid hsl(var(--border));
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	box-shadow: 0 2px 10px hsl(var(--background) / 0.5);
+	z-index: 1000;
+	opacity: 0;
+	pointer-events: none;
+	transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.theme-toggle.visible {
+	opacity: 0.7;
+	pointer-events: auto;
+}
+
+.theme-toggle.visible:hover {
+	background-color: hsl(var(--accent));
+	transform: scale(1.1);
+	opacity: 1;
+}
+
+/* Botón de configuración */
+.settings-button {
+	position: fixed;
+	bottom: 20px;
+	left: 20px;
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	background-color: hsl(var(--secondary));
+	color: hsl(var(--secondary-foreground));
+	border: 1px solid hsl(var(--border));
+	cursor: pointer;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	box-shadow: 0 2px 10px hsl(var(--background) / 0.5);
+	z-index: 1000;
+	opacity: 0;
+	pointer-events: none;
+	transition: all 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.settings-button.visible {
+	opacity: 0.7;
+	pointer-events: auto;
+}
+
+.settings-button.visible:hover {
+	background-color: hsl(var(--accent));
+	transform: scale(1.1);
+	opacity: 1;
+}
+
+/* Panel de configuración */
+.settings-panel {
+	position: fixed;
+	bottom: 70px;
+	left: 20px;
+	background-color: hsl(var(--card));
+	color: hsl(var(--card-foreground));
+	padding: 15px;
+	border-radius: var(--radius);
+	box-shadow: 0 2px 10px hsl(var(--background) / 0.3);
+	border: 1px solid hsl(var(--border));
+	z-index: 1000;
+	opacity: 0;
+	pointer-events: none;
+	transition: opacity 0.3s ease;
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.settings-panel.visible {
+	opacity: 1;
+	pointer-events: auto;
+}
+
+.settings-button-row {
+	display: flex;
+	gap: 10px;
+}
+
+.settings-button-row button {
+	padding: 8px 12px;
+	border-radius: var(--radius);
+	background-color: hsl(var(--secondary));
+	color: hsl(var(--secondary-foreground));
+	border: 1px solid hsl(var(--border));
+	cursor: pointer;
+	transition: all 0.2s ease;
+}
+
+.settings-button-row button:hover {
+	background-color: hsl(var(--accent));
+}
+
+/* Indicador de carga */
+.loading-indicator {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.loading-spinner {
+	width: 32px;
+	height: 32px;
+	border: 3px solid hsl(var(--border));
+	border-top-color: hsl(var(--primary));
+	border-radius: 50%;
+	animation: spin 1s linear infinite;
+}
+
+/* Estilos para matrices anidadas */
+.nested-matrix-container {
+	position: relative;
+	width: 100%;
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background-color: rgba(0, 0, 0, 0.05);
+	border-radius: var(--radius);
+}
+
+.nested-matrix-button {
+	padding: 10px 20px;
+	background-color: hsl(var(--primary));
+	color: hsl(var(--primary-foreground));
+	border: none;
+	border-radius: var(--radius);
+	cursor: pointer;
+	font-size: 16px;
+	transition: all 0.2s ease;
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.nested-matrix-button:hover {
+	transform: scale(1.05);
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.nested-matrix-info {
+	position: absolute;
+	bottom: 20px;
+	font-size: 14px;
+	color: rgba(255, 255, 255, 0.7);
+	text-align: center;
+	width: 100%;
+}
+
+/* Estilos para el sistema de navegación jerárquica */
+.matrix-nav-panel {
+	position: fixed;
+	top: 20px;
+	right: 20px;
+	background-color: rgba(0, 0, 0, 0.8);
+	color: white;
+	border-radius: 8px;
+	padding: 12px;
+	z-index: 2000;
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+	max-width: 300px;
+	transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.matrix-nav-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 10px;
+	padding-bottom: 8px;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.matrix-nav-title {
+	font-weight: bold;
+	margin: 0;
+	font-size: 14px;
+}
+
+.matrix-nav-close {
+	background: none;
+	border: none;
+	color: white;
+	cursor: pointer;
+	font-size: 16px;
+	padding: 0;
+	width: 20px;
+	height: 20px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	opacity: 0.7;
+}
+
+.matrix-nav-close:hover {
+	opacity: 1;
+}
+
+.matrix-nav-controls {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 5px;
+}
+
+.matrix-nav-button {
+	background-color: rgba(255, 255, 255, 0.2);
+	border: 1px solid rgba(255, 255, 255, 0.3);
+	color: white;
+	border-radius: 4px;
+	padding: 8px;
+	cursor: pointer;
+	font-size: 14px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	transition: background-color 0.2s ease;
+}
+
+.matrix-nav-button:hover {
+	background-color: rgba(255, 255, 255, 0.3);
+}
+
+.matrix-nav-info {
+	margin-top: 10px;
+	font-size: 12px;
+	opacity: 0.8;
+}
+
+.matrix-nav-level {
+	display: inline-block;
+	padding: 2px 6px;
+	background-color: rgba(255, 255, 255, 0.2);
+	border-radius: 10px;
+	font-size: 10px;
+	margin-left: 5px;
+}
+
+.matrix-nav-level-0 { background-color: #4caf50; }
+.matrix-nav-level-1 { background-color: #2196f3; }
+.matrix-nav-level-2 { background-color: #f44336; }
+.matrix-nav-level-3 { background-color: #ff9800; }
+.matrix-nav-level-4 { background-color: #9c27b0; }
+
+/* Botón de salida más visible */
+.nav-button.exit {
+	background-color: rgba(255, 100, 100, 0.3);
+	border: 1px solid rgba(255, 100, 100, 0.5);
+}
+
+.nav-button.exit:hover {
+	background-color: rgba(255, 100, 100, 0.5);
+}
+
+/* Indicador de nivel de profundidad */
+.depth-indicator {
+	display: none;
+	position: fixed;
+	top: 10px;
+	left: 10px;
+	background-color: rgba(0, 0, 0, 0.5);
+	color: white;
+	padding: 5px 10px;
+	border-radius: 15px;
+	font-size: 12px;
+	z-index: 1000;
+	pointer-events: none;
+}
+
+/* NUEVOS ESTILOS PARA MATRICES ANIDADAS */
+
+/* Indicador visual de matriz anidada */
+.nested-matrix-indicator {
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	width: 24px;
+	height: 24px;
+	background-color: rgba(33, 150, 243, 0.8);
+	border-radius: 4px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	z-index: 998;
+	box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+	pointer-events: none;
+}
+
+.nested-matrix-indicator svg {
+	width: 16px;
+	height: 16px;
+	fill: white;
+}
+
+/* Overlay interactivo */
+.nested-matrix-overlay {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.3);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	transition: background-color 0.3s ease;
+	z-index: 999;
+}
+
+.nested-matrix-overlay:hover {
+	background-color: rgba(0, 0, 0, 0.5);
+}
+
+.nested-matrix-overlay svg {
+	width: 32px;
+	height: 32px;
+	fill: white;
+	opacity: 0.8;
+	transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.nested-matrix-overlay:hover svg {
+	opacity: 1;
+	transform: scale(1.1);
+}
+
+/* Contenedor para matriz anidada */
+.nested-matrix-with-preview {
+	position: relative;
+	width: 100%;
+	height: 100%;
+}
+
+/* Ruta de navegación jerárquica */
+.hierarchy-path {
+	visibility: hidden;
+	position: fixed;
+	top: 10px;
+	left: 50%;
+	transform: translateX(-50%);
+	background-color: rgba(0, 0, 0, 0.6);
+	color: white;
+	padding: 5px 10px;
+	border-radius: 15px;
+	font-size: 12px;
+	z-index: 1000;
+	display: flex;
+	align-items: center;
+	gap: 5px;
+	max-width: 80%;
+	overflow-x: auto;
+	white-space: nowrap;
+}
+
+.hierarchy-path-item {
+	display: flex;
+	align-items: center;
+	padding: 2px 6px;
+	background-color: rgba(255, 255, 255, 0.2);
+	border-radius: 10px;
+	cursor: pointer;
+	transition: background-color 0.2s ease;
+}
+
+.hierarchy-path-item:hover {
+	background-color: rgba(255, 255, 255, 0.3);
+}
+
+.hierarchy-path-separator {
+	color: rgba(255, 255, 255, 0.5);
+}
