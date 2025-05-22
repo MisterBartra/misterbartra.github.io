@@ -1,4 +1,4 @@
-// Clase principal para gestionar la aplicación
+// Clase principal para gestionar la aplicación:
 class IframeMatrixViewer {
 	constructor(rootElement) {
 		this.root = rootElement;
