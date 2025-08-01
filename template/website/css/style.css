@@ -1,0 +1,524 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;400;700;900&display=swap');
+/* Asi se hace referecnia a las fuente de Google indicada con sus estilos seleccionados */
+@import url('https://fonts.googleapis.com/css2?family=Lobster&display=swap');
+
+html{
+    scroll-behavior: smooth;
+}
+
+body{/* Asi se define una regla de estilos para el objeto body */
+    background-color: #dddddd;/* Color de fondo */
+    font-family: 'Poppins', Tahoma, Arial, sans-serif;/* Asi se indica el tipo de letra 
+    y se ha indicado además fuentes alternativas */
+    margin: 0; /* Anula el margen por defecto que tiene body */
+    font-size: 16px;
+}
+figure{
+    margin:0;/* Esto anula el margen que por defecto tienen los figure */
+}
+img{
+    display: block;/* Esto es para anular el espacio por defecto de cada imagen */
+}
+p{
+    margin-top:0;/* margen superior */
+    margin-bottom: 16px;/* margen inferior */
+    line-height: 22px;/* alto de línea o interlineado */
+}
+/*  COLORES
+    En hexadecimal base 16  0123456789ABCDEF
+    Cada pareja es un color  FF  rojo    00   verde  00  azul    
+    #A2F739  ->>>  A2 rojo   F7 verde    39   azul 
+    RGB
+    */
+a{
+    color:#ff0000;
+    text-decoration: none;
+}
+a:hover{
+    color:#be8125;
+    text-decoration: underline;
+}
+
+h1, h2 ,h3, h4, h5, h6{
+    margin:0;
+    line-height: 0.9em;/* em es una unidad porcentual en este caso es el 90% del tamaño de la letra */
+}
+
+h1{
+    font-family: 'Lobster', cursive;
+    /*font-weight: 900;*/
+    font-size: 48px;
+    letter-spacing: -3px; /* Espacio entre letra y letra */
+}
+
+h2{
+    font-weight: 200;
+    font-size: 40px;
+    letter-spacing: -2px;
+    text-transform: lowercase; /* Muestra los textos en minúscula */
+    margin-bottom: 45px;
+    text-align: center;
+    position: relative;
+    display: flex;
+    justify-content: center;
+}
+h2:after{
+    content:" ";
+    background-color: #ff0000;
+    position: absolute;
+    width: 40px;
+    height: 2px;
+    bottom: -10px;
+}
+h3{
+    font-weight: 700;
+    font-size: 20px;
+    letter-spacing: -1px;
+    text-transform: uppercase; /* Muestra los textos en mayúscula */
+    margin-bottom: 10px;
+}
+
+/* MENU  *************************************************************************/
+.menu{
+    padding: 0;
+    margin: 0;
+    list-style: none;/* Anula las viñetas */
+    display: flex;
+}
+.menu li a{
+    display: block;
+    transition: .5s all ease-in-out;
+}
+.menu-top li a{
+    padding: 8px 12px;/* Arriba y Abajo / Izquierda y derecha   */
+    color:#dddddd;
+    font-size: 13px;
+    border-right: 1px solid #555;
+}
+
+.menu-top li a:hover{
+    text-decoration: none;
+    background-color: #555555;
+}
+.menu-top li:last-child a{
+    border-right:none;
+}
+
+.menu-main li a{
+    color: #000000;
+    padding: 24px 12px;/* Arriba y Abajo / Izquierda y derecha   */
+    border-bottom: solid 2px transparent;
+}
+.menu-main li a:hover{
+    text-decoration: none;
+    border-bottom: solid 2px #ff0000;
+}
+
+
+#top-nav{
+    background-color: #0D2E41;
+}
+#top-nav .row{
+    justify-content: space-between;
+}
+#main-header{
+    background-color: #ffffff;
+    position: sticky;
+    top:0;
+    z-index: 2000;/* Controla el orden de profundidad de los objetos */
+}
+
+#main-header p{/* El espacio significa dentro de (El párrafo que está dentro de main-header) */
+    margin-bottom: 0;
+}
+#main-header .row{
+    justify-content: space-between;
+}
+#main-content{
+    min-height: 600px;
+}
+#logo{
+    width: 180px;
+    padding: 15px;
+}
+#banner{
+    /* Para centrar la imagen del banner */
+    display: flex;
+    justify-content: center;
+    position: relative;
+}
+#banner-leyenda{
+    position: absolute;
+    bottom: -40px;
+    background-color: #ffffff;
+    width: 50%;
+    padding: 30px;
+    box-sizing: border-box;
+    box-shadow: 0px 20px 20px 4px rgb(0 0 0 / 30%);
+    animation: animacion-banner-leyenda 0.8s ease-out;
+}
+
+
+#mensaje{/* Así se define una regla para un objeto por su id (empieza con #) */
+    background-color: #F8AF2C;
+    color:#ffffff;/* Color de texto */
+}
+#mensaje a{
+    color:#000000;
+}
+#mensaje a:hover{
+    color:#44AD9F;
+}
+#videos{
+    background-color: #000000;
+    color:#ffffff;
+}
+#noticias{
+    background-color: #bbbbbb;
+}
+#noticias .col{
+    border: solid 15px #eee;
+    /* #eee = #eeeeee 
+    por ejemplo: 
+        #fc5 = #ffcc55
+    */
+    margin: 0 15px;/* superior e inferior / izquierda y derecha   */
+    padding-top: 30px;
+    /* margin es distancia del borde hacia afuera
+    padding es distancia del borde hacia adentro */
+}
+#anuncio{
+    background-image: url("../images/concierto.jpg");
+    background-size: cover; /* La imagen debe cubrir lo maximo de su contenedor */
+    background-position: left bottom;
+    background-attachment: fixed;/* Para que la imagen quede fija respecto al navegador */
+    color: #ffffff;
+}
+
+#anuncio p{
+    font-weight: 200;
+    font-size: 64px;
+    font-style: italic;
+    line-height: 56px;
+    letter-spacing: -5px;
+}
+#cursos img{
+    margin-bottom: 20px;
+}
+#cursos .col{
+    border: solid 1px #fff;
+    margin: 0 15px;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    border-radius: 15px;
+    background-color: #eee;
+}
+#frase{
+    background-color: #44AD9F;
+    color: #dddddd;
+}
+#frase h2{
+    border-top: solid 1px #444;
+    padding-top: 30px;
+    border-bottom: solid 1px #444;
+    padding-bottom: 30px;
+
+
+}
+
+#empresa{
+    background-color: #0D2E41;
+    color: #dddddd;
+    text-align: right;
+}
+#empresa h2{
+    text-align: right;
+}
+
+#valores{
+    text-align: center;
+}
+
+#valores i{
+    background-color: #FA6135;
+    padding: 26px 20px;
+    border-radius: 50%;
+    color: #eeeeee;
+}
+#valores h3{
+    margin-top: 20px;
+}
+
+#eventos{
+    background-color: #00798A;
+    color:#ffffff;
+}
+#eventos a{
+    color: #ccff55;
+}
+#eventos a:hover{
+    color: #ff0000;
+    text-decoration: none;
+}
+
+#colaboradores{
+    background-color: #ffffff;
+}
+
+#colaboradores img{
+    border-radius: 50%;
+    margin-bottom: 30px;
+    margin-top: 30px;
+    box-shadow: 5px 8.66px 30px 0 #777777;
+    border:solid 10px #eeeeee
+}
+#colaboradores .col{
+    padding-left: 30px;
+    padding-right: 30px;
+}
+
+#main-footer{
+    padding-top: 45px;
+    padding-bottom: 45px;
+    background-color: #444444;
+    color: #eeeeee;
+}
+#ir-arriba{
+    background-color: #ff0000;
+    color: #ffffff;
+    font-size: 20px;
+    padding: 15px 21px;/* arriba y abajo   /   izquierda y derecha  */
+    border-radius: 50%;
+    position: fixed;
+    right: 30px;
+    bottom: 50px;
+    transition: .5s all ease-in-out;
+    animation: animacion-ir-arriba 2s ease-in-out infinite;
+}
+#ir-arriba:hover{
+    bottom: 55px;
+    box-shadow: 5px 8.66px 30px 0 rgba(0,0,0,0.5);
+}
+.padded{/* Así se define una regla una clase (empieza con .) 
+    Una clase se puede aplicar a varios objetos */
+    padding-top: 90px; /* margen interno superior */
+    padding-bottom: 90px; /* margen interno inferior */
+}
+.container{
+    max-width: 1440px; /* Ancho máximo */
+    margin-left: auto;
+    margin-right: auto;/* Al ser ambos márgenes automáticos, ambos son iguales
+    por tanto su contenido se ve centrado */
+
+    padding-left: 15px;
+    padding-right: 15px;
+}
+.row{
+    display: flex; /* Es para que los elementos que contiene, por defecto estén uno al costado del otro */
+
+    /* para que anule el padding sobrante entre la clase col y container */
+    margin-left: -15px;
+    margin-right: -15px;
+    flex-wrap: wrap; /* Si el contenido supera al ancho que pase a la siguiente fila */
+}
+.col{
+    padding-left:15px;
+    padding-right:15px;
+
+    /* Para que las columnas tengan el mismo ancho */
+    flex-basis: 0;
+    flex-grow: 1;
+    box-sizing: border-box;/* Para que el padding no incremente el ancho */
+}
+.col-50{
+    flex-basis: 50%;
+    max-width: 50%; /* Para que el ancho sea la mitad de su contenedor */
+    
+}
+.col-33{
+    flex-basis: 33.33%;
+    max-width: 33.33%;
+}
+.col-66{
+    flex-basis: 66.66%;
+    max-width: 66.66%;
+}
+.col-figura{
+    flex-basis: 16.66%;
+    max-width: 16.66%; /* Para que el ancho sea la mitad de su contenedor */
+    padding-left: 0;
+    padding-right: 0;
+    overflow: hidden; /* lo que se desborda de sus limites no se ve */
+}
+.col-figura img{
+    transition: .5s all ease-in-out;
+}
+.col-figura img:hover{
+    transform: scale(1.3,1.3) rotate(-15deg);
+}
+.img-fluid{
+    max-width: 100%;/* Asi se indica que el ancho máximo de la imagen
+    sea igual al ancho de su contenedor */
+}
+.alineacion-vertical{
+    display: flex;
+    flex-direction: column; /* pone los objetos uno debajo de otro */
+    justify-content: center; /* Para que se alinee verticalmente siempre que este con display flex*/
+}
+.texto-importante{
+    font-weight: 700;
+    color: #ccff55;
+}
+.caja-imagen{
+    position: relative;
+}
+.caja-imagen-leyenda{
+    position: absolute;
+    top:0;
+    background-color: rgba(0,0,0,0.7);
+    width: calc(100% - 90px);
+    height: calc(100% - 60px);
+    padding: 40px;
+    box-sizing: border-box;/* Para que el padding no incremente el ancho */
+    text-align: left;
+    opacity: 0;
+    transition: .5s all ease-in-out;
+    margin: 30px;
+}
+.caja-imagen-leyenda:hover{
+    opacity: 1;
+}
+.boton-h{
+    border: solid 1px;
+    padding: 8px 20px;/* arriba y abajo   /   izquierda y derecha  */
+    border-radius: 21px;
+    transition: .5s all ease-in-out;
+}
+.boton-h:hover{
+    background-color: #ff0000;
+    color: #ffffff;
+    text-decoration: none;
+}
+
+.videoWrapper {
+    position: relative;
+    padding-bottom: 56.25%; /* 16:9 */
+    height: 0;
+  }
+.videoWrapper iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .contenido-columnas{
+    column-count: 3;
+    column-gap: 30px;
+    column-rule: solid 1px #999999;
+  }
+  /**************************************************/
+  #sedes{
+      background-color: #ffffff;
+  }
+  .miTabla{
+      width:100%;
+      background-color: #cce4ff;
+      border-collapse: collapse;
+  }
+  .miTabla tbody tr{
+    border-bottom: solid 1px #aaa;
+  }
+  .miTabla th{
+      text-align: left;
+      background-color: rgba(0,0,0,0.5);
+      color: #ffffff;
+  }
+  .miTabla th,
+  .miTabla td{
+      padding: 8px;
+  }
+  .miTabla thead tr th:last-child,
+  .miTabla tbody tr td:last-child{
+      text-align: right;
+  }
+
+  .miTabla tbody tr td:nth-child(4){
+      background-color: rgba(0,0,0,0.1);
+  }
+  .miTabla tbody tr:nth-child(even){/* odd */
+      background-color: rgba(0,0,0,0.1);
+  }
+  .miTabla tbody tr:hover{
+    background-color: rgba(0,0,0,0.2);
+  }
+
+
+  .empleado-mes{
+    position: relative;
+    overflow: hidden;
+  }
+  .empleado-mes figcaption{
+    background-color: #ff0000;
+    color: #ffffff;
+    padding: 5px;
+    text-align: center;
+    position: absolute;
+    top: 15%;
+    transform: rotate(315deg);
+    width: 100%;
+    left: -30%;
+  }
+  .form-control{
+    width: 100%;
+    background: transparent;
+    border: none;
+    border-bottom: solid 1px #999;
+    padding: 8px;
+    font: inherit;
+    margin-bottom: 10px;
+    outline: none;
+    box-sizing: border-box;
+  }
+  .form-control:focus{
+      border-bottom-color: #ff0000;
+  }
+
+  .btn-formulario{
+    width: 100%;
+    padding: 8px;
+    border: none;
+    background-color: #ff0000;
+    color: #ffffff;
+    box-sizing: border-box;
+    cursor: pointer;
+    transition: .5s all ease-in-out; 
+  }
+  .btn-formulario:hover{
+      background-color: #0066ff;
+  }
+
+  .caja-formulario{
+    background-color: #ffffff;
+    padding: 30px;
+    box-shadow: 0px 0px 20px 5px rgb(0 0 0 / 20%);
+}
+
+#mapa-contacto{
+    margin-top: 60px;
+    padding-bottom: 25%;
+}
+
+
+@keyframes animacion-banner-leyenda{
+    from{bottom: 20px}
+    to{bottom: -40px}
+}
+@keyframes animacion-ir-arriba{
+    0%{bottom: 20px}
+    50%{bottom: 50px}
+    100%{bottom: 20px}
+}
+#info .videoWrapper{
+    padding-bottom: 120%;
+}

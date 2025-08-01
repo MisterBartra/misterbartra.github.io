@@ -1,0 +1,126 @@
+/* Importación de fuentes:*/
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;400;700;900&display=swap');
+/* Asi las respectivas fuentes de Google hace de referencias con los estilos indicados. */
+
+/* Asi se define las reglas de estilos para los elementos */
+html {
+	scroll-behavior:smooth;
+}
+
+body { /* |Cuerpo de Página| */
+	margin:0;
+	font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+	font-size:1rem;
+	font-weight:400;
+	line-height:1.5;
+	color:#212529;
+	text-align:left;
+	background-color:#fff;
+}
+ul {
+	list-style-type:none;
+	padding-left:0;
+	margin:0;
+}
+li {
+	font-size:17px;
+}
+a {
+	text-decoration:none;
+	letter-spacing:0.45px;
+	color:#fff;
+} a:hover {
+	/*color:#fff;*/
+}
+h1 , h2 , h3 {
+	color:#1f1f25
+}
+h3 {
+	font-family:"Poppins", sans-serif;
+	line-height:1.4075;
+	color:#1f1f25;
+}
+header.noheight {
+	width:1320px;
+	position:absolute;
+	top:0;
+}
+img {
+	display:block;
+	border:0;
+}
+header, nav, footer {
+	display:block;
+}
+a.btn-default, button.btn-default {
+	color:#fff;
+	font-size:16px;
+	text-transform:uppercase;
+	letter-spacing:2px;
+	padding:16px 40px;
+	border-radius:500px;
+	display:inline-block;
+	font-weight:500;
+	transition:all .35s ease-in-out;
+	background-size:152% 100%;
+	background-color:#fd4766;
+	border:solid 2px #fd4766;
+	transition-delay:.125s;
+} a.btn-default:hover {
+	color:#fd4766;
+	background:#00000000;
+}
+img.thumbnail, .thumbnail img {
+	border-radius:6px;
+}
+span.subtitle {
+	background:#fd4766;
+	background:linear-gradient(120deg, #1C99FE 5%, #7644FF 45%, #fd4766 85%);
+	-webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+    display:inline-block;
+	font-weight:600;
+	letter-spacing:0.505px;
+	line-height:20px;
+	font-size:16px;
+	border-radius:4px;
+	padding-top:2px;
+	margin-bottom:12px;
+}
+h4.title {
+	margin-top:12px;
+	margin-bottom:12px;
+	font-size:24px;
+	font-weight:600;
+}
+ul.brand-style {
+	list-style:none;
+    margin:0;
+    padding:0;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-wrap:wrap;
+}
+ul.brand-style li {
+	padding:18px 20px;
+    flex-basis:15%;
+    text-align:center;
+}
+ul.brand-style img {
+	opacity:0.8;
+    transition:0.3s;
+    max-height:110px;
+    max-width:150px;
+	padding-left:50px;
+    filter:grayscale(1);
+    cursor:pointer;
+}
+ul.brand-style img:hover {
+	transform:scale(1.1);
+    opacity:1;
+    filter:grayscale(0);
+}
+footer.colorblack {
+	background:#010001;
+}

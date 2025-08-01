@@ -1,0 +1,40 @@
+/* Asi se define reglas de animación para aplicarse en los estilos */
+@keyframes li-move-down {
+    0%{top:-140px;}
+    90%{top:0;}
+}
+@keyframes left-move {
+    25%{opacity:0;left:-815px;top:172px;}
+    75%{opacity:1;}
+    100%{left:40px;top:178px;}
+}
+@keyframes btn-move {
+	0%{left:0px;top:332px;background:#fd4766;color:#fff}
+	5%{left:165px;top:330px;transform: scale(1.25);background-color:#00000000; color:#fd4766;}
+    50%{background:#fd4766;color:#fff}
+    94%{left:165px;top:332px;}
+    100%{left:0px;top:332px;transform: scale(0.995);}
+}
+@keyframes up-card-solid {
+    50%{opacity:0.5;}
+	100%{opacity:1;}
+}
+@keyframes ir-page-top {
+    0%{bottom:50px;}
+    20%{bottom:42.5px;}
+    45%{bottom:75px;}
+    85%{bottom:45px;}
+    95%{bottom:50px;}
+}
+@keyframes hacersever {
+    0%{opacity:0;}
+    25%{opacity:0.35}
+    50%{opacity:0.65}
+    75%{opacity:0.85}
+    100%{opacity:1}
+}
+@keyframes aboutimgresize {
+	0%{transform:scale(1.0)}
+	50%{transform:scale(0.85)}
+	100%{transform:scale(1.0}
+}
