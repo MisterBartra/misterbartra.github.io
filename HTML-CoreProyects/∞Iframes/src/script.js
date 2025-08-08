@@ -3,7 +3,7 @@ class IframeMatrixViewer {
 	constructor(rootElement) {
 		this.root = rootElement;
 		this.matrix = [];
-		this.title = "∞Iframes Matrix Viewer";
+		this.title = window.title || document.title || "\u221EIframes Matrix Viewer";
 		this.currentPosition = { x: 0, y: 0, depth: 0 };
 		this.matrixStack = [];
 		this.initialDepth = 0;
