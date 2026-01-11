@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Skip Buttons DLC - Demo</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            color: white;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .video-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s ease;
+        }
+        
+        .video-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .video-card h3 {
+            margin-top: 0;
+            color: #fff;
+        }
+        
+        .video-container {
+            position: relative;
+            width: 100%;
+            height: 250px;
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+        
+        .video-container iframe,
+        .video-container video {
+            width: 100%;
+            height: 100%;
+            border: none;
+            border-radius: 8px;
+        }
+        
+        .params-info {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 10px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            margin-top: 10px;
+        }
+        
+        .feature-list {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .feature-list h2 {
+            margin-top: 0;
+            color: #fff;
+        }
+        
+        .feature-list ul {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .feature-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+        }
+        
+        .feature-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .feature-list li::before {
+            content: "✨";
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+        
+        .controls {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 30px;
+        }
+        
+        .controls h3 {
+            margin-top: 0;
+        }
+        
+        .control-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        
+        .control-group input,
+        .control-group button {
+            padding: 8px 12px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-family: inherit;
+        }
+        
+        .control-group button {
+            background: rgba(33, 150, 243, 0.8);
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+        
+        .control-group button:hover {
+            background: rgba(33, 150, 243, 1);
+        }
+        
+        .instructions {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin-bottom: 30px;
+        }
+        
+        .code-block {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎬 Video Skip Buttons DLC</h1>
+            <p>Sistema de botones de salto de tiempo para videos embedidos</p>
+        </div>
+
+        <div class="instructions">
+            <h2>📖 ¿Cómo funciona?</h2>
+            <p>El sistema detecta automáticamente videos con parámetros especiales y agrega botones de salto:</p>
+            <div class="code-block">
+?d=90&op=00:00&ed=03:20
+            </div>
+            <ul>
+                <li><strong>d</strong>: duración para rangos implícitos (opcional, default: 90s)</li>
+                <li><strong>op</strong>: tiempo para Opening (MM:SS, [MM:SS], [MM:SS-MM:SS] o MM:SS+90s)</li>
+                <li><strong>ed</strong>: tiempo para Ending (MM:SS, [MM:SS], [MM:SS-MM:SS] o MM:SS+90s)</li>
+            </ul>
+            <h3>🎯 Lógica de Corchetes</h3>
+            <p><strong>Regla simple:</strong></p>
+            <ul>
+                <li>Si el dato está entre corchetes <code>[...]</code> → Usa <code>duration</code> (rango implícito)</li>
+                <li>Si el dato no está entre corchetes → Es punto fijo</li>
+            </ul>
+        </div>
+
+        <div class="controls">
+            <h3>🎛️ Controles Manuales</h3>
+            <div class="control-group">
+                <input type="text" id="videoUrl" placeholder="URL del video" value="https://www.youtube.com/embed/a88bwmM2B9Q">
+                <input type="text" id="videoParams" placeholder="Parámetros (ej: d=120&op=00:30&ed=02:00)" value="d=120&op=00:30&ed=02:00">
+                <button onclick="addCustomVideo()">Agregar Video</button>
+                <button onclick="clearCustomVideos()">Limpiar Videos</button>
+            </div>
+        </div>
+
+        <div class="video-grid">
+            <div class="video-card">
+                <h3>🎵 Video con OP y ED (Puntos Fijos)</h3>
+                <div class="video-container">
+                    <iframe 
+                        src="https://www.youtube.com/embed/a88bwmM2B9Q?op=00:30&ed=03:20" 
+                        title="Video de ejemplo con OP y ED como puntos fijos"
+                        allowfullscreen>
+                    </iframe>
+                </div>
+                <div class="params-info">
+                    Parámetros: op=00:30&ed=03:20 (puntos fijos)
+                </div>
+            </div>
+
+            <div class="video-card">
+                <h3>🎬 Video con OP como Rango Implícito</h3>
+                <div class="video-container">
+                    <iframe 
+                        src="https://www.youtube.com/embed/a88bwmM2B9Q?d=120&op=[01:30]" 
+                        title="Video de ejemplo con OP como rango implícito"
+                        allowfullscreen>
+                    </iframe>
+                </div>
+                <div class="params-info">
+                    Parámetros: d=120&op=[01:30] (rango: [01:30-03:30])
+                </div>
+            </div>
+
+            <div class="video-card">
+                <h3>🎭 Video con ED como Rango Exacto</h3>
+                <div class="video-container">
+                    <iframe 
+                        src="https://www.youtube.com/embed/dQw4w9WgXcQ?ed=[02:00-03:30]" 
+                        title="Video de ejemplo con ED como rango exacto"
+                        allowfullscreen>
+                    </iframe>
+                </div>
+                <div class="params-info">
+                    Parámetros: ed=[02:00-03:30] (rango exacto)
+                </div>
+            </div>
+
+            <div class="video-card">
+                <h3>⏱️ Video con Duración Explícita</h3>
+                <div class="video-container">
+                    <iframe 
+                        src="https://www.youtube.com/embed/dQw4w9WgXcQ?op=01:00+45s" 
+                        title="Video de ejemplo con duración explícita"
+                        allowfullscreen>
+                    </iframe>
+                </div>
+                <div class="params-info">
+                    Parámetros: op=01:00+45s (rango: [01:00-01:45])
+                </div>
+            </div>
+
+            <div class="video-card">
+                <h3>🎬 Video solo con duración</h3>
+                <div class="video-container">
+                    <iframe 
+                        src="https://www.youtube.com/embed/dQw4w9WgXcQ?d=120" 
+                        title="Video de ejemplo solo con duración"
+                        allowfullscreen>
+                    </iframe>
+                </div>
+                <div class="params-info">
+                    Parámetros: d=120 (solo duración, sin botones)
+                </div>
+            </div>
+
+            <div class="video-card">
+                <h3>🎹 Video sin parámetros (normal)</h3>
+                <div class="video-container">
+                    <iframe 
+                        src="https://www.youtube.com/embed/a88bwmM2B9Q" 
+                        title="Video normal sin intervención del DLC"
+                        allowfullscreen>
+                    </iframe>
+                </div>
+                <div class="params-info">
+                    Sin parámetros (funciona como video normal, sin botones)
+                </div>
+            </div>
+
+            <div class="video-card">
+                <h3>📹 Video HTML5 nativo</h3>
+                <div class="video-container">
+                    <video 
+                        data-video-params="d=60&op=[00:10]&ed=00:40"
+                        controls>
+                        <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4">
+                        Tu navegador no soporta videos HTML5.
+                    </video>
+                </div>
+                <div class="params-info">
+                    Parámetros: d=60&op=[00:10]&ed=00:40
+                </div>
+            </div>
+
+            <div class="video-card">
+                <h3>🔧 Combinación Completa</h3>
+                <div class="video-container">
+                    <iframe 
+                        src="https://www.youtube.com/embed/a88bwmM2B9Q?d=90&op=[01:30]&ed=[22:00-23:30]" 
+                        title="Video con todos los formatos combinados"
+                        allowfullscreen>
+                    </iframe>
+                </div>
+                <div class="params-info">
+                    Parámetros: d=90&op=[01:30]&ed=[22:00-23:30]
+                </div>
+            </div>
+        </div>
+
+        <div id="customVideos"></div>
+
+        <div class="feature-list">
+            <h2>🚀 Características del DLC</h2>
+            <ul>
+                <li>Detección automática de videos con parámetros especiales</li>
+                <li>Botones flotantes con diseño moderno y responsivo</li>
+                <li>Soporte para YouTube, videos HTML5 y otros servicios</li>
+                <li>Lógica de corchetes: [rango] vs punto fijo</li>
+                <li>Duration flexible con parámetro d=</li>
+                <li>Integración con ∞Iframes Matrix Viewer</li>
+                <li>Animaciones suaves y notificaciones visuales</li>
+                <li>Detección automática de nuevos videos via MutationObserver</li>
+                <li>API pública para control programático</li>
+                <li>Compatibilidad con navegadores modernos</li>
+                <li>Código modular y extensible</li>
+            </ul>
+        </div>
+
+        <div class="instructions">
+            <h2>🔧 Uso Programático</h2>
+            <div class="code-block">
+// Agregar un video manualmente
+window.videoSkipButtons.addVideo(elementoVideo, 'd=120&op=[01:30]&ed=02:00');
+
+// Actualizar configuración de un video
+window.videoSkipButtons.updateVideoConfig('video-id', {
+    op: 60,
+    ed: 180
+});
+
+// Destruir el DLC
+window.videoSkipButtons.destroy();
+            </div>
+        </div>
+    </div>
+
+    <!-- Cargar el DLC -->
+    <script src="./src/video-skip-buttons.js"></script>
+    
+    <script>
+        // Funciones para la demo interactiva
+        function addCustomVideo() {
+            const url = document.getElementById('videoUrl').value;
+            const params = document.getElementById('videoParams').value;
+            
+            if (!url || !params) {
+                alert('Por favor, completa ambos campos');
+                return;
+            }
+            
+            const container = document.getElementById('customVideos');
+            const videoCard = document.createElement('div');
+            videoCard.className = 'video-card';
+            videoCard.innerHTML = `
+                <h3>🎹 Video Personalizado</h3>
+                <div class="video-container">
+                    <iframe 
+                        src="${url}?${params}" 
+                        title="Video personalizado"
+                        allowfullscreen>
+                    </iframe>
+                </div>
+                <div class="params-info">
+                    Parámetros: ${params}
+                </div>
+                <button onclick="this.parentElement.remove()" style="margin-top: 10px; padding: 5px 10px; background: rgba(244, 67, 54, 0.8); border: none; border-radius: 4px; color: white; cursor: pointer;">Eliminar</button>
+            `;
+            
+            container.appendChild(videoCard);
+            
+            // Limpiar campos
+            document.getElementById('videoUrl').value = '';
+            document.getElementById('videoParams').value = '';
+        }
+        
+        function clearCustomVideos() {
+            const container = document.getElementById('customVideos');
+            container.innerHTML = '';
+        }
+        
+        // Esperar a que el DLC esté listo
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('Demo de Video Skip Buttons DLC cargada');
+        });
+    </script>
+</body>
+</html>
