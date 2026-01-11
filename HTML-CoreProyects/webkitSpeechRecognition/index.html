@@ -36,7 +36,7 @@
 		isListening = (isListening) ? false : true;
 	}
 	if ("SpeechRecognition" in window || "webkitSpeechRecognition" in window) {
-	  let speechRecognition = window.SpeechRecognition || new webkitSpeechRecognition || false;
+	  let speechRecognition = window.SpeechRecognition || webkitSpeechRecognition || false;
 	  let final_transcript = "";
 
 	  speechRecognition.continuous = true;
@@ -44,6 +44,7 @@
 	  speechRecognition.lang = document.querySelector("#select_dialect").value;
 
 	  speechRecognition.onstart = () => {
+		console.log("Speech Recognition Start");
 		document.querySelector("#status").style.display = "block";
 	  };
 	  speechRecognition.onerror = () => {
@@ -76,11 +77,11 @@
 
 	  document.querySelector("#start").onclick = () => {
 		speechRecognition.lang = document.querySelector("#select_dialect").value;
-		speechRecognition.start();
+		speechRecognition.onstart();
 		listenSpeechLapsus();
 	  };
 	  document.querySelector("#stop").onclick = () => {
-		speechRecognition.stop();
+		speechRecognition.onend();
 	  };
 	} else {
 	  console.log("Speech Recognition Not Available");
