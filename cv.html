@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CV | AI Systems & Interactive Tooling</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <style>
+        .cv-grid {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 3rem;
+        }
+        @media (max-width: 900px) {
+            .cv-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .cv-section-title {
+            color: var(--accent-primary);
+            border-bottom: 1px solid var(--glass-border);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1.5rem;
+            margin-top: 2.5rem;
+            font-family: var(--font-mono);
+            font-size: 1.25rem;
+        }
+        .cv-section-title:first-child {
+            margin-top: 0;
+        }
+        ul.custom-list {
+            list-style: none;
+            padding-left: 0;
+        }
+        ul.custom-list li {
+            position: relative;
+            padding-left: 1.5rem;
+            margin-bottom: 0.75rem;
+            color: var(--text-secondary);
+        }
+        ul.custom-list li::before {
+            content: '▹';
+            position: absolute;
+            left: 0;
+            color: var(--accent-secondary);
+            font-weight: bold;
+        }
+        .project-card {
+            background: rgba(255,255,255,0.02);
+            border-left: 2px solid var(--accent-tertiary);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-radius: 0 8px 8px 0;
+            transition: background 0.3s ease;
+        }
+        .project-card:hover {
+            background: rgba(255,255,255,0.05);
+        }
+    </style>
+</head>
+<body data-page="cv">
+    <div class="bg-mesh"></div>
+    
+    <div id="navbar-placeholder"></div>
+
+    <main style="padding-top: calc(var(--nav-height) + 4rem); padding-bottom: 4rem;">
+        <div class="container">
+            
+            <!-- Header -->
+            <div class="fade-in" style="margin-bottom: 4rem; text-align: center;">
+                <h1 style="font-size: 3rem; margin-bottom: 1rem;">José Eduardo <span class="gradient-text">Bartra Quispe</span></h1>
+                <p style="font-size: 1.2rem; color: var(--text-secondary); max-width: 800px; margin: 0 auto;">
+                    <strong>AI Engineer & Systems Architect.</strong> With over 10 years of foundational experience in concurrent programming (Java) and automation (Python), my career has naturally evolved from game development and bot orchestration into designing modular, scalable, and adaptive AI-powered ecosystems.
+                </p>
+            </div>
+
+            <div class="cv-grid">
+                <!-- Left Column: Experience / Projects -->
+                <div class="glass-panel fade-in fade-in-delayed-1">
+                    <h2 class="cv-section-title">Notable Architecture & Projects</h2>
+
+                    <div class="project-card">
+                        <h3 style="margin-bottom: 0.5rem; font-size: 1.4rem;">MHT-ChatRAG: Real-Time Multilingual Assistant</h3>
+                        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem; font-family: var(--font-mono);">Node.js | RAG | WebSocket | LWW Concurrency | Tri-DB (Redis, Postgres, LanceDB)</p>
+                        <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+                            Engineered an ultra-low latency real-time voice and text assistant using WebSockets, AssemblyAI (STT), and Edge-TTS. Implemented a robust "Tri-DB" state recovery system and Last-Write-Wins (LWW) concurrency for seamless user interruptions.
+                        </p>
+                        <a href="project-chatrag.html" style="color: var(--accent-primary); text-decoration: none; font-weight: 600; font-size: 0.9rem;">View Case Study &rarr;</a>
+                    </div>
+
+                    <div class="project-card">
+                        <h3 style="margin-bottom: 0.5rem; font-size: 1.4rem;">Adaptive Multi-Source AI Data Manager</h3>
+                        <ul class="custom-list">
+                            <li>Designed a system capable of dynamically switching between multiple data providers (e.g., music APIs, game presence, or AI sources).</li>
+                            <li>Implemented fallback logic to ensure continuous data availability.</li>
+                            <li>Enabled real-time UI updates based on source state (ACTIVE / INACTIVE / OFFLINE).</li>
+                        </ul>
+                        <div style="margin-top: 1rem;">
+                            <strong>Key Contributions:</strong> Provider abstraction layer, adapter-based data normalization, autonomous source selection logic.
+                        </div>
+                    </div>
+
+                    <div class="project-card">
+                        <h3 style="margin-bottom: 0.5rem; font-size: 1.4rem;">Modular Command & Trigger System</h3>
+                        <ul class="custom-list">
+                            <li>Built a reusable command system with centralized registry and distributed execution contexts.</li>
+                            <li>Designed multiple managers for handling commands across entities, blocks, and global scopes.</li>
+                        </ul>
+                        <div style="margin-top: 1rem;">
+                            <strong>Key Contributions:</strong> Unified trigger interface, command reuse via global repository, persistent state handling.
+                        </div>
+                    </div>
+
+                    <h2 class="cv-section-title">Foundational Experience & Maneuvers</h2>
+
+                    <div class="project-card">
+                        <h3 style="margin-bottom: 0.5rem; font-size: 1.4rem;">Automation & Concurrent Systems (10+ Years)</h3>
+                        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem; font-family: var(--font-mono);">Java | Python | SQL | Web Scrapping</p>
+                        <ul class="custom-list">
+                            <li><strong>Thread Management:</strong> Deep understanding of concurrent programming in Java, directly applying this logic to modern Node.js Event Loop architectures and LWW concurrency in AI streaming.</li>
+                            <li><strong>Autonomous Bots:</strong> Developed data-driven Python bots and macros for automated data parsing, web scraping, and specialized assistance.</li>
+                        </ul>
+                    </div>
+
+                    <div class="project-card">
+                        <h3 style="margin-bottom: 0.5rem; font-size: 1.4rem;">Conversational UI & Game Dev</h3>
+                        <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem; font-family: var(--font-mono);">Watson Assistant | Tidio | No-Code Platforms</p>
+                        <ul class="custom-list">
+                            <li><strong>Chatbot Design:</strong> Orchestrated conversation flows and natural responses using tools like Watson Assistant, laying the groundwork for complex LLM prompting and RAG integrations.</li>
+                            <li><strong>Game Dev & Optimization:</strong> Directed high-concurrency online game rooms and optimized JSON/multimedia resources, establishing my focus on performance and low-latency architectures.</li>
+                        </ul>
+                    </div>
+
+                </div>
+
+                <!-- Right Column: Skills -->
+                <div class="glass-panel fade-in fade-in-delayed-2" style="height: fit-content;">
+                    <h2 class="cv-section-title">Core Skills</h2>
+                    
+                    <h4 style="margin-bottom: 0.5rem;">AI Integration & Orchestration</h4>
+                    <ul class="custom-list" style="margin-bottom: 1.5rem;">
+                        <li>LLM-based systems (multi-provider)</li>
+                        <li>RAG pipelines & Embeddings</li>
+                        <li>Adaptive data sourcing</li>
+                    </ul>
+
+                    <h4 style="margin-bottom: 0.5rem;">System Architecture</h4>
+                    <ul class="custom-list" style="margin-bottom: 1.5rem;">
+                        <li>Modular architecture design</li>
+                        <li>Manager-based orchestration</li>
+                        <li>Event-driven & trigger systems</li>
+                    </ul>
+
+                    <h4 style="margin-bottom: 0.5rem;">Backend & Tooling</h4>
+                    <ul class="custom-list" style="margin-bottom: 1.5rem;">
+                        <li>Node.js / TypeScript / WebSockets</li>
+                        <li>State Persistence (Redis/Postgres)</li>
+                        <li>API integration (REST/Streaming)</li>
+                    </ul>
+
+                    <h4 style="margin-bottom: 0.5rem;">Frontend Interaction</h4>
+                    <ul class="custom-list">
+                        <li>Reactive UI systems</li>
+                        <li>Real-time visualization</li>
+                        <li>Adaptive UX based on state</li>
+                    </ul>
+
+                    <h2 class="cv-section-title" style="margin-top: 2rem;">Value Proposition</h2>
+                    <ul class="custom-list">
+                        <li>Bridging traditional <strong>concurrent programming</strong> with modern <strong>AI streaming capabilities</strong>.</li>
+                        <li>Building AI-powered tools that feel responsive and alive.</li>
+                        <li>System thinking over isolated implementations.</li>
+                    </ul>
+
+                    <h2 class="cv-section-title" style="margin-top: 2rem;">Education & Certifications</h2>
+                    <ul class="custom-list">
+                        <li><strong>Node.js for Bots (2023 - Present)</strong><br><span style="font-size:0.85rem; color: var(--text-muted);">Advanced bot automation and programmatic tooling.</span></li>
+                        <li><strong>Diseño y Desarrollo de Videojuegos (2021 - 2023)</strong><br><span style="font-size:0.85rem; color: var(--text-muted);">Instituto San Ignacio de Loyola (ISIL).</span></li>
+                        <li><strong>Videojuegos y Realidad Aumentada (2020)</strong><br><span style="font-size:0.85rem; color: var(--text-muted);">SENATI - Technical Training.</span></li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <div id="footer-placeholder"></div>
+
+    <script src="js/components.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

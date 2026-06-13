@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MHT-ChatRAG Project | AI Engineer Portfolio</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/animations.css">
+    
+    <style>
+        .hero-project {
+            padding: 8rem 0 4rem;
+            text-align: center;
+        }
+        .arch-diagram {
+            width: 100%;
+            border-radius: 12px;
+            background: var(--bg-accent);
+            padding: 2rem;
+            border: 1px solid var(--glass-border);
+            font-family: var(--font-mono);
+            white-space: pre-wrap;
+            color: var(--text-primary);
+            overflow-x: auto;
+            font-size: 0.85rem;
+            line-height: 1.4;
+        }
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        .tech-pill {
+            display: inline-block;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-family: var(--font-mono);
+            margin: 0.2rem;
+        }
+        
+        .code-block {
+            background: #0d0d12;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid var(--glass-border);
+            font-family: var(--font-mono);
+            color: #a6accd;
+            font-size: 0.9rem;
+            overflow-x: auto;
+        }
+        .code-keyword { color: #89ddff; }
+        .code-string { color: #c3e88d; }
+        .code-comment { color: #546e7a; }
+        
+        .media-placeholder {
+            width: 100%;
+            height: 400px;
+            background: linear-gradient(45deg, rgba(99, 102, 241, 0.1), rgba(236, 72, 153, 0.1));
+            border: 1px dashed var(--accent-primary);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body data-page="project">
+    <div class="bg-mesh tech-grid"></div>
+    <div id="navbar-placeholder"></div>
+
+    <main>
+        
+        <section class="hero-project container">
+            <div class="fade-in">
+                <span class="tag" style="margin-bottom: 1rem;">Flagship Project</span>
+                <h1 style="font-size: 3.5rem; margin-bottom: 1rem;">MHT-ChatRAG</h1>
+                <p style="font-size: 1.2rem; color: var(--text-secondary); max-width: 800px; margin: 0 auto 2rem;">
+                    A real-time, low-latency, multilingual AI assistant powered by a complex Retrieval-Augmented Generation (RAG) pipeline and a robust Tri-DB persistence layer.
+                </p>
+                <div>
+                    <span class="tech-pill">Node.js</span>
+                    <span class="tech-pill">WebSockets</span>
+                    <span class="tech-pill">Redis</span>
+                    <span class="tech-pill">PostgreSQL</span>
+                    <span class="tech-pill">LanceDB</span>
+                    <span class="tech-pill">AssemblyAI (STT)</span>
+                    <span class="tech-pill">Edge-TTS</span>
+                    <span class="tech-pill">Live2D Cubism</span>
+                </div>
+            </div>
+        </section>
+
+        <section class="section container" style="padding-top: 0;">
+            <div class="glass-panel fade-in fade-in-delayed-1" style="margin-bottom: 4rem;">
+                <h2 style="margin-bottom: 1.5rem; font-size: 2rem;" class="gradient-text">System Architecture</h2>
+                <div class="arch-diagram">┌─────────────────────┐                              ┌─────────────────────┐
+│   Browser / UI      │      HTTP/WS (PORT 3000)     │   Express Server    │
+│  - clientChatHandler│◄────────────────────────────►│  - WebSocket Server │
+│  - Live2D Avatar    │                              │  - REST API         │
+│  - STT/TTS Client   │                              │  - Static Files     │
+└─────────────────────┘                              └──────────┬──────────┘
+                                                                │
+                     ┌──────────────────────────────────────────┼──────────────────────┐
+                     │                                          │                      │
+                     ▼                                          ▼                      ▼
+           ┌─────────────────┐                       ┌─────────────────┐    ┌─────────────────┐
+           │     Redis       │                       │   PostgreSQL    │    │    LanceDB      │
+           │ - Session Cache │                       │ - Chat History  │    │ - Vector Store  │
+           │ - Message Queue │                       │ - Payloads      │    │ - Embeddings    │
+           └─────────────────┘                       └─────────────────┘    └─────────────────┘</div>
+           
+                <div class="feature-grid">
+                    <div>
+                        <h3 style="margin-bottom: 0.5rem; color: var(--text-primary);">Tri-DB Resilience</h3>
+                        <p style="color: var(--text-secondary); font-size: 0.95rem;">
+                            <strong>Redis</strong> manages ultra-fast session cache and queues. 
+                            <strong>PostgreSQL</strong> acts as the structured backbone for history and variables. 
+                            <strong>LanceDB</strong> holds the permanent vector archive. Disconnections trigger instant restoration from Postgres to prevent LLM context loss.
+                        </p>
+                    </div>
+                    <div>
+                        <h3 style="margin-bottom: 0.5rem; color: var(--text-primary);">Last-Write-Wins Concurrency</h3>
+                        <p style="color: var(--text-secondary); font-size: 0.95rem;">
+                            Handles barge-in natively. If a new message arrives while the LLM is generating, the obsolete stream is proactively aborted (`break`), freeing resources and focusing on the new interaction.
+                        </p>
+                    </div>
+                    <div>
+                        <h3 style="margin-bottom: 0.5rem; color: var(--text-primary);">Live2D Avatar Sincronization</h3>
+                        <p style="color: var(--text-secondary); font-size: 0.95rem;">
+                            Integrating a Live2D model (Hiyori) via an iframe with a bidirectional `postMessage` queue. Combines Web Audio API and TTS streaming to achieve real-time lip-sync animations with no noticeable delay.
+                        </p>
+                    </div>
+                    <div>
+                        <h3 style="margin-bottom: 0.5rem; color: var(--text-primary);">Security & Modularity</h3>
+                        <p style="color: var(--text-secondary); font-size: 0.95rem;">
+                            Built with a dedicated JS obfuscation pipeline to protect client-side RAG logic. Employs dynamic component injection for UI elements like modales, avoiding monolithic architectures.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Multimedia Section -->
+            <div class="fade-in" style="margin-bottom: 4rem;">
+                <h2 style="margin-bottom: 1rem; font-size: 2rem;">Multimedia Showcase</h2>
+                <p style="color: var(--text-secondary);">Watch the real-time interaction and Live2D synchronization in action.</p>
+                
+                <!-- Video placeholder -->
+                <div class="media-placeholder animate-float">
+                    [ Video Component / Gallery will be inserted here ]<br>
+                    Showcasing UI, Live2D avatar, and Real-Time TTS/STT speeds.
+                </div>
+            </div>
+
+            <!-- RAG Pipeline details -->
+            <div class="glass-panel fade-in">
+                <h2 style="margin-bottom: 1.5rem; font-size: 2rem;" class="gradient-text">Advanced RAG Pipeline</h2>
+                <p style="color: var(--text-secondary); margin-bottom: 2rem;">
+                    The system combines Vector Search and Full-Text Search (FTS) for a Hybrid Retrieval approach. It adapts embeddings on-the-fly depending on the context and dynamically orchestrates chains.
+                </p>
+
+                <div class="code-block">
+<span class="code-comment">// Simplified Pipeline Flow</span>
+Query → Hybrid Retriever → <span class="code-string">Vector + FTS Results</span>
+                                      ↓
+                          Context Assembly
+                                      ↓
+                          LLM Generation <span class="code-comment">(Cerebras/Groq/OpenAI)</span>
+                                      ↓
+                          Response Stream <span class="code-comment">(TTS Chunking)</span>
+                </div>
+                
+                <h3 style="margin: 2rem 0 1rem;">Key UX Innovations</h3>
+                <ul style="color: var(--text-secondary); padding-left: 1.5rem; margin-bottom: 2rem;">
+                    <li style="margin-bottom: 0.5rem;"><strong>Audio Streaming Bidirectional:</strong> Reproduces chunks from Edge-TTS while the LLM generates the rest, drastically reducing Time-To-First-Byte (TTFB).</li>
+                    <li style="margin-bottom: 0.5rem;"><strong>Timezone-Awareness (`dateUtils.js`):</strong> Parses temporal references ("today", "tomorrow") relative to the client's local timezone (UTC-5), intelligently handling server midnight rollovers.</li>
+                    <li style="margin-bottom: 0.5rem;"><strong>Transient Messages & Debounce:</strong> Shows localized "I couldn't hear you" messages on STT failure without polluting the conversation history, paired with a 500ms microphone debounce to prevent accidental double-clicks.</li>
+                </ul>
+            </div>
+
+        </section>
+
+    </main>
+
+    <div id="footer-placeholder"></div>
+
+    <script src="js/components.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
