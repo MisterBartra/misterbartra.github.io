@@ -40,6 +40,9 @@ class IframeMatrixViewer {
 			// Obtener datos de la matriz
 			await this.loadMatrixData();
 			
+			// Inicializar Gobernanza Interactiva de forma dinámica
+			await this.loadGovernance();
+			
 			// Inicializar estados de carga
 			this.initLoadingStates();
 			
@@ -1127,46 +1130,156 @@ class IframeMatrixViewer {
 	}
 	
 	setupEdgeDetectors() {
-		// Configurar los detectores de bordes
+		// Control de estado para la tecla Ctrl
+		this.ctrlPressed = false;
+		
+		document.addEventListener('keydown', (e) => {
+			if (e.key === 'Control' && !this.ctrlPressed) {
+				this.ctrlPressed = true;
+				document.querySelectorAll('.edge-detector').forEach(det => {
+					if (this.activeEdges[det.dataset.edge]) {
+						this.expandEdge(det, det.dataset.edge);
+					}
+				});
+			}
+		});
+
+		document.addEventListener('keyup', (e) => {
+			if (e.key === 'Control' && this.ctrlPressed) {
+				this.ctrlPressed = false;
+				document.querySelectorAll('.edge-detector').forEach(det => {
+					this.collapseEdge(det, det.dataset.edge);
+				});
+			}
+		});
+
+		// Configurar los detectores de bordes principales
 		document.querySelectorAll('.edge-detector').forEach(detector => {
-			const edge = detector.classList[1]; // top, right, bottom, left, top-left, etc.
+			const edge = detector.dataset.edge; // top, right, bottom, left
 			
 			detector.addEventListener('mouseenter', () => {
 				if (this.isLoading || this.animationInProgress) return;
-				
-				// Activar este borde
 				this.activeEdges[edge] = true;
 				
-				// Mostrar los botones correspondientes
-				this.showEdgeButtons(edge);
+				// Si está en crossOriginMode, el overlay se despliega automáticamente por hover inteligente
+				// de lo contrario, depende de la tecla Ctrl.
+				if (this.ctrlPressed || this.crossOriginMode) {
+					this.expandEdge(detector, edge);
+				}
+				
+				this.showEdgeButtons(edge); // Para botones de settings/tema antiguos
 			});
 			
 			detector.addEventListener('mouseleave', () => {
 				if (this.isLoading || this.animationInProgress) return;
-				
-				// Desactivar este borde
 				this.activeEdges[edge] = false;
 				
-				// Solo ocultar los botones si no estamos en modo "botones visibles"
+				this.collapseEdge(detector, edge);
+				
 				if (!this.buttonsVisible) {
-					// Dar un pequeño tiempo para que el ratón pueda moverse a los botones
 					setTimeout(() => {
 						if (!this.activeEdges[edge]) {
 							this.hideEdgeButtons(edge);
 						}
-					}, 100); // Aumentado para dar más tiempo
+					}, 100);
 				}
 			});
-			
-			detector.addEventListener('click', (e) => {
-				e.preventDefault();
-				e.stopPropagation();
-				if (this.isLoading || this.animationInProgress) return;
+
+			detector.addEventListener('mousemove', (e) => {
+				// Permitir movimiento del arco si se presionó Ctrl o estamos en modo CrossOrigin (fallback inteligente)
+				if ((!this.ctrlPressed && !this.crossOriginMode) || !this.activeEdges[edge]) return;
 				
-				// Navegar según el borde
-				this.handleEdgeClick(edge);
+				// Lógica del arco elástico
+				const btn = detector.querySelector('.edge-nav-button');
+				if (!btn) return;
+				
+				const rect = detector.getBoundingClientRect();
+				const { innerWidth, innerHeight } = window;
+				
+				// Calcular el progreso (0 a 1) del mouse a lo largo del borde
+				let progress = 0;
+				let archDepth = 0;
+				
+				if (edge === 'top' || edge === 'bottom') {
+					progress = (e.clientX - rect.left) / rect.width;
+					// El arco es máximo en el centro (progress = 0.5)
+					const archFactor = Math.sin(progress * Math.PI); // 0 a 1 a 0
+					archDepth = archFactor * (innerHeight * 0.25); // 25vh max
+					
+					btn.style.left = `${e.clientX - rect.left}px`;
+					if (edge === 'top') {
+						btn.style.top = `${archDepth}px`;
+					} else {
+						btn.style.bottom = `${archDepth}px`;
+					}
+				} else {
+					progress = (e.clientY - rect.top) / rect.height;
+					const archFactor = Math.sin(progress * Math.PI);
+					archDepth = archFactor * (innerWidth * 0.25); // 25vw max
+					
+					btn.style.top = `${e.clientY - rect.top}px`;
+					if (edge === 'left') {
+						btn.style.left = `${archDepth}px`;
+					} else {
+						btn.style.right = `${archDepth}px`;
+					}
+				}
 			});
 		});
+	}
+
+	expandEdge(detector, edge) {
+		detector.classList.add('expanded');
+		
+		// Ampliar el grosor temporalmente para capturar mejor el movimiento
+		if (edge === 'top' || edge === 'bottom') {
+			detector.style.height = '15vh';
+		} else {
+			detector.style.width = '15vw';
+		}
+
+		// Centrar el botón inicialmente
+		const btn = detector.querySelector('.edge-nav-button');
+		if (btn) {
+			if (edge === 'top' || edge === 'bottom') {
+				btn.style.left = '50%';
+				btn.style[edge] = '0px';
+			} else {
+				btn.style.top = '50%';
+				btn.style[edge] = '0px';
+			}
+			btn.style.transform = 'translate(-50%, -50%) scale(1)';
+			btn.style.opacity = '1';
+		}
+	}
+
+	collapseEdge(detector, edge) {
+		// Animación de retroceso "curiosa" (easeOutBack manejado por CSS)
+		const btn = detector.querySelector('.edge-nav-button');
+		if (btn) {
+			if (edge === 'top' || edge === 'bottom') {
+				btn.style.left = '50%';
+				btn.style[edge] = '0px';
+			} else {
+				btn.style.top = '50%';
+				btn.style[edge] = '0px';
+			}
+			btn.style.opacity = '0';
+			btn.style.transform = 'translate(-50%, -50%) scale(0.5)';
+		}
+
+		// Después de 0.5s, quitar la expansión
+		setTimeout(() => {
+			if ((!this.ctrlPressed && !this.crossOriginMode) || !this.activeEdges[edge]) {
+				detector.classList.remove('expanded');
+				const inset = this.calculateInset(this.currentPosition.depth);
+				if (edge === 'top' || edge === 'bottom') {
+					detector.style.height = inset;
+				} else {
+					detector.style.width = inset;
+				}
+			}
+		}, 500);
 	}
 	
 	getButtonsForEdge(edge) {
@@ -1360,6 +1473,81 @@ class IframeMatrixViewer {
 		
 		// Iniciar detección de matrices anidadas
 		this.detectNestedMatrix(rowIndex, colIndex);
+
+		// Detección inteligente para la tecla Ctrl y Esc (Smart Detection)
+		const iframe = document.querySelector(`.iframe-cell[data-x="${colIndex}"][data-y="${rowIndex}"] iframe`);
+		if (iframe) {
+			this.setupIframeSmartDetection(iframe);
+		}
+	}
+	
+	setupIframeSmartDetection(iframe) {
+		try {
+			// Intentamos acceder al documento del iframe
+			const iframeDoc = iframe.contentWindow.document;
+			// Si no lanza error, es local / mismo dominio
+			iframe.dataset.crossOrigin = "false";
+			this.crossOriginMode = false;
+
+			iframeDoc.addEventListener('keydown', (e) => {
+				if (e.key === 'Control' && !this.ctrlPressed) {
+					this.ctrlPressed = true;
+					this.expandActiveEdges();
+				}
+				if (e.key === 'Escape') {
+					window.focus(); // Retorna el foco a la ventana principal
+					this.ctrlPressed = false;
+					this.collapseAllEdges();
+				}
+			});
+			iframeDoc.addEventListener('keyup', (e) => {
+				if (e.key === 'Control' && this.ctrlPressed) {
+					this.ctrlPressed = false;
+					this.collapseAllEdges();
+				}
+			});
+		} catch (e) {
+			// Lanzó SecurityError (Cross-Origin)
+			console.log('Iframe cross-origin detectado, activando desencadenamiento inteligente por overlay (hover).');
+			iframe.dataset.crossOrigin = "true";
+			// Activar modo fallback global para la matriz actual
+			this.crossOriginMode = true;
+		}
+	}
+
+	expandActiveEdges() {
+		document.querySelectorAll('.edge-detector').forEach(det => {
+			if (this.activeEdges[det.dataset.edge]) {
+				this.expandEdge(det, det.dataset.edge);
+			}
+		});
+	}
+
+	collapseAllEdges() {
+		document.querySelectorAll('.edge-detector').forEach(det => {
+			this.collapseEdge(det, det.dataset.edge);
+		});
+	}
+	
+	loadGovernance() {
+		return new Promise((resolve) => {
+			if (typeof window.InteractiveGovernance !== 'undefined') {
+				this.governance = new window.InteractiveGovernance();
+				resolve();
+				return;
+			}
+			const script = document.createElement('script');
+			script.src = './src/interactive-governance.js';
+			script.onload = () => {
+				this.governance = new window.InteractiveGovernance();
+				resolve();
+			};
+			script.onerror = () => {
+				console.warn('No se pudo cargar interactive-governance.js');
+				resolve(); // Resolvemos igual para no bloquear la app
+			};
+			document.head.appendChild(script);
+		});
 	}
 	
 	handleIframeError(rowIndex, colIndex) {
@@ -1513,22 +1701,21 @@ class IframeMatrixViewer {
 	
 	// Método para calcular el inset basado en la profundidad
 	calculateInset(depth) {
-		// Iniciar desde 2vw/vh y aumentar con la profundidad
-		return `${2 + depth * 0.5}vh`;
+		// Grosor muy fino por defecto
+		return `10px`;
 	}
 	
 	// Método para renderizar los detectores de bordes
 	renderEdgeDetectors() {
-		// Calcular el inset basado en la profundidad
 		const inset = this.calculateInset(this.currentPosition.depth);
 		
-		// Crear los detectores de bordes
-		const edges = ['top', 'right', 'bottom', 'left', 'top-left', 'top-right', 'bottom-left', 'bottom-right'];
+		// Solo crearemos botones direccionales para los 4 bordes principales
+		const edges = ['top', 'right', 'bottom', 'left'];
 		
 		edges.forEach(edge => {
 			const detector = document.createElement('div');
 			detector.className = `edge-detector ${edge}`;
-			detector.style.pointerEvents = 'auto'; // Asegurar que reciba eventos
+			detector.dataset.edge = edge;
 			
 			// Posicionar y dimensionar según el borde y el inset
 			if (edge === 'top') {
@@ -1551,29 +1738,53 @@ class IframeMatrixViewer {
 				detector.style.top = '0';
 				detector.style.bottom = '0';
 				detector.style.width = inset;
-			} else if (edge === 'top-left') {
-				detector.style.top = '0';
-				detector.style.left = '0';
-				detector.style.width = inset;
-				detector.style.height = inset;
-			} else if (edge === 'top-right') {
-				detector.style.top = '0';
-				detector.style.right = '0';
-				detector.style.width = inset;
-				detector.style.height = inset;
-			} else if (edge === 'bottom-left') {
-				detector.style.bottom = '0';
-				detector.style.left = '0';
-				detector.style.width = inset;
-				detector.style.height = inset;
-			} else if (edge === 'bottom-right') {
-				detector.style.bottom = '0';
-				detector.style.right = '0';
-				detector.style.width = inset;
-				detector.style.height = inset;
 			}
+
+			// Crear el botón direccional interactivo
+			const navBtn = document.createElement('div');
+			navBtn.className = 'edge-nav-button';
 			
+			let iconPath = '';
+			if (edge === 'top') iconPath = 'M5 15l7-7 7 7';
+			else if (edge === 'bottom') iconPath = 'M19 9l-7 7-7-7';
+			else if (edge === 'left') iconPath = 'M15 19l-7-7 7-7';
+			else if (edge === 'right') iconPath = 'M9 5l7 7-7 7';
+
+			navBtn.innerHTML = `
+				<svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+					<path d="${iconPath}"></path>
+				</svg>
+			`;
+
+			navBtn.addEventListener('click', (e) => {
+				e.preventDefault();
+				e.stopPropagation();
+				this.handleEdgeClick(edge);
+			});
+
+			detector.appendChild(navBtn);
 			this.root.appendChild(detector);
+		});
+
+		// Para compatibilidad con botones existentes de theme, config, etc.
+		const corners = ['top-left', 'top-right', 'bottom-left', 'bottom-right'];
+		corners.forEach(corner => {
+			const cornerDet = document.createElement('div');
+			cornerDet.className = `edge-detector ${corner}`;
+			cornerDet.dataset.edge = corner;
+			
+			if (corner === 'top-left') {
+				cornerDet.style.top = '0'; cornerDet.style.left = '0';
+			} else if (corner === 'top-right') {
+				cornerDet.style.top = '0'; cornerDet.style.right = '0';
+			} else if (corner === 'bottom-left') {
+				cornerDet.style.bottom = '0'; cornerDet.style.left = '0';
+			} else if (corner === 'bottom-right') {
+				cornerDet.style.bottom = '0'; cornerDet.style.right = '0';
+			}
+			cornerDet.style.width = '40px';
+			cornerDet.style.height = '40px';
+			this.root.appendChild(cornerDet);
 		});
 	}
 	
