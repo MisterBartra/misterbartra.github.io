@@ -173,10 +173,58 @@ iframe {
 	z-index: 997;
 	background-color: transparent;
 	transition: background-color 0.3s ease, top 0.3s ease, left 0.3s ease, right 0.3s ease, bottom 0.3s ease, width 0.3s ease, height 0.3s ease;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	pointer-events: none; /* Solo será interactivo cuando se expanda */
 }
 
-.edge-detector:hover {
+.edge-detector.expanded {
+	pointer-events: auto;
+}
+
+.edge-detector.expanded:hover {
 	background-color: hsl(var(--secondary) / 0.1);
+}
+
+.edge-nav-button {
+	position: absolute;
+	width: 48px;
+	height: 48px;
+	border-radius: 50%;
+	background: rgba(15, 15, 19, 0.9);
+	backdrop-filter: blur(8px);
+	border: 1px solid rgba(255, 255, 255, 0.2);
+	color: white;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+	opacity: 0;
+	transform: scale(0.5);
+	pointer-events: none;
+	/* Usar el easing curious propuesto easeOutBack */
+	transition: opacity 0.3s ease, transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.edge-nav-button svg {
+	width: 24px;
+	height: 24px;
+	fill: currentColor;
+	transition: transform 0.2s ease;
+}
+
+.edge-nav-button:hover {
+	background: rgba(255, 255, 255, 0.1);
+	border-color: rgba(255, 255, 255, 0.4);
+	transform: scale(1.1) !important;
+}
+
+.edge-detector.expanded:hover .edge-nav-button {
+	opacity: 1;
+	pointer-events: auto;
+	transform: scale(1);
 }
 
 /* Animaciones */
