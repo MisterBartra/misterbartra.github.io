@@ -2064,6 +2064,11 @@ class IframeMatrixViewer {
 						
 						// Añadir todo al wrapper
 						iframeWrapper.appendChild(nestedMatrixWithPreview);
+
+						// Event Bus Hook para DLCs (Matriz Anidada)
+						document.dispatchEvent(new CustomEvent('matrixItemRendered', { 
+							detail: { element: iframe, wrapper: iframeWrapper, url: url, x, y, isNested: true } 
+						}));
 					} else {
 						// Crear el iframe normal para elementos que no son matrices anidadas
 						const iframe = document.createElement('iframe');
@@ -2107,6 +2112,11 @@ class IframeMatrixViewer {
 								iframeWrapper.appendChild(loadingIndicator);
 							}
 							iframeWrapper.appendChild(iframe);
+
+							// Event Bus Hook para DLCs (Iframe normal)
+							document.dispatchEvent(new CustomEvent('matrixItemRendered', { 
+								detail: { element: iframe, wrapper: iframeWrapper, url: currentItem, x, y, isNested: false } 
+							}));
 						}
 					}
 					iframeCell.appendChild(iframeWrapper);
