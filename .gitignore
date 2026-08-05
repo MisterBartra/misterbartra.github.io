@@ -1,0 +1,10 @@
+# Archivos binarios grandes
+*.mp4
+*.mkv
+*.avi
+*.mov
+
+# Sistema
+desktop.ini
+.DS_Store
+Thumbs.db

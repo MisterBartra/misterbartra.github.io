@@ -23,7 +23,8 @@
 }
 
 /* Estilos generales */
-html, body {
+html,
+body {
 	margin: 0;
 	padding: 0;
 	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -59,7 +60,8 @@ html, body {
 	width: 100vw;
 	height: 100vh;
 	overflow: hidden;
-	background-color: transparent; /* Inicialmente transparente */
+	background-color: transparent;
+	/* Inicialmente transparente */
 }
 
 /* Wrapper para cada iframe con inset */
@@ -69,10 +71,13 @@ html, body {
 	border-radius: var(--radius);
 	overflow: hidden;
 	box-shadow: inset 0 0 0 1px hsl(var(--border) / 0.2);
-	background-color: transparent; /* Inicialmente transparente */
+	background-color: transparent;
+	/* Inicialmente transparente */
 	transition: background-color 0.5s ease, top 0.3s ease, left 0.3s ease, right 0.3s ease, bottom 0.3s ease;
-	z-index: 996; /* Añadir z-index menor que las hitboxes */
-	pointer-events: auto; /* Permitir interacción con el iframe */
+	z-index: 996;
+	/* Añadir z-index menor que las hitboxes */
+	pointer-events: auto;
+	/* Permitir interacción con el iframe */
 }
 
 /* Iframes */
@@ -172,19 +177,58 @@ iframe {
 	position: fixed;
 	z-index: 997;
 	background-color: transparent;
-	transition: background-color 0.3s ease, top 0.3s ease, left 0.3s ease, right 0.3s ease, bottom 0.3s ease, width 0.3s ease, height 0.3s ease;
+	transition: background-color 0.3s ease, top 0.3s ease, left 0.3s ease, right 0.3s ease, bottom 0.3s ease, width 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55), height 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	pointer-events: none; /* Solo será interactivo cuando se expanda */
+	pointer-events: auto;
 }
 
+/* Barra visual del borde que se reduce a cero */
+.edge-detector::before {
+	content: '';
+	position: absolute;
+	background-color: hsl(var(--secondary) / 0.2);
+	transition: opacity 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55), transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+	pointer-events: none;
+}
+
+.edge-detector.top::before,
+.edge-detector.bottom::before {
+	left: 0;
+	right: 0;
+	top: 0;
+	height: 100%;
+	transform-origin: center;
+}
+
+.edge-detector.left::before,
+.edge-detector.right::before {
+	top: 0;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	transform-origin: center;
+}
+
+/* Estado activo: hitbox expandida */
 .edge-detector.expanded {
 	pointer-events: auto;
 }
 
-.edge-detector.expanded:hover {
-	background-color: hsl(var(--secondary) / 0.1);
+/* Al hover, la barra visual se reduce a cero */
+.edge-detector.expanded:hover::before {
+	opacity: 0;
+}
+
+.edge-detector.top.expanded:hover::before,
+.edge-detector.bottom.expanded:hover::before {
+	transform: scaleY(0);
+}
+
+.edge-detector.left.expanded:hover::before,
+.edge-detector.right.expanded:hover::before {
+	transform: scaleX(0);
 }
 
 .edge-nav-button {
@@ -202,7 +246,8 @@ iframe {
 	cursor: pointer;
 	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
 	opacity: 0;
-	transform: scale(0.5);
+	/* Centrar con translate para que hover funcione correctamente */
+	transform: translate(-50%, -50%) scale(0.5);
 	pointer-events: none;
 	/* Usar el easing curious propuesto easeOutBack */
 	transition: opacity 0.3s ease, transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
@@ -218,24 +263,34 @@ iframe {
 .edge-nav-button:hover {
 	background: rgba(255, 255, 255, 0.1);
 	border-color: rgba(255, 255, 255, 0.4);
-	transform: scale(1.1) !important;
+	transform: translate(-50%, -50%) scale(1.1) !important;
 }
 
 .edge-detector.expanded:hover .edge-nav-button {
 	opacity: 1;
 	pointer-events: auto;
-	transform: scale(1);
+	transform: translate(-50%, -50%) scale(1);
 }
 
 /* Animaciones */
 @keyframes fadeIn {
-	from { opacity: 0; }
-	to { opacity: 0.7; }
+	from {
+		opacity: 0;
+	}
+
+	to {
+		opacity: 0.7;
+	}
 }
 
 @keyframes fadeOut {
-	from { opacity: 0.7; }
-	to { opacity: 0; }
+	from {
+		opacity: 0.7;
+	}
+
+	to {
+		opacity: 0;
+	}
 }
 
 /* Estilos para el selector de JSON */
@@ -366,7 +421,9 @@ iframe {
 }
 
 @keyframes spin {
-	to { transform: rotate(360deg); }
+	to {
+		transform: rotate(360deg);
+	}
 }
 
 /* Botón de modo oscuro/claro */
@@ -625,11 +682,25 @@ iframe {
 	margin-left: 5px;
 }
 
-.matrix-nav-level-0 { background-color: #4caf50; }
-.matrix-nav-level-1 { background-color: #2196f3; }
-.matrix-nav-level-2 { background-color: #f44336; }
-.matrix-nav-level-3 { background-color: #ff9800; }
-.matrix-nav-level-4 { background-color: #9c27b0; }
+.matrix-nav-level-0 {
+	background-color: #4caf50;
+}
+
+.matrix-nav-level-1 {
+	background-color: #2196f3;
+}
+
+.matrix-nav-level-2 {
+	background-color: #f44336;
+}
+
+.matrix-nav-level-3 {
+	background-color: #ff9800;
+}
+
+.matrix-nav-level-4 {
+	background-color: #9c27b0;
+}
 
 /* Botón de salida más visible */
 .nav-button.exit {

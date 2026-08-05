@@ -28,43 +28,43 @@ class IframeMatrixViewer {
 		// Inicializar la aplicación
 		this.init();
 	}
-	
+
 	async init() {
 		try {
 			// Mostrar loader
 			this.showLoader();
-			
+
 			// Detectar la profundidad actual
 			this.initialDepth = this.detectCurrentDepth();
-			
+
 			// Obtener datos de la matriz
 			await this.loadMatrixData();
-			
+
 			// Inicializar Gobernanza Interactiva de forma dinámica
 			await this.loadGovernance();
-			
+
 			// Inicializar estados de carga
 			this.initLoadingStates();
-			
+
 			// Renderizar la interfaz
 			this.render();
-			
+
 			// Configurar eventos
 			//this.setupEventListeners();
-			
+
 			// Comprobar si hay una posición en el hash de la URL
 			this.checkUrlHash();
 			this.updateUrlHash();
-			
+
 			// Ocultar loader
 			this.hideLoader();
-			
+
 			// Mostrar notificación de bienvenida
 			this.showNotification(`Bienvenido a ∞Iframes Matrix Viewer (Nivel ${this.currentPosition.depth})`);
-			
+
 			// Establecer el título del documento
 			document.title = this.title;
-			
+
 			// Iniciar detección de matrices anidadas
 			this.startNestedMatrixDetection();
 		} catch (error) {
@@ -73,14 +73,14 @@ class IframeMatrixViewer {
 			this.hideLoader();
 		}
 	}
-	
+
 	initLoadingStates() {
 		if (Array.isArray(this.matrix) && this.matrix.length > 0 && Array.isArray(this.matrix[0])) {
 			this.loadingStates = this.matrix.map(row => row.map(() => true));
 			this.iframeOpacities = this.matrix.map(row => row.map(() => 0.5));
 		}
 	}
-	
+
 	showLoader() {
 		this.isLoading = true;
 		const loader = document.createElement('div');
@@ -88,7 +88,7 @@ class IframeMatrixViewer {
 		loader.innerHTML = '<div class="loader-spinner"></div>';
 		document.body.appendChild(loader);
 	}
-	
+
 	hideLoader() {
 		this.isLoading = false;
 		const loader = document.querySelector('.loader');
@@ -99,25 +99,25 @@ class IframeMatrixViewer {
 			}, 250);
 		}
 	}
-	
+
 	showNotification(message, duration = 3000) {
 		// Eliminar notificación existente
 		const existingNotification = document.querySelector('.notification');
 		if (existingNotification) {
 			existingNotification.remove();
 		}
-		
+
 		// Crear nueva notificación
 		const notification = document.createElement('div');
 		notification.className = 'notification';
 		notification.textContent = message;
 		document.body.appendChild(notification);
-		
+
 		// Mostrar notificación
 		setTimeout(() => {
 			notification.classList.add('show');
 		}, 10);
-		
+
 		// Ocultar notificación después de la duración
 		setTimeout(() => {
 			notification.classList.remove('show');
@@ -126,7 +126,7 @@ class IframeMatrixViewer {
 			}, 300);
 		}, duration);
 	}
-	
+
 	decodeUrlParam(param) {
 		if (typeof param !== "string") return null;
 
@@ -165,12 +165,12 @@ class IframeMatrixViewer {
 	// Inicializar la ruta jerárquica basada en el hash
 	initializeHierarchyPath() {
 		this.hierarchyPath = [];
-		
+
 		// Si hay un hash del padre, procesarlo
 		if (this.parentHash) {
 			// Dividir el hash por | para obtener cada nivel
 			const positions = this.parentHash.split('|');
-			
+
 			// Procesar cada posición y añadirla a la ruta jerárquica
 			for (let i = 0; i < positions.length; i++) {
 				const [x, y] = positions[i].split(',').map(Number);
@@ -179,34 +179,34 @@ class IframeMatrixViewer {
 				}
 			}
 		}
-		
+
 		// Añadir la posición actual
 		this.hierarchyPath.push({
 			x: this.currentPosition.x,
 			y: this.currentPosition.y,
 			depth: this.currentPosition.depth
 		});
-		
+
 		console.log("Ruta jerárquica inicializada:", this.hierarchyPath);
 	}
-	
+
 	createDefaultMatrix() {
 		return [
 			["https://example.com", "https://example.org"],
 			["https://example.com", "https://example.com"]
 		];
 	}
-	
+
 	async loadMatrix(url) {
 		try {
 			// Detectar si estamos en un contexto de archivo local (file:///)
 			const isFileProtocol = window.location.protocol === 'file:';
-			
+
 			// Para URLs y rutas relativas
-			if (url.startsWith("http://") || url.startsWith("https://") || 
-				url.startsWith("/") || url.startsWith("./") || 
+			if (url.startsWith("http://") || url.startsWith("https://") ||
+				url.startsWith("/") || url.startsWith("./") ||
 				(isFileProtocol && (url.startsWith("file://") || !url.match(/^[a-z]+:\/\//i)))) {
-				
+
 				// Si estamos en protocolo file:// y es una ruta relativa, construimos la ruta completa
 				if (isFileProtocol && !url.startsWith("file://") && !url.startsWith("http")) {
 					// Obtener el directorio base del HTML actual
@@ -216,7 +216,7 @@ class IframeMatrixViewer {
 					// Construir la ruta completa
 					url = `${basePath}${cleanUrl}`;
 				}
-	
+
 				try {
 					// Intentar cargar con fetch primero
 					const response = await fetch(url);
@@ -224,12 +224,12 @@ class IframeMatrixViewer {
 						throw new Error(`HTTP error! status: ${response.status}`);
 					}
 					const data = await response.json();
-	
+
 					// Validar que la matriz sea válida
 					if (!data.urlMatrix || !Array.isArray(data.urlMatrix) || data.urlMatrix.length === 0) {
 						throw new Error("Invalid matrix format in JSON");
 					}
-	
+
 					return data;
 				} catch (fetchError) {
 					console.warn("Fetch failed, trying XMLHttpRequest:", fetchError);
@@ -241,13 +241,13 @@ class IframeMatrixViewer {
 								if (xhr.status === 200 || (isFileProtocol && xhr.status === 0)) {
 									try {
 										const parsedData = JSON.parse(xhr.responseText);
-	
+
 										// Validar que la matriz sea válida
 										if (!parsedData.urlMatrix || !Array.isArray(parsedData.urlMatrix) || parsedData.urlMatrix.length === 0) {
 											reject(new Error("Invalid matrix format in JSON"));
 											return;
 										}
-	
+
 										resolve(parsedData);
 									} catch (error) {
 										reject(new Error("Error parsing JSON"));
@@ -280,7 +280,7 @@ class IframeMatrixViewer {
 			};
 		}
 	}
-	
+
 	getBracketValue(bracket, depth = 0) {
 		try {
 			let value;
@@ -337,7 +337,7 @@ class IframeMatrixViewer {
 			return this.createDefaultMatrix();
 		}
 	}
-	
+
 	detectCurrentDepth() {
 		let depth = 0;
 		let currentWindow = window;
@@ -353,14 +353,14 @@ class IframeMatrixViewer {
 		}
 		return depth;
 	}
-	
+
 	getUrlParameter(name) {
 		const params = new URLSearchParams(window.location.search);
 		let paramValue = params.get(name);
-		
+
 		if (name === "urlRowsIframe") {
 			if (!paramValue) return window.urlRowsIframe;
-	
+
 			try {
 				while (paramValue !== decodeURIComponent(paramValue)) {
 					paramValue = decodeURIComponent(paramValue);
@@ -371,11 +371,11 @@ class IframeMatrixViewer {
 				return window.urlRowsIframe;
 			}
 		}
-	
+
 		return paramValue;
 	}
 
-	
+
 	parseUrlHash() {
 		const hash = window.location.hash.substring(1);
 		if (hash) {
@@ -387,7 +387,7 @@ class IframeMatrixViewer {
 		}
 	}
 
-	
+
 	checkUrlHash() {
 		const pos = this.parseUrlHash();
 		if (!pos) return;
@@ -406,14 +406,14 @@ class IframeMatrixViewer {
 		}
 	}
 
-	
+
 	// Método actualizado para el hash jerárquico invertido
 	updateUrlHash() {
 		const newHash = `${this.currentPosition.x},${this.currentPosition.y}`;
 		window.location.hash = newHash;
 	}
 
-	
+
 	navigate(dx, dy) {
 		if (this.isLoading || this.animationInProgress) return;
 
@@ -436,7 +436,7 @@ class IframeMatrixViewer {
 
 		this.currentPosition.x = newX;
 		this.currentPosition.y = newY;
-		
+
 		this.updateIframeContainerPosition();
 		this.updateUrlHash();
 
@@ -449,13 +449,13 @@ class IframeMatrixViewer {
 		}, 250);
 	}
 
-	
+
 	updateIframeContainerPosition() {
 		const container = document.querySelector('.iframe-container');
 		if (container) {
 			container.style.transform = `translate(-${this.currentPosition.x * 100}%, -${this.currentPosition.y * 100}%)`;
 		}
-		
+
 		const currentMatrix = this.matrixStack[this.currentPosition.depth - this.initialDepth];
 		const currentRow = currentMatrix[this.currentPosition.y] || [];
 
@@ -480,25 +480,25 @@ class IframeMatrixViewer {
 	// Método para crear una URL para una submatriz
 	createSubmatrixUrl(subarray, position) {
 		const jsonSubarray = JSON.stringify(subarray); // NO lo envuelvas en [subarray]
-	
+
 		const url = new URL(window.location.href);
 		url.search = ""; // Limpiar parámetros anteriores
 		url.hash = "";   // Evitar arrastrar posición anterior
-	
+
 		url.searchParams.set("urlRowsIframe", jsonSubarray);
 		url.searchParams.set("initialDepth", (this.currentPosition.depth + 1).toString());
-	
+
 		// Agregar acumulación de parentHash
 		const targetHash = `${position.x},${position.y}`;
 		const fullParentHash = this.parentHash
 			? `${this.parentHash}|${targetHash}`
 			: targetHash;
-	
+
 		url.searchParams.set("parentHash", fullParentHash);
-	
+
 		return url.toString();
 	}
-	
+
 
 
 	isSubmatrixCandidate(cell) { return Array.isArray(cell) && cell.every(el => typeof el === "string" || Array.isArray(el)); }
@@ -506,7 +506,7 @@ class IframeMatrixViewer {
 
 	handleCellClick(x, y) {
 		const cell = this.matrix[y][x];
-	
+
 		if (this.isSubmatrixCandidate(cell)) {
 			const url = this.createSubarrayUrl(cell, { x, y });
 			window.open(url, "_self");
@@ -534,7 +534,7 @@ class IframeMatrixViewer {
 
 			this.showNotification("Volviendo a matriz anterior...", 1000);
 			setTimeout(() => {
-			window.location.href = returnUrl.toString();
+				window.location.href = returnUrl.toString();
 			}, 300);
 
 		} else if (this.currentPosition.depth > this.initialDepth) {
@@ -552,13 +552,13 @@ class IframeMatrixViewer {
 		}
 	}
 
-	
+
 	// Método para detectar si una URL causaría un bucle infinito
 	wouldCauseInfiniteLoop(url) {
 		// Si la URL es la misma que la actual pero sin parámetros, podría causar un bucle
 		const currentUrlBase = window.location.href.split('?')[0].split('#')[0];
 		const urlBase = url.split('?')[0].split('#')[0];
-		
+
 		// Si la URL base es la misma y ya estamos en un iframe, prevenir el bucle
 		if (urlBase === currentUrlBase && this.initialDepth > 0) {
 			console.warn("Prevención de bucle infinito detectada:", url);
@@ -566,44 +566,44 @@ class IframeMatrixViewer {
 		}
 		return false;
 	}
-	
+
 	hideAllButtons() {
 		// Limpiar todos los timeouts pendientes
 		Object.values(this.hideTimeouts).forEach(timeout => {
 			clearTimeout(timeout);
 		});
 		this.hideTimeouts = {};
-		
+
 		// Ocultar todos los botones
 		document.querySelectorAll('.nav-button.visible, .json-selector.visible, .theme-toggle.visible, .settings-button.visible, .settings-panel.visible').forEach(element => {
 			element.classList.remove('visible');
 		});
-		
+
 		// Ocultar todos los tooltips
 		document.querySelectorAll('.tooltip').forEach(tooltip => {
 			tooltip.style.opacity = '0';
 		});
-		
+
 		// Desactivar todos los bordes
 		this.activeEdges = {};
-		
+
 		// Ocultar panel de configuración
 		this.settingsVisible = false;
 	}
-	
+
 	toggleButtonsVisibility() {
 		if (this.isLoading || this.animationInProgress) return;
-		
+
 		this.buttonsVisible = !this.buttonsVisible;
 		this.updateButtonsVisibility();
-		
+
 		// Mostrar notificación
 		this.showNotification(this.buttonsVisible ? "Botones visibles" : "Botones ocultos", 1500);
 	}
-	
+
 	updateButtonsVisibility() {
 		const buttons = document.querySelectorAll('.nav-button, .json-selector, .theme-toggle, .settings-button');
-		
+
 		if (this.buttonsVisible) {
 			// Mostrar botones
 			buttons.forEach(button => {
@@ -615,49 +615,49 @@ class IframeMatrixViewer {
 				button.classList.remove('visible');
 			});
 		}
-		
+
 		// Actualizar el icono del botón de alternar
 		const toggleButton = document.querySelector('.toggle-button');
 		if (toggleButton) {
-			toggleButton.innerHTML = this.buttonsVisible ? 
-				'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none"></circle><circle cx="12" cy="12" r="4"></circle></svg>' : 
+			toggleButton.innerHTML = this.buttonsVisible ?
+				'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none"></circle><circle cx="12" cy="12" r="4"></circle></svg>' :
 				'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none"></circle></svg>';
 		}
-		
+
 		// Ocultar panel de configuración si los botones están ocultos
 		if (!this.buttonsVisible) {
 			this.settingsVisible = false;
 			document.querySelector('.settings-panel')?.classList.remove('visible');
 		}
 	}
-	
+
 	toggleDarkMode() {
 		if (this.isLoading || this.animationInProgress) return;
-		
+
 		this.darkMode = !this.darkMode;
 		document.body.classList.toggle('light-mode', !this.darkMode);
-		
+
 		// Mostrar notificación
 		this.showNotification(this.darkMode ? "Modo oscuro activado" : "Modo claro activado", 1500);
-		
+
 		// Actualizar el icono del botón
 		const themeToggle = document.querySelector('.theme-toggle');
 		if (themeToggle) {
 			themeToggle.innerHTML = this.darkMode ? '☀️' : '🌙';
 		}
 	}
-	
+
 	toggleSettings() {
 		if (this.isLoading || this.animationInProgress) return;
-		
+
 		this.settingsVisible = !this.settingsVisible;
-		
+
 		const settingsPanel = document.querySelector('.settings-panel');
 		if (settingsPanel) {
 			settingsPanel.classList.toggle('visible', this.settingsVisible);
 		}
 	}
-	
+
 	saveMatrix() {
 		try {
 			localStorage.setItem('urlMatrix', JSON.stringify(this.matrix));
@@ -667,7 +667,7 @@ class IframeMatrixViewer {
 			this.showNotification('Error al guardar la matriz', 2000);
 		}
 	}
-	
+
 	loadMatrix() {
 		try {
 			const savedMatrix = localStorage.getItem('urlMatrix');
@@ -687,39 +687,39 @@ class IframeMatrixViewer {
 			this.showNotification('Error al cargar la matriz', 2000);
 		}
 	}
-	
+
 	handleJsonLoaded(jsonData) {
 		if (this.isLoading || this.animationInProgress) return;
-		
+
 		if (jsonData.urlMatrix) {
 			this.animationInProgress = true;
-			
+
 			// Ocultar todos los botones y tooltips
 			this.hideAllButtons();
-			
+
 			// Esperar a que termine la animación
 			setTimeout(() => {
 				this.matrix = jsonData.urlMatrix;
 				this.matrixStack = [jsonData.urlMatrix];
 				this.title = jsonData.title || "∞Iframes Matrix Viewer";
 				this.currentPosition = { x: 0, y: 0, depth: this.initialDepth };
-				
+
 				// Inicializar estados de carga
 				this.initLoadingStates();
-				
+
 				// Actualizar la interfaz
 				this.render();
-				
+
 				// Resetear el hash al cargar una nueva matriz
 				this.updateUrlHash();
-				
+
 				// Mostrar notificación
 				this.showNotification(`Matriz cargada: ${this.title}`, 2000);
-				
+
 				// Permitir nuevas navegaciones después de la animación
 				setTimeout(() => {
 					this.animationInProgress = false;
-					
+
 					// Intentar detectar el color del iframe actual
 					this.detectIframeColor(0, 0);
 				}, 250);
@@ -728,34 +728,34 @@ class IframeMatrixViewer {
 			alert("El archivo JSON no contiene una matriz válida. Debe tener una propiedad 'urlMatrix'.");
 		}
 	}
-	
+
 	createTooltip(element, text) {
 		const tooltip = document.createElement('div');
 		tooltip.className = 'tooltip';
 		tooltip.textContent = text;
 		document.body.appendChild(tooltip);
-		
+
 		element.addEventListener('mouseenter', () => {
 			if (!element.classList.contains('visible')) return;
-			
+
 			const rect = element.getBoundingClientRect();
 			tooltip.style.left = `${rect.left + rect.width / 2 - tooltip.offsetWidth / 2}px`;
 			tooltip.style.top = `${rect.top - tooltip.offsetHeight - 10}px`;
 			tooltip.style.opacity = '1';
 		});
-		
+
 		element.addEventListener('mouseleave', () => {
 			tooltip.style.opacity = '0';
 		});
-		
+
 		return tooltip;
 	}
-	
+
 	setupEventListeners() {
 		// Manejar teclas de navegación
 		document.addEventListener('keydown', (e) => {
 			if (this.isLoading || this.animationInProgress) return;
-			
+
 			switch (e.key) {
 				case "ArrowLeft":
 					this.navigate(-1, 0);
@@ -784,12 +784,12 @@ class IframeMatrixViewer {
 					break;
 			}
 		});
-		
+
 		// Manejar cambios en el hash de la URL
 		window.addEventListener('hashchange', () => {
 			this.checkUrlHash();
 		});
-		
+
 		// Configurar el selector de JSON
 		const jsonInput = document.getElementById('json-input');
 		if (jsonInput) {
@@ -810,54 +810,54 @@ class IframeMatrixViewer {
 				}
 			});
 		}
-		
+
 		// Configurar los botones de navegación
 		this.setupNavigationButtons();
-		
+
 		// Configurar los detectores de bordes
 		this.setupEdgeDetectors();
-		
+
 		// Configurar el botón de alternar visibilidad
 		const toggleButton = document.querySelector('.toggle-button');
 		if (toggleButton) {
 			toggleButton.addEventListener('click', () => this.toggleButtonsVisibility());
 			this.createTooltip(toggleButton, 'Mostrar/Ocultar botones (b)');
 		}
-		
+
 		// Configurar el botón de tema
 		const themeToggle = document.querySelector('.theme-toggle');
 		if (themeToggle) {
 			themeToggle.addEventListener('click', () => this.toggleDarkMode());
 			this.createTooltip(themeToggle, 'Cambiar tema (d)');
 		}
-		
+
 		// Configurar el botón de configuración
 		const settingsButton = document.querySelector('.settings-button');
 		if (settingsButton) {
 			settingsButton.addEventListener('click', () => this.toggleSettings());
 			this.createTooltip(settingsButton, 'Configuración');
 		}
-		
+
 		// Configurar botones del panel de configuración
 		const saveButton = document.querySelector('.save-button');
 		if (saveButton) {
 			saveButton.addEventListener('click', () => this.saveMatrix());
 		}
-		
+
 		const loadButton = document.querySelector('.load-button');
 		if (loadButton) {
 			loadButton.addEventListener('click', () => this.loadMatrix());
 		}
-		
+
 		// Configurar escucha de mensajes para comunicación entre frames
 		window.addEventListener('message', (event) => {
 			this.handleIncomingMessage(event);
 		});
-		
+
 		// Configurar eventos para la ruta jerárquica
 		this.setupHierarchyPathEvents();
 	}
-	
+
 	// Configurar eventos para la ruta jerárquica
 	setupHierarchyPathEvents() {
 		document.addEventListener('click', (e) => {
@@ -866,26 +866,26 @@ class IframeMatrixViewer {
 				const depth = parseInt(item.dataset.depth);
 				const x = parseInt(item.dataset.x);
 				const y = parseInt(item.dataset.y);
-				
+
 				if (!isNaN(depth) && !isNaN(x) && !isNaN(y)) {
 					this.navigateToHierarchyLevel(depth, x, y);
 				}
 			}
 		});
 	}
-	
+
 	// Navegar a un nivel específico de la jerarquía
 	navigateToHierarchyLevel(depth, x, y) {
 		if (this.isLoading || this.animationInProgress) return;
-		
+
 		// Si es el nivel actual, no hacer nada
 		if (depth === this.currentPosition.depth) return;
-		
+
 		// Si es un nivel superior, salir de las matrices anidadas hasta ese nivel
 		if (depth < this.currentPosition.depth) {
 			// Construir un nuevo hash para navegar directamente a ese nivel
 			let newHash = '';
-			
+
 			// Recorrer la ruta jerárquica hasta el nivel deseado
 			for (let i = 0; i <= depth; i++) {
 				const pos = this.hierarchyPath[i];
@@ -894,28 +894,28 @@ class IframeMatrixViewer {
 					newHash += `${pos.x},${pos.y}`;
 				}
 			}
-			
+
 			// Navegar a la URL con el nuevo hash
 			const returnUrl = new URL(window.location.pathname, window.location.origin);
 			returnUrl.hash = newHash;
-			
+
 			// Mostrar notificación antes de navegar
 			this.showNotification(`Navegando al nivel ${depth}...`, 1000);
-			
+
 			// Navegar después de un breve retraso
 			setTimeout(() => {
 				window.location.href = returnUrl.toString();
 			}, 250);
 		}
 	}
-	
+
 	// Método para manejar mensajes entrantes
 	handleIncomingMessage(event) {
 		const data = event.data;
-		
+
 		// Verificar que sea un objeto y tenga un tipo
 		if (!data || typeof data !== 'object' || !data.type) return;
-		
+
 		switch (data.type) {
 			case 'NAVIGATE_COMMAND':
 				// Comando para navegar
@@ -927,19 +927,19 @@ class IframeMatrixViewer {
 					this.exitNestedMatrix();
 				}
 				break;
-				
+
 			case 'MATRIX_DETECTION_REQUEST':
 				// Solicitud para detectar si este frame contiene una matriz
 				this.respondToMatrixDetection(event.source, data);
 				break;
-				
+
 			case 'REQUEST_MATRIX_INFO':
 				// Solicitud de información sobre la matriz actual
 				this.sendMatrixInfo(event.source, data);
 				break;
 		}
 	}
-	
+
 	// Responder a una solicitud de detección de matriz
 	respondToMatrixDetection(source, request) {
 		try {
@@ -957,7 +957,7 @@ class IframeMatrixViewer {
 				hasNestedMatrices: this.hasNestedMatrices(currentMatrix),
 				depth: this.currentPosition.depth
 			};
-			
+
 			// Enviar respuesta
 			source.postMessage(response, '*');
 		} catch (e) {
@@ -971,27 +971,27 @@ class IframeMatrixViewer {
 			}, '*');
 		}
 	}
-	
+
 	// Verificar si una matriz contiene matrices anidadas
 	hasNestedMatrices(matrix) {
 		if (!Array.isArray(matrix)) return false;
-		
+
 		// Función recursiva para buscar arrays anidados
 		const hasNestedArray = (item, depth = 0) => {
 			if (depth >= 3) return false; // Limitar profundidad de búsqueda
-			
+
 			if (Array.isArray(item)) {
 				// Si algún elemento es un array,
-				return item.some(subItem => Array.isArray(subItem)) || 
+				return item.some(subItem => Array.isArray(subItem)) ||
 					item.some(subItem => hasNestedArray(subItem, depth + 1));
 			}
-			
+
 			return false;
 		};
-		
+
 		return hasNestedArray(matrix);
 	}
-	
+
 	// Enviar información sobre la matriz actual
 	sendMatrixInfo(source, request) {
 		try {
@@ -1010,7 +1010,7 @@ class IframeMatrixViewer {
 			console.error('Error enviando información de matriz:', e);
 		}
 	}
-	
+
 	// Notificar a los observadores sobre la navegación
 	notifyNavigationObservers() {
 		try {
@@ -1030,18 +1030,18 @@ class IframeMatrixViewer {
 			console.warn('Error notificando navegación:', e);
 		}
 	}
-	
+
 	setupNavigationButtons() {
 		const currentMatrix = this.matrixStack[this.currentPosition.depth - this.initialDepth];
-		
+
 		// Verificar si la matriz tiene múltiples columnas o filas
 		const hasMultipleColumns = currentMatrix && currentMatrix[0] && currentMatrix[0].length > 1;
 		const hasMultipleRows = currentMatrix && currentMatrix.length > 1;
-		
+
 		// Calcular el desplazamiento basado en la profundidad
 		const depth = this.currentPosition.depth;
 		const offset = depth * 2.5; // Reducido a la mitad
-		
+
 		// Crear botones de navegación solo si son necesarios
 		if (hasMultipleColumns) {
 			// Botón izquierdo - más cerca del borde izquierdo
@@ -1058,7 +1058,7 @@ class IframeMatrixViewer {
 				}
 			});
 			this.root.appendChild(leftButton);
-			
+
 			// Botón derecho - más cerca del borde derecho
 			const rightButton = document.createElement('button');
 			rightButton.className = 'nav-button right';
@@ -1074,7 +1074,7 @@ class IframeMatrixViewer {
 			});
 			this.root.appendChild(rightButton);
 		}
-		
+
 		// Solo mostrar botones verticales si hay más de una fila
 		if (hasMultipleRows) {
 			// Botón arriba - más cerca del borde superior
@@ -1091,7 +1091,7 @@ class IframeMatrixViewer {
 				}
 			});
 			this.root.appendChild(upButton);
-			
+
 			// Botón abajo - más cerca del borde inferior
 			const downButton = document.createElement('button');
 			downButton.className = 'nav-button down';
@@ -1107,7 +1107,7 @@ class IframeMatrixViewer {
 			});
 			this.root.appendChild(downButton);
 		}
-		
+
 		// Botón de salida (solo si estamos en una matriz anidada)
 		if (this.currentPosition.depth > this.initialDepth || this.getUrlParameter("parentHash")) {
 			const exitButton = document.createElement('button');
@@ -1116,7 +1116,7 @@ class IframeMatrixViewer {
 			exitButton.style.left = `6vh`;
 			exitButton.style.top = `6vh`;
 			exitButton.style.opacity = `0.25`;
-			exitButton.style.pointerEvents = `auto`; 
+			exitButton.style.pointerEvents = `auto`;
 			exitButton.addEventListener('click', (e) => {
 				e.preventDefault();
 				e.stopPropagation();
@@ -1128,54 +1128,99 @@ class IframeMatrixViewer {
 			this.createTooltip(exitButton, 'Salir de matriz anidada (Esc)');
 		}
 	}
-	
+
 	setupEdgeDetectors() {
-		// Control de estado para la tecla Ctrl
+		// Control de estado para la tecla Shift (botón se desvincula del arco)
 		this.ctrlPressed = false;
-		
+		// Estado independiente por borde para evitar conflictos con múltiples hovers
+		this.edgeStates = {};
+
+		// Helper: resetear un borde a su estado inicial
+		const resetEdge = (edge) => {
+			const detector = document.querySelector(`.edge-detector[data-edge="${edge}"]`);
+			if (!detector) return;
+			const btn = detector.querySelector('.edge-nav-button');
+			if (btn) {
+				btn.style.opacity = '';
+				btn.style.left = '';
+				btn.style.right = '';
+				btn.style.top = '';
+				btn.style.bottom = '';
+				btn.style.transform = '';
+			}
+			detector.classList.remove('expanded');
+			const inset = this.calculateInset(this.currentPosition.depth);
+			if (edge === 'top' || edge === 'bottom') {
+				detector.style.height = inset;
+			} else {
+				detector.style.width = inset;
+			}
+			this.edgeStates[edge] = {
+				active: false,
+				timeout: null,
+				shifted: false
+			};
+		};
+
+		// Inicializar estados solo de los bordes que existen en el DOM
+		document.querySelectorAll('.edge-detector[data-edge]').forEach(det => {
+			const edge = det.dataset.edge;
+			if (['top', 'bottom', 'left', 'right'].includes(edge)) {
+				resetEdge(edge);
+			}
+		});
+
 		document.addEventListener('keydown', (e) => {
-			if (e.key === 'Control' && !this.ctrlPressed) {
+			if (e.key === 'Shift' && !this.ctrlPressed) {
 				this.ctrlPressed = true;
-				document.querySelectorAll('.edge-detector').forEach(det => {
-					if (this.activeEdges[det.dataset.edge]) {
-						this.expandEdge(det, det.dataset.edge);
-					}
-				});
 			}
 		});
 
 		document.addEventListener('keyup', (e) => {
-			if (e.key === 'Control' && this.ctrlPressed) {
+			if (e.key === 'Shift' && this.ctrlPressed) {
 				this.ctrlPressed = false;
-				document.querySelectorAll('.edge-detector').forEach(det => {
-					this.collapseEdge(det, det.dataset.edge);
+				// Al soltar Shift, restaurar botones a su posición de arco si siguen activos
+				['top', 'bottom', 'left', 'right'].forEach(edge => {
+					if (this.edgeStates[edge] && this.edgeStates[edge].active) {
+						this.edgeStates[edge].shifted = false;
+					}
 				});
 			}
 		});
 
 		// Configurar los detectores de bordes principales
 		document.querySelectorAll('.edge-detector').forEach(detector => {
-			const edge = detector.dataset.edge; // top, right, bottom, left
-			
+			const edge = detector.dataset.edge;
+
+			// mouseenter: SIEMPRE activar el borde (sin requerir Shift)
 			detector.addEventListener('mouseenter', () => {
 				if (this.isLoading || this.animationInProgress) return;
-				this.activeEdges[edge] = true;
-				
-				// Si está en crossOriginMode, el overlay se despliega automáticamente por hover inteligente
-				// de lo contrario, depende de la tecla Ctrl.
-				if (this.ctrlPressed || this.crossOriginMode) {
-					this.expandEdge(detector, edge);
+
+				// Limpiar timeout anterior si existe (evitar conflictos de hover múltiple)
+				if (this.edgeStates[edge] && this.edgeStates[edge].timeout) {
+					clearTimeout(this.edgeStates[edge].timeout);
+					this.edgeStates[edge].timeout = null;
 				}
-				
-				this.showEdgeButtons(edge); // Para botones de settings/tema antiguos
+
+				this.activeEdges[edge] = true;
+				this.edgeStates[edge] = this.edgeStates[edge] || {};
+				this.edgeStates[edge].active = true;
+				this.edgeStates[edge].shifted = false;
+
+				// Expandir la hitbox siempre
+				this.expandEdge(detector, edge);
+
+				this.showEdgeButtons(edge);
 			});
-			
+
+			// mouseleave: colapsar y programar reset
 			detector.addEventListener('mouseleave', () => {
 				if (this.isLoading || this.animationInProgress) return;
 				this.activeEdges[edge] = false;
-				
+				if (this.edgeStates[edge]) this.edgeStates[edge].active = false;
+
 				this.collapseEdge(detector, edge);
-				
+
 				if (!this.buttonsVisible) {
 					setTimeout(() => {
 						if (!this.activeEdges[edge]) {
@@ -1185,53 +1230,98 @@ class IframeMatrixViewer {
 				}
 			});
 
+			// mousemove: arco elástico (sin Shift) o seguimiento directo (con Shift)
 			detector.addEventListener('mousemove', (e) => {
-				// Permitir movimiento del arco si se presionó Ctrl o estamos en modo CrossOrigin (fallback inteligente)
-				if ((!this.ctrlPressed && !this.crossOriginMode) || !this.activeEdges[edge]) return;
-				
-				// Lógica del arco elástico
+				if (this.isLoading || this.animationInProgress) return;
+				if (!this.activeEdges[edge]) return;
+
 				const btn = detector.querySelector('.edge-nav-button');
 				if (!btn) return;
-				
+
 				const rect = detector.getBoundingClientRect();
-				const { innerWidth, innerHeight } = window;
-				
-				// Calcular el progreso (0 a 1) del mouse a lo largo del borde
+
+				// Con Shift: el botón se desvincula del arco y sigue al mouse directamente
+				if (this.ctrlPressed) {
+					if (this.edgeStates[edge]) this.edgeStates[edge].shifted = true;
+					btn.style.transition = 'opacity 0.3s ease';
+					btn.style.left = `${e.clientX - rect.left}px`;
+					btn.style.top = `${e.clientY - rect.top}px`;
+					return;
+				}
+
+				// Sin Shift: arco elíptico (posición en la mitad correspondiente al borde)
+				btn.style.transition = '';
 				let progress = 0;
 				let archDepth = 0;
-				
+				const { innerWidth, innerHeight } = window;
+
 				if (edge === 'top' || edge === 'bottom') {
 					progress = (e.clientX - rect.left) / rect.width;
-					// El arco es máximo en el centro (progress = 0.5)
-					const archFactor = Math.sin(progress * Math.PI); // 0 a 1 a 0
-					archDepth = archFactor * (innerHeight * 0.25); // 25vh max
-					
+					const archFactor = Math.sin(progress * Math.PI);
+					archDepth = archFactor * (innerHeight * 0.25);
+
 					btn.style.left = `${e.clientX - rect.left}px`;
 					if (edge === 'top') {
 						btn.style.top = `${archDepth}px`;
+						btn.style.bottom = '';
 					} else {
 						btn.style.bottom = `${archDepth}px`;
+						btn.style.top = '';
 					}
 				} else {
 					progress = (e.clientY - rect.top) / rect.height;
 					const archFactor = Math.sin(progress * Math.PI);
-					archDepth = archFactor * (innerWidth * 0.25); // 25vw max
-					
+					archDepth = archFactor * (innerWidth * 0.25);
+
 					btn.style.top = `${e.clientY - rect.top}px`;
 					if (edge === 'left') {
 						btn.style.left = `${archDepth}px`;
+						btn.style.right = '';
 					} else {
 						btn.style.right = `${archDepth}px`;
+						btn.style.left = '';
 					}
 				}
 			});
+
+			// Navegación con rueda del mouse sobre el borde
+			detector.addEventListener('wheel', (e) => {
+				if (this.isLoading || this.animationInProgress) return;
+				if (!this.activeEdges[edge]) return;
+
+				e.preventDefault();
+
+				const delta = e.deltaY;
+				if (delta === 0) return;
+
+				if (this._wheelThrottle) return;
+				this._wheelThrottle = true;
+				setTimeout(() => { this._wheelThrottle = false; }, 300);
+
+				const isShift = e.shiftKey;
+				const scrollDown = delta > 0;
+
+				if (edge === 'top' || edge === 'bottom') {
+					if (isShift) {
+						this.navigate(scrollDown ? 1 : -1, 0);
+					} else {
+						this.navigate(0, scrollDown ? 1 : -1);
+					}
+				} else {
+					if (isShift) {
+						this.navigate(0, scrollDown ? 1 : -1);
+					} else {
+						this.navigate(scrollDown ? 1 : -1, 0);
+					}
+				}
+			}, { passive: false });
 		});
 	}
 
 	expandEdge(detector, edge) {
 		detector.classList.add('expanded');
-		
-		// Ampliar el grosor temporalmente para capturar mejor el movimiento
+
+		// Expandir el grosor de la hitbox para capturar mejor el movimiento
 		if (edge === 'top' || edge === 'bottom') {
 			detector.style.height = '15vh';
 		} else {
@@ -1248,13 +1338,11 @@ class IframeMatrixViewer {
 				btn.style.top = '50%';
 				btn.style[edge] = '0px';
 			}
-			btn.style.transform = 'translate(-50%, -50%) scale(1)';
-			btn.style.opacity = '1';
 		}
 	}
 
 	collapseEdge(detector, edge) {
-		// Animación de retroceso "curiosa" (easeOutBack manejado por CSS)
+		// Resetear posición del botón
 		const btn = detector.querySelector('.edge-nav-button');
 		if (btn) {
 			if (edge === 'top' || edge === 'bottom') {
@@ -1264,31 +1352,42 @@ class IframeMatrixViewer {
 				btn.style.top = '50%';
 				btn.style[edge] = '0px';
 			}
-			btn.style.opacity = '0';
-			btn.style.transform = 'translate(-50%, -50%) scale(0.5)';
 		}
 
-		// Después de 0.5s, quitar la expansión
-		setTimeout(() => {
-			if ((!this.ctrlPressed && !this.crossOriginMode) || !this.activeEdges[edge]) {
-				detector.classList.remove('expanded');
-				const inset = this.calculateInset(this.currentPosition.depth);
-				if (edge === 'top' || edge === 'bottom') {
-					detector.style.height = inset;
-				} else {
-					detector.style.width = inset;
+		// Después de 3 segundos, restaurar el grosor del borde (hitbox)
+		// Esto evita confusiones con múltiples hovers casuales simultáneos
+		if (this.edgeStates[edge] && this.edgeStates[edge].timeout) {
+			clearTimeout(this.edgeStates[edge].timeout);
+		}
+
+		if (this.edgeStates[edge]) {
+			this.edgeStates[edge].timeout = setTimeout(() => {
+				// Solo colapsar si el borde no está activo (mouse ya salió)
+				if (!this.activeEdges[edge]) {
+					detector.classList.remove('expanded');
+					const inset = this.calculateInset(this.currentPosition.depth);
+					if (edge === 'top' || edge === 'bottom') {
+						detector.style.height = inset;
+					} else {
+						detector.style.width = inset;
+					}
+					// Regenerar estado inicial para nueva interacción limpia
+					this.edgeStates[edge] = {
+						active: false,
+						timeout: null,
+						shifted: false
+					};
 				}
-			}
-		}, 500);
+			}, 3000);
+		}
 	}
-	
 	getButtonsForEdge(edge) {
 		const currentMatrix = this.matrixStack[this.currentPosition.depth - this.initialDepth];
 		if (!currentMatrix) return [];
-		
+
 		const hasMultipleColumns = currentMatrix[0] && currentMatrix[0].length > 1;
 		const hasMultipleRows = currentMatrix.length > 1;
-		
+
 		switch (edge) {
 			case 'left':
 				return hasMultipleColumns ? ['left'] : [];
@@ -1326,10 +1425,10 @@ class IframeMatrixViewer {
 				return [];
 		}
 	}
-	
+
 	showEdgeButtons(edge) {
 		const buttons = this.getButtonsForEdge(edge);
-		
+
 		buttons.forEach(button => {
 			if (button === 'left') {
 				document.querySelector('.nav-button.left')?.classList.add('visible');
@@ -1350,10 +1449,10 @@ class IframeMatrixViewer {
 			}
 		});
 	}
-	
+
 	hideEdgeButtons(edge) {
 		const buttons = this.getButtonsForEdge(edge);
-		
+
 		buttons.forEach(button => {
 			if (button === 'left') {
 				document.querySelector('.nav-button.left')?.classList.remove('visible');
@@ -1374,16 +1473,16 @@ class IframeMatrixViewer {
 			}
 		});
 	}
-	
+
 	handleEdgeClick(edge) {
 		if (this.isLoading || this.animationInProgress) return;
-		
+
 		const currentMatrix = this.matrixStack[this.currentPosition.depth - this.initialDepth];
 		if (!currentMatrix) return;
-		
+
 		const hasMultipleColumns = currentMatrix[0] && currentMatrix[0].length > 1;
 		const hasMultipleRows = currentMatrix.length > 1;
-		
+
 		switch (edge) {
 			case 'left':
 				if (hasMultipleColumns) this.navigate(-1, 0);
@@ -1439,38 +1538,38 @@ class IframeMatrixViewer {
 				break;
 		}
 	}
-	
+
 	handleIframeLoad(rowIndex, colIndex) {
 		// Limpiar cualquier timeout pendiente
 		if (this.loadingTimeouts && this.loadingTimeouts[rowIndex] && this.loadingTimeouts[rowIndex][colIndex]) {
 			clearTimeout(this.loadingTimeouts[rowIndex][colIndex]);
 		}
-		
+
 		// Actualizar el estado de carga
 		if (this.loadingStates[rowIndex]) {
 			this.loadingStates[rowIndex][colIndex] = false;
 		}
-		
+
 		// Actualizar la opacidad del iframe
 		if (this.iframeOpacities[rowIndex]) {
 			this.iframeOpacities[rowIndex][colIndex] = 1;
-			
+
 			// Aplicar la opacidad al iframe
 			const iframe = document.querySelector(`.iframe-cell[data-x="${colIndex}"][data-y="${rowIndex}"] iframe`);
 			if (iframe) {
 				iframe.style.opacity = '1';
 			}
 		}
-		
+
 		// Ocultar el indicador de carga
 		const loadingIndicator = document.querySelector(`.iframe-cell[data-x="${colIndex}"][data-y="${rowIndex}"] .loading-indicator`);
 		if (loadingIndicator) {
 			loadingIndicator.style.display = 'none';
 		}
-		
+
 		// Intentar detectar el color del iframe
 		this.detectIframeColor(colIndex, rowIndex);
-		
+
 		// Iniciar detección de matrices anidadas
 		this.detectNestedMatrix(rowIndex, colIndex);
 
@@ -1480,7 +1579,7 @@ class IframeMatrixViewer {
 			this.setupIframeSmartDetection(iframe);
 		}
 	}
-	
+
 	setupIframeSmartDetection(iframe) {
 		try {
 			// Intentamos acceder al documento del iframe
@@ -1490,7 +1589,8 @@ class IframeMatrixViewer {
 			this.crossOriginMode = false;
 
 			iframeDoc.addEventListener('keydown', (e) => {
-				if (e.key === 'Control' && !this.ctrlPressed) {
+				// Unificado: usar Shift (igual que setupEdgeDetectors)
+				if (e.key === 'Shift' && !this.ctrlPressed) {
 					this.ctrlPressed = true;
 					this.expandActiveEdges();
 				}
@@ -1501,7 +1601,8 @@ class IframeMatrixViewer {
 				}
 			});
 			iframeDoc.addEventListener('keyup', (e) => {
-				if (e.key === 'Control' && this.ctrlPressed) {
+				// Unificado: usar Shift
+				if (e.key === 'Shift' && this.ctrlPressed) {
 					this.ctrlPressed = false;
 					this.collapseAllEdges();
 				}
@@ -1528,7 +1629,7 @@ class IframeMatrixViewer {
 			this.collapseEdge(det, det.dataset.edge);
 		});
 	}
-	
+
 	loadGovernance() {
 		return new Promise((resolve) => {
 			if (typeof window.InteractiveGovernance !== 'undefined') {
@@ -1549,22 +1650,22 @@ class IframeMatrixViewer {
 			document.head.appendChild(script);
 		});
 	}
-	
+
 	handleIframeError(rowIndex, colIndex) {
 		console.error(`Error loading iframe at position [${rowIndex}][${colIndex}]`);
 		this.handleIframeLoad(rowIndex, colIndex);
 	}
-	
+
 	// Método para detectar matrices anidadas en un iframe
 	detectNestedMatrix(rowIndex, colIndex) {
 		const iframe = document.querySelector(`.iframe-cell[data-x="${colIndex}"][data-y="${rowIndex}"] iframe`);
 		if (!iframe) return;
-		
+
 		// Generar ID único para el iframe si no tiene
 		if (!iframe.id) {
 			iframe.id = `iframe_${rowIndex}_${colIndex}_${Math.random().toString(36).substring(2, 9)}`;
 		}
-		
+
 		// Enviar mensaje al iframe para detectar si contiene una matriz
 		try {
 			iframe.contentWindow.postMessage({
@@ -1576,20 +1677,20 @@ class IframeMatrixViewer {
 			console.warn(`No se pudo enviar mensaje al iframe [${rowIndex}][${colIndex}]:`, e);
 		}
 	}
-	
+
 	// Modificar la función applyIframeColor para aplicar el color exacto del body del iframe al iframe-cell
 	applyIframeColor(x, y, color) {
 		// Aplicar el color al wrapper del iframe
 		const wrapper = document.querySelector(`.iframe-cell[data-x="${x}"][data-y="${y}"] .iframe-wrapper`);
 		if (wrapper) {
 			wrapper.style.backgroundColor = color;
-			
+
 			// Aplicar el mismo color exacto como fondo al iframe-cell
 			const cell = document.querySelector(`.iframe-cell[data-x="${x}"][data-y="${y}"]`);
 			if (cell) {
 				// Aplicar el color exacto sin modificar la opacidad
 				cell.style.backgroundColor = color;
-				
+
 				// Crear un borde sutil con el mismo color
 				cell.style.boxShadow = `inset 0 0 0 ${this.calculateInset(this.currentPosition.depth)} ${color}`;
 			}
@@ -1602,32 +1703,32 @@ class IframeMatrixViewer {
 			// Obtener el iframe actual
 			const iframe = document.querySelector(`.iframe-cell[data-x="${x}"][data-y="${y}"] iframe`);
 			if (!iframe) return;
-			
+
 			// Crear un identificador único para este iframe
 			const iframeId = `${x},${y}`;
-			
+
 			// Si ya tenemos un color para este iframe, usarlo
 			if (this.iframeColors[iframeId]) {
 				this.applyIframeColor(x, y, this.iframeColors[iframeId]);
 				return;
 			}
-			
+
 			// Intentar detectar el color del iframe cuando se cargue
 			iframe.addEventListener('load', () => {
 				try {
 					// Intentar acceder al contenido del iframe (puede fallar por CORS)
 					const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-					
+
 					// Priorizar obtener el color de fondo del body
 					const bodyStyle = window.getComputedStyle(iframeDoc.body);
 					let bgColor = bodyStyle.backgroundColor;
-					
+
 					// Si el body no tiene un color de fondo definido, intentar con el elemento html
 					if (!bgColor || bgColor === 'rgba(0, 0, 0, 0)' || bgColor === 'transparent') {
 						const htmlStyle = window.getComputedStyle(iframeDoc.documentElement);
 						bgColor = htmlStyle.backgroundColor;
 					}
-					
+
 					// Si aún no hay color, intentar con elementos principales
 					if (!bgColor || bgColor === 'rgba(0, 0, 0, 0)' || bgColor === 'transparent') {
 						// Intentar obtener el color del primer elemento grande
@@ -1641,21 +1742,21 @@ class IframeMatrixViewer {
 							}
 						}
 					}
-					
+
 					// Si aún no hay color, usar un color por defecto
 					if (!bgColor || bgColor === 'rgba(0, 0, 0, 0)' || bgColor === 'transparent') {
 						bgColor = this.defaultBackgroundColor;
 					}
-					
+
 					// Guardar y aplicar el color
 					this.iframeColors[iframeId] = bgColor;
 					this.applyIframeColor(x, y, bgColor);
 				} catch (error) {
 					console.warn("Error accessing iframe content (CORS):\n\t", error);
-					
+
 					// Usar color por defecto en caso de error CORS
 					const bgColor = this.defaultBackgroundColor;
-					
+
 					// Guardar y aplicar el color
 					this.iframeColors[iframeId] = bgColor;
 					this.applyIframeColor(x, y, bgColor);
@@ -1665,7 +1766,7 @@ class IframeMatrixViewer {
 			console.warn("Error detecting iframe color:", error);
 		}
 	}
-	
+
 	hashCode(str) {
 		let hash = 0;
 		for (let i = 0; i < str.length; i++) {
@@ -1674,49 +1775,65 @@ class IframeMatrixViewer {
 		}
 		return Math.abs(hash);
 	}
-	
+
 	// Mejorar la función para verificar si un elemento es una matriz anidada
 	isNestedMatrix(item) {
 		// Verificar si es un array
 		if (!Array.isArray(item)) return false;
-		
+
 		// Si es un array vacío, no es una matriz anidada
 		if (item.length === 0) return false;
-		
+
 		// Caso 1: Es un array de arrays (matriz 2D)
 		if (Array.isArray(item[0])) return true;
-		
+
 		// Caso 2: Contiene al menos un elemento que es un array
 		if (item.some(element => Array.isArray(element))) return true;
-		
+
 		// Caso 3: Es un array de URLs (al menos 2 elementos)
-		if (item.length >= 2 && item.every(element => 
-			typeof element === 'string' && 
+		if (item.length >= 2 && item.every(element =>
+			typeof element === 'string' &&
 			(element.startsWith('http://') || element.startsWith('https://'))
 		)) return true;
-		
+
 		// No es una matriz anidada
 		return false;
 	}
-	
+
 	// Método para calcular el inset basado en la profundidad
 	calculateInset(depth) {
-		// Grosor muy fino por defecto
-		return `10px`;
+		// Inset responsivo: base de 2vh + incremento por nivel
+		return `calc(2vh + 1vw + ${depth * 0.5}vh)`;
 	}
-	
-	// Método para renderizar los detectores de bordes
+
+	// Método para renderizar los detectores de bordes (instanciación inteligente)
 	renderEdgeDetectors() {
 		const inset = this.calculateInset(this.currentPosition.depth);
-		
-		// Solo crearemos botones direccionales para los 4 bordes principales
-		const edges = ['top', 'right', 'bottom', 'left'];
-		
+
+		// Analizar dimensiones de la matriz para instanciación inteligente
+		const currentMatrix = this.matrixStack[this.currentPosition.depth - this.initialDepth];
+		const hasMultipleRows = currentMatrix && currentMatrix.length > 1;
+		const hasMultipleColumns = currentMatrix && currentMatrix[0] && currentMatrix[0].length > 1;
+
+		// Solo crear bordes que tengan sentido según las dimensiones
+		// - Bordes top/bottom: solo si hay múltiples filas (navegación vertical)
+		// - Bordes left/right: solo si hay múltiples columnas (navegación horizontal)
+		const edges = [];
+		if (hasMultipleRows) edges.push('top', 'bottom');
+		if (hasMultipleColumns) edges.push('left', 'right');
+
+		const iconPaths = {
+			top: 'M5 15l7-7 7 7',
+			bottom: 'M19 9l-7 7-7-7',
+			left: 'M15 19l-7-7 7-7',
+			right: 'M9 5l7 7-7 7'
+		};
+
 		edges.forEach(edge => {
 			const detector = document.createElement('div');
 			detector.className = `edge-detector ${edge}`;
 			detector.dataset.edge = edge;
-			
+
 			// Posicionar y dimensionar según el borde y el inset
 			if (edge === 'top') {
 				detector.style.top = '0';
@@ -1743,16 +1860,10 @@ class IframeMatrixViewer {
 			// Crear el botón direccional interactivo
 			const navBtn = document.createElement('div');
 			navBtn.className = 'edge-nav-button';
-			
-			let iconPath = '';
-			if (edge === 'top') iconPath = 'M5 15l7-7 7 7';
-			else if (edge === 'bottom') iconPath = 'M19 9l-7 7-7-7';
-			else if (edge === 'left') iconPath = 'M15 19l-7-7 7-7';
-			else if (edge === 'right') iconPath = 'M9 5l7 7-7 7';
 
 			navBtn.innerHTML = `
 				<svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-					<path d="${iconPath}"></path>
+					<path d="${iconPaths[edge]}"></path>
 				</svg>
 			`;
 
@@ -1766,13 +1877,30 @@ class IframeMatrixViewer {
 			this.root.appendChild(detector);
 		});
 
-		// Para compatibilidad con botones existentes de theme, config, etc.
-		const corners = ['top-left', 'top-right', 'bottom-left', 'bottom-right'];
+		// Esquinas: solo crear las que tienen sentido según las dimensiones
+		// - top-left/top-right: solo si hay múltiples filas (navegación vertical disponible)
+		// - bottom-left/bottom-right: solo si hay múltiples filas o si hay funciones extra (settings, exit)
+		// En matriz 1x1 (elemento único), no se crean esquinas de navegación
+		const corners = [];
+
+		if (hasMultipleRows) {
+			corners.push('top-left', 'top-right');
+		}
+
+		if (this.currentPosition.depth > this.initialDepth) {
+			// Matriz anidada: siempre crear bottom corners (exit + settings)
+			corners.push('bottom-left', 'bottom-right');
+		} else if (hasMultipleRows || hasMultipleColumns) {
+			// Matriz raíz navegable: bottom corners tienen settings/json + navegación
+			corners.push('bottom-left', 'bottom-right');
+		}
+		// En matriz 1x1 raíz (no anidada, elemento único): sin esquinas
+
 		corners.forEach(corner => {
 			const cornerDet = document.createElement('div');
 			cornerDet.className = `edge-detector ${corner}`;
 			cornerDet.dataset.edge = corner;
-			
+
 			if (corner === 'top-left') {
 				cornerDet.style.top = '0'; cornerDet.style.left = '0';
 			} else if (corner === 'top-right') {
@@ -1787,45 +1915,45 @@ class IframeMatrixViewer {
 			this.root.appendChild(cornerDet);
 		});
 	}
-	
+
 	// Método para ir a una posición específica
 	goToPosition(x, y) {
 		if (this.isLoading || this.animationInProgress) return;
-		
+
 		// Verificar que la posición sea válida
 		const currentMatrix = this.matrixStack[this.currentPosition.depth - this.initialDepth];
 		if (!currentMatrix || y >= currentMatrix.length || x >= currentMatrix[0].length) {
 			console.warn(`Posición inválida: [${y}][${x}]`);
 			return;
 		}
-		
+
 		this.animationInProgress = true;
-		
+
 		// Actualizar posición
 		this.currentPosition.x = x;
 		this.currentPosition.y = y;
-		
+
 		// Actualizar la posición del contenedor de iframes
 		this.updateIframeContainerPosition();
-		
+
 		// Actualizar el hash de la URL
 		this.updateUrlHash();
-		
+
 		// Mostrar notificación
-		this.showNotification(`Posición: (${x+1}, ${y+1})`, 1500);
-		
+		this.showNotification(`Posición: (${x + 1}, ${y + 1})`, 1500);
+
 		// Permitir nuevas navegaciones después de la animación
 		setTimeout(() => {
 			this.animationInProgress = false;
-			
+
 			// Intentar detectar el color del iframe actual
 			this.detectIframeColor(x, y);
-			
+
 			// Notificar a los observadores
 			this.notifyNavigationObservers();
 		}, 500);
 	}
-	
+
 	// Método para renderizar la ruta jerárquica
 	renderHierarchyPath() {
 		// Eliminar la ruta jerárquica existente
@@ -1833,14 +1961,14 @@ class IframeMatrixViewer {
 		if (existingPath) {
 			existingPath.remove();
 		}
-		
+
 		// Si no hay ruta jerárquica, no hacer nada
 		if (!this.hierarchyPath || this.hierarchyPath.length === 0) return;
-		
+
 		// Crear el contenedor de la ruta jerárquica
 		const pathContainer = document.createElement('div');
 		pathContainer.className = 'hierarchy-path';
-		
+
 		// Añadir cada nivel a la ruta
 		this.hierarchyPath.forEach((position, index) => {
 			// Si no es el primer elemento, añadir separador
@@ -1850,51 +1978,51 @@ class IframeMatrixViewer {
 				separator.textContent = '>';
 				pathContainer.appendChild(separator);
 			}
-			
+
 			// Crear el elemento de la ruta
 			const pathItem = document.createElement('div');
 			pathItem.className = 'hierarchy-path-item';
 			pathItem.dataset.depth = position.depth;
 			pathItem.dataset.x = position.x;
 			pathItem.dataset.y = position.y;
-			pathItem.textContent = `${position.x+1},${position.y+1}`;
-			
+			pathItem.textContent = `${position.x + 1},${position.y + 1}`;
+
 			// Añadir clase especial para el nivel actual
 			if (position.depth === this.currentPosition.depth) {
 				pathItem.style.backgroundColor = 'rgba(33, 150, 243, 0.5)';
 			}
-			
+
 			pathContainer.appendChild(pathItem);
 		});
-		
+
 		// Añadir la ruta al DOM
 		document.body.appendChild(pathContainer);
 	}
-	
+
 	// Método para renderizar los botones de navegación
 	renderNavigationButtons() {
 		const currentMatrix = this.matrixStack[this.currentPosition.depth - this.initialDepth];
 		if (!currentMatrix) return;
-		
+
 		// Verificar si la matriz tiene múltiples columnas o filas
 		const hasMultipleColumns = currentMatrix[0] && currentMatrix[0].length > 1;
 		const hasMultipleRows = currentMatrix.length > 1;
-		
+
 		// Calcular el desplazamiento basado en la profundidad
 		const depth = this.currentPosition.depth;
 		const offset = depth * 2.5; // Reducido a la mitad
-		
+
 		// Crear botones de navegación solo si son necesarios
 		if (hasMultipleColumns) {
 			// Botón izquierdo - más cerca del borde izquierdo
 			const leftButton = document.createElement('button');
 			leftButton.className = 'nav-button left';
 			leftButton.innerHTML = '<svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"></polyline></svg>';
-			
+
 			leftButton.style.left = `calc(5% + ${offset}px)`;
 			leftButton.style.top = `50%`;
 			this.root.appendChild(leftButton);
-			
+
 			// Botón derecho - más cerca del borde derecho
 			const rightButton = document.createElement('button');
 			rightButton.className = 'nav-button right';
@@ -1903,7 +2031,7 @@ class IframeMatrixViewer {
 			rightButton.style.top = `50%`;
 			this.root.appendChild(rightButton);
 		}
-		
+
 		// Solo mostrar botones verticales si hay más de una fila
 		if (hasMultipleRows) {
 			// Botón arriba - más cerca del borde superior
@@ -1913,7 +2041,7 @@ class IframeMatrixViewer {
 			upButton.style.left = `50%`;
 			upButton.style.top = `calc(5% + ${offset}px)`;
 			this.root.appendChild(upButton);
-			
+
 			// Botón abajo - más cerca del borde inferior
 			const downButton = document.createElement('button');
 			downButton.className = 'nav-button down';
@@ -1922,7 +2050,7 @@ class IframeMatrixViewer {
 			downButton.style.top = `calc(95% - ${offset}px)`;
 			this.root.appendChild(downButton);
 		}
-		
+
 		// Botón de salida (solo si estamos en una matriz anidada)
 		if (this.currentPosition.depth > this.initialDepth) {
 			const exitButton = document.createElement('button');
@@ -1933,7 +2061,7 @@ class IframeMatrixViewer {
 			this.root.appendChild(exitButton);
 			this.createTooltip(exitButton, 'Salir de matriz anidada (Esc)');
 		}
-		
+
 		// Añadir indicador de profundidad
 		const depthIndicator = document.createElement('div');
 		depthIndicator.className = 'depth-indicator';
@@ -1953,10 +2081,10 @@ class IframeMatrixViewer {
 		try {
 			// Actualizar el título del documento
 			document.title = this.title;
-			
+
 			// Limpiar el contenedor raíz
 			this.root.innerHTML = '';
-			
+
 			// Obtener la matriz actual con verificación de seguridad
 			const matrixIndex = this.currentPosition.depth - this.initialDepth;
 			if (matrixIndex < 0 || matrixIndex >= this.matrixStack.length) {
@@ -1971,29 +2099,29 @@ class IframeMatrixViewer {
 				this.showNotification("Error: Matriz inválida", 3000);
 				return;
 			}
-			
+
 			// Asegurarse de que la matriz tenga al menos una fila y una columna
 			if (!Array.isArray(currentMatrix[0])) {
 				currentMatrix[0] = [currentMatrix[0]];
 			}
-			
+
 			// Crear el contenedor de iframes
 			const iframeContainer = document.createElement('div');
 			iframeContainer.className = 'iframe-container';
 			iframeContainer.style.display = 'grid';
 			iframeContainer.style.width = '100vw';
 			iframeContainer.style.height = '100vh';
-			
+
 			// Calcular el inset basado en la profundidad
 			const inset = this.calculateInset(this.currentPosition.depth);
-			
+
 			// Crear los iframes con wrapper para inset
 			this.isSingleRowMatrix = currentMatrix.length === 1;
 			for (let y = 0; y < currentMatrix.length; y++) {
 				this.isSingleColumnRow = currentMatrix[y].length === 1;
 				for (let x = 0; x < currentMatrix[y].length; x++) {
 					const currentItem = currentMatrix[y][x];
-					
+
 					// Crear el contenedor de celda para el iframe
 					const iframeCell = document.createElement('div');
 					iframeCell.className = 'iframe-cell';
@@ -2001,28 +2129,31 @@ class IframeMatrixViewer {
 					iframeCell.dataset.y = y;
 					iframeCell.style.gridColumn = x + 1;
 					iframeCell.style.gridRow = y + 1;
-					
+
 					// Crear el wrapper para el iframe con inset dinámico basado en la profundidad
 					const iframeWrapper = document.createElement('div');
 					iframeWrapper.className = 'iframe-wrapper';
 					this.iWrapperInsetSetter(iframeWrapper, inset);
-					
+
 					// Si es una matriz anidada, mostrar un contenedor especial
 					if (this.isNestedMatrix(currentItem)) {
 						// Crear contenedor para matriz anidada
 						const nestedMatrixWithPreview = document.createElement('div');
 						nestedMatrixWithPreview.className = 'nested-matrix-with-preview';
-						
+
 						// Crear la URL para la matriz anidada
-						const url = this.createSubmatrixUrl(currentItem, {x, y});
+						const url = this.createSubmatrixUrl(currentItem, { x, y });
 						console.log(`Creando iframe para matriz anidada en [${y}][${x}]:`, url);
-						
+
 						// Crear el iframe principal
 						const iframe = document.createElement('iframe');
 						iframe.src = url;
+						iframe.allowFullscreen = true;
+						iframe.setAttribute('allowfullscreen', '');
+						iframe.setAttribute('allow', 'fullscreen; autoplay; encrypted-media; picture-in-picture');
 						iframe.style.opacity = this.iframeOpacities[y]?.[x] || 0;
 						iframe.style.pointerEvents = 'auto';
-						
+
 						// Añadir eventos de carga y error
 						iframe.addEventListener('load', () => {
 							console.log(`Iframe de matriz anidada en [${y}][${x}] cargado correctamente`);
@@ -2032,19 +2163,19 @@ class IframeMatrixViewer {
 							console.error(`Error cargando iframe de matriz anidada en [${y}][${x}]:`, e);
 							this.handleIframeError(y, x);
 						});
-						
+
 						// Añadir indicador visual de matriz anidada
 						const nestedIndicator = document.createElement('div');
 						nestedIndicator.className = 'nested-matrix-indicator';
 						nestedIndicator.innerHTML = '<svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>';
 						nestedMatrixWithPreview.appendChild(nestedIndicator);
-						
+
 						// Crear overlay interactivo
 						const overlay = document.createElement('div');
 						overlay.className = 'nested-matrix-overlay';
 						overlay.title = 'Ingresar a matriz anidada';
 						overlay.innerHTML = '<svg viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"></path></svg>';
-						
+
 						// Añadir evento de clic para navegar a la matriz anidada
 						overlay.addEventListener('click', (e) => {
 							e.preventDefault();
@@ -2053,35 +2184,35 @@ class IframeMatrixViewer {
 								window.location.href = url;
 							}
 						});
-						
+
 						nestedMatrixWithPreview.appendChild(overlay);
-						
+
 						// Añadir indicador de carga
 						const loadingIndicator = document.createElement('div');
 						loadingIndicator.className = 'loading-indicator';
 						loadingIndicator.innerHTML = '<div class="loading-spinner"></div>';
 						nestedMatrixWithPreview.appendChild(loadingIndicator);
-						
+
 						// Añadir todo al wrapper
 						iframeWrapper.appendChild(nestedMatrixWithPreview);
 
 						// Event Bus Hook para DLCs (Matriz Anidada)
-						document.dispatchEvent(new CustomEvent('matrixItemRendered', { 
-							detail: { element: iframe, wrapper: iframeWrapper, url: url, x, y, isNested: true } 
+						document.dispatchEvent(new CustomEvent('matrixItemRendered', {
+							detail: { element: iframe, wrapper: iframeWrapper, url: url, x, y, isNested: true }
 						}));
 					} else {
 						// Crear el iframe normal para elementos que no son matrices anidadas
 						const iframe = document.createElement('iframe');
-						
+
 						// Asegurarse de que la URL sea una cadena
 						let url = currentItem;
-						
+
 						// Si es un array pero no se considera una matriz anidada (puede ser un array de URLs),
 						// crear una URL para cargar el mismo HTML con el subarray como parámetro
 						if (Array.isArray(url)) {
-							url = this.createSubmatrixUrl(url, {x, y});
+							url = this.createSubmatrixUrl(url, { x, y });
 						}
-						
+
 						// Si es una URL que causaría un bucle infinito, mostrar un mensaje en lugar de cargar el iframe
 						if (typeof currentItem === 'string' && this.wouldCauseInfiniteLoop(currentItem)) {
 							// Crear un div con un mensaje en lugar del iframe
@@ -2097,13 +2228,16 @@ class IframeMatrixViewer {
 							iframeWrapper.appendChild(infiniteLoopWarning);
 						} else {
 							iframe.src = url;
+							iframe.allowFullscreen = true;
+							iframe.setAttribute('allowfullscreen', '');
+							iframe.setAttribute('allow', 'fullscreen; autoplay; encrypted-media; picture-in-picture');
 							iframe.style.opacity = this.iframeOpacities[y]?.[x] || 0;
 							iframe.style.pointerEvents = 'auto'; // Asegurar que el iframe reciba eventos
-							
+
 							// Añadir eventos de carga y error
 							iframe.addEventListener('load', () => this.handleIframeLoad(y, x));
 							iframe.addEventListener('error', () => this.handleIframeError(y, x));
-							
+
 							// Añadir indicador de carga si es necesario
 							if (this.loadingStates[y]?.[x] && url !== 'about:blank' && url !== '') {
 								const loadingIndicator = document.createElement('div');
@@ -2114,8 +2248,8 @@ class IframeMatrixViewer {
 							iframeWrapper.appendChild(iframe);
 
 							// Event Bus Hook para DLCs (Iframe normal)
-							document.dispatchEvent(new CustomEvent('matrixItemRendered', { 
-								detail: { element: iframe, wrapper: iframeWrapper, url: currentItem, x, y, isNested: false } 
+							document.dispatchEvent(new CustomEvent('matrixItemRendered', {
+								detail: { element: iframe, wrapper: iframeWrapper, url: currentItem, x, y, isNested: false }
 							}));
 						}
 					}
@@ -2123,39 +2257,39 @@ class IframeMatrixViewer {
 					iframeContainer.appendChild(iframeCell);
 				}
 			}
-			
+
 			this.root.appendChild(iframeContainer);
-			
+
 			// Crear los detectores de bordes
 			this.renderEdgeDetectors();
-			
+
 			// Crear los botones de navegación
 			//this.renderNavigationButtons();
-			
+
 			// Crear el botón de alternar visibilidad
 			//this.renderToggleButton();
-			
+
 			// Crear el selector de JSON
 			this.renderJsonSelector();
-			
+
 			// Crear el botón de tema
 			this.renderThemeToggle();
-			
+
 			// Crear el botón de configuración y panel
 			this.renderSettingsButton();
-			
+
 			// Renderizar la ruta jerárquica
 			this.renderHierarchyPath();
-			
+
 			// Aplicar el modo oscuro/claro
 			document.body.classList.toggle('light-mode', !this.darkMode);
-			
+
 			// Configurar eventos
 			this.setupEventListeners();
-			
+
 			// Detectar colores para todos los iframes visibles
 			this.detectAllIframeColors();
-			
+
 			// Inicializar el sistema de navegación jerárquica
 			//this.initializeHierarchicalNavigation();
 		} catch (error) {
@@ -2163,16 +2297,16 @@ class IframeMatrixViewer {
 			this.root.innerHTML = `<p>Error rendering interface: ${error.message}</p>`;
 		}
 	}
-	
+
 	detectAllIframeColors() {
 		const currentMatrix = this.matrixStack[this.currentPosition.depth - this.initialDepth];
 		if (!currentMatrix) return;
-		
+
 		// Detectar colores para todos los iframes
 		for (let y = 0; y < currentMatrix.length; y++) {
 			for (let x = 0; x < currentMatrix[y].length; x++) {
 				const currentItem = currentMatrix[y][x];
-				
+
 				// Solo detectar color si no es una matriz anidada
 				if (!this.isNestedMatrix(currentItem)) {
 					this.detectIframeColor(x, y);
@@ -2180,78 +2314,78 @@ class IframeMatrixViewer {
 			}
 		}
 	}
-	
+
 	renderToggleButton() {
 		const toggleButton = document.createElement('button');
 		toggleButton.className = 'toggle-button';
 		toggleButton.style.opacity = '0.5';
-		toggleButton.innerHTML = this.buttonsVisible ? 
-			'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none"></circle><circle cx="12" cy="12" r="4"></circle></svg>' : 
+		toggleButton.innerHTML = this.buttonsVisible ?
+			'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none"></circle><circle cx="12" cy="12" r="4"></circle></svg>' :
 			'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none"></circle></svg>';
 		this.root.appendChild(toggleButton);
 	}
-	
+
 	renderJsonSelector() {
 		const jsonSelector = document.createElement('div');
 		jsonSelector.className = 'json-selector';
-		
+
 		const jsonButton = document.createElement('label');
 		jsonButton.htmlFor = 'json-input';
 		jsonButton.className = 'json-button';
 		jsonButton.textContent = '📁';
-		
+
 		const jsonInput = document.createElement('input');
 		jsonInput.id = 'json-input';
 		jsonInput.type = 'file';
 		jsonInput.accept = '.json';
 		jsonInput.className = 'json-input';
-		
+
 		jsonSelector.appendChild(jsonButton);
 		jsonSelector.appendChild(jsonInput);
-		
+
 		this.root.appendChild(jsonSelector);
-		
+
 		// Crear tooltip
 		this.createTooltip(jsonButton, 'Cargar matriz desde JSON');
 	}
-	
+
 	renderThemeToggle() {
 		const themeToggle = document.createElement('button');
 		themeToggle.className = 'theme-toggle';
 		themeToggle.innerHTML = this.darkMode ? '☀️' : '🌙';
-		
+
 		this.root.appendChild(themeToggle);
 	}
-	
+
 	renderSettingsButton() {
 		// Botón de configuración
 		const settingsButton = document.createElement('button');
 		settingsButton.className = 'settings-button';
 		settingsButton.textContent = '⚙️';
 		this.root.appendChild(settingsButton);
-		
+
 		// Panel de configuración
 		const settingsPanel = document.createElement('div');
 		settingsPanel.className = 'settings-panel';
-		
+
 		const buttonRow = document.createElement('div');
 		buttonRow.className = 'settings-button-row';
-		
+
 		const saveButton = document.createElement('button');
 		saveButton.className = 'save-button';
 		saveButton.textContent = 'Guardar';
-		
+
 		const loadButton = document.createElement('button');
 		loadButton.className = 'load-button';
 		loadButton.textContent = 'Cargar';
-		
+
 		buttonRow.appendChild(saveButton);
 		buttonRow.appendChild(loadButton);
 		settingsPanel.appendChild(buttonRow);
-		
+
 		this.root.appendChild(settingsPanel);
 	}
-	
+
 	// Add this new method to normalize matrices
 	normalizeMatrix(matrix) {
 		// Si no es un array, convertirlo en un array de un solo elemento
@@ -2272,62 +2406,62 @@ class IframeMatrixViewer {
 	// Método para salir de una matriz anidada
 	exitNestedMatrix() {
 		if (this.isLoading || this.animationInProgress) return;
-		
+
 		// Si hay un parámetro parentHash, volver a la URL del padre
 		const parentHash = this.getUrlParameter("parentHash");
 		if (parentHash) {
 			// Construir la URL de retorno
 			const returnUrl = new URL(window.location.pathname, window.location.origin);
-			
+
 			// Añadir el hash del padre
 			returnUrl.hash = parentHash;
-			
+
 			// Mostrar notificación antes de navegar
 			this.showNotification("Volviendo a matriz padre...", 1000);
-			
+
 			// Navegar a la URL del padre después de un breve retraso
 			setTimeout(() => {
 				window.location.href = returnUrl.toString();
 			}, 250);
 		} else if (this.currentPosition.depth > this.initialDepth) {
 			this.animationInProgress = true;
-			
+
 			// Ocultar todos los botones y tooltips
 			this.hideAllButtons();
-			
+
 			// Esperar a que termine la animación
 			setTimeout(() => {
 				this.matrixStack.pop();
 				this.currentPosition.x = 0;
 				this.currentPosition.y = 0;
 				this.currentPosition.depth--;
-				
+
 				// Inicializar estados de carga para la matriz anterior
 				this.initLoadingStates();
-				
+
 				// Actualizar la interfaz
 				this.render();
-				
+
 				// Resetear el hash al salir de una matriz anidada
 				this.updateUrlHash();
-				
+
 				// Mostrar notificación
 				this.showNotification("Saliendo a nivel " + this.currentPosition.depth, 2000);
-				
+
 				// Permitir nuevas navegaciones después de la animación
 				setTimeout(() => {
 					this.animationInProgress = false;
-					
+
 					// Intentar detectar el color del iframe actual
 					this.detectIframeColor(0, 0);
-					
+
 					// Notificar a los observadores
 					this.notifyNavigationObservers();
 				}, 250);
 			}, 500);
 		}
 	}
-	
+
 	// Método para sanitizar una matriz
 	sanitizeMatrix(matrix) {
 		// Si no es un array, retornar directamente
@@ -2400,27 +2534,27 @@ class IframeMatrixViewer {
 	initializeHierarchicalNavigation() {
 		// Crear un objeto para rastrear las matrices anidadas detectadas
 		this.nestedMatrices = new Map();
-		
+
 		// Iniciar escaneo periódico de matrices anidadas
 		this.startNestedMatrixDetection();
 	}
-	
+
 	// Iniciar detección periódica de matrices anidadas
 	startNestedMatrixDetection() {
 		// Limpiar intervalo existente si hay
 		if (this.nestedMatrixScanInterval) {
 			clearInterval(this.nestedMatrixScanInterval);
 		}
-		
+
 		// Escanear cada 2 segundos
 		this.nestedMatrixScanInterval = setInterval(() => {
 			this.scanForNestedMatrices();
 		}, 2000);
-		
+
 		// Escaneo inicial
 		this.scanForNestedMatrices();
 	}
-	
+
 	// Escanear iframes en busca de matrices anidadas
 	scanForNestedMatrices() {
 		// Obtener todos los iframes visibles
@@ -2436,14 +2570,14 @@ class IframeMatrixViewer {
 					rect.right > 0
 				);
 			});
-		
+
 		// Procesar cada iframe
 		iframes.forEach(iframe => {
 			// Generar ID único para el iframe si no tiene
 			if (!iframe.id) {
 				iframe.id = `iframe_${Math.random().toString(36).substring(2, 11)}`;
 			}
-			
+
 			// Verificar si ya hemos detectado este iframe
 			if (this.nestedMatrices.has(iframe.id)) {
 				// Actualizar timestamp para saber que sigue activo
@@ -2451,7 +2585,7 @@ class IframeMatrixViewer {
 				matrixInfo.lastSeen = Date.now();
 				return;
 			}
-			
+
 			// Intentar comunicarse con el iframe
 			try {
 				iframe.contentWindow.postMessage({
@@ -2463,16 +2597,16 @@ class IframeMatrixViewer {
 				console.warn(`No se pudo enviar mensaje al iframe ${iframe.id}:`, e);
 			}
 		});
-		
+
 		// Limpiar matrices inactivas
 		this.cleanupInactiveMatrices();
 	}
-	
+
 	// Limpiar matrices inactivas
 	cleanupInactiveMatrices() {
 		const now = Date.now();
 		const inactiveThreshold = 10000; // 10 segundos
-		
+
 		for (const [iframeId, matrixInfo] of this.nestedMatrices.entries()) {
 			if (now - matrixInfo.lastSeen > inactiveThreshold) {
 				this.nestedMatrices.delete(iframeId);
@@ -2645,7 +2779,7 @@ class CentralNavigation {
 		}, '*');
 	}
 }
-	
+
 // Inicializar la aplicación cuando el DOM esté cargado
 document.addEventListener('DOMContentLoaded', () => {
 	document.body.innerHTML = `<div id="root"></div>`;
