@@ -249,8 +249,9 @@ iframe {
 	/* Centrar con translate para que hover funcione correctamente */
 	transform: translate(-50%, -50%) scale(0.5);
 	pointer-events: none;
-	/* Usar el easing curious propuesto easeOutBack */
-	transition: opacity 0.3s ease, transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+	/* Transición completa para restauración suave de posición y opacidad */
+	transition: opacity 0.3s ease, transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+		left 0.3s ease, top 0.3s ease, right 0.3s ease, bottom 0.3s ease;
 }
 
 .edge-nav-button svg {

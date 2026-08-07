@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Video Skip Buttons DLC - Demo</title>
+    <title>Video Skip Buttons DLC - Demo Completa</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -36,6 +36,13 @@
             opacity: 0.9;
         }
 
+        .section-title {
+            font-size: 1.8em;
+            margin: 40px 0 20px 0;
+            padding-bottom: 10px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
         .video-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
@@ -59,12 +66,43 @@
         .video-card h3 {
             margin-top: 0;
             color: #fff;
+            font-size: 1.1em;
+        }
+
+        .video-card .format-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: bold;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+
+        .badge-absoluto {
+            background: #4caf50;
+        }
+
+        .badge-relativo-inicio {
+            background: #2196f3;
+        }
+
+        .badge-relativo-final {
+            background: #ff9800;
+        }
+
+        .badge-html5 {
+            background: #9c27b0;
+        }
+
+        .badge-yout-ube {
+            background: #f44336;
         }
 
         .video-container {
             position: relative;
             width: 100%;
-            height: 250px;
+            aspect-ratio: 16 / 9;
             border-radius: 8px;
             overflow: hidden;
             margin-bottom: 15px;
@@ -85,6 +123,11 @@
             font-family: 'Courier New', monospace;
             font-size: 12px;
             margin-top: 10px;
+            word-break: break-all;
+        }
+
+        .params-info code {
+            color: #80cbc4;
         }
 
         .feature-list {
@@ -180,176 +223,454 @@
             overflow-x: auto;
             margin: 10px 0;
         }
+
+        .format-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        .format-table th,
+        .format-table td {
+            padding: 8px 12px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .format-table th {
+            background: rgba(0, 0, 0, 0.2);
+            font-size: 13px;
+        }
+
+        .format-table td {
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+        }
     </style>
 </head>
 
 <body>
     <div class="container">
         <div class="header">
-            <h1>🎬 Video Skip Buttons DLC</h1>
-            <p>Sistema de botones de salto de tiempo para videos embedidos</p>
+            <h1>🎬 Video Skip Buttons DLC — Demo Completa</h1>
+            <p>8 formatos de tiempo · YouTube (yout-ube) · HTML5 · MP4 externos · Estáticos locales</p>
         </div>
 
-        <div class="instructions">
-            <h2>📖 ¿Cómo funciona?</h2>
-            <p>El sistema detecta automáticamente videos con parámetros especiales y agrega botones de salto:</p>
-            <div class="code-block">
-                ?d=90&op=00:00&ed=03:20
-            </div>
-            <ul>
-                <li><strong>d</strong>: duración para rangos implícitos (opcional, default: 90s)</li>
-                <li><strong>op</strong>: tiempo para Opening (MM:SS, [MM:SS], [MM:SS-MM:SS] o MM:SS+90s)</li>
-                <li><strong>ed</strong>: tiempo para Ending (MM:SS, [MM:SS], [MM:SS-MM:SS] o MM:SS+90s)</li>
-            </ul>
-            <h3>🎯 Lógica de Corchetes</h3>
-            <p><strong>Regla simple:</strong></p>
-            <ul>
-                <li>Si el dato está entre corchetes <code>[...]</code> → Usa <code>duration</code> (rango implícito)
-                </li>
-                <li>Si el dato no está entre corchetes → Es punto fijo</li>
-            </ul>
-        </div>
-
-        <div class="controls">
-            <h3>🎛️ Controles Manuales</h3>
-            <div class="control-group">
-                <input type="text" id="videoUrl" placeholder="URL del video"
-                    value="https://www.youtube.com/embed/a88bwmM2B9Q">
-                <input type="text" id="videoParams" placeholder="Parámetros (ej: d=120&op=00:30&ed=02:00)"
-                    value="d=120&op=00:30&ed=02:00">
-                <button onclick="addCustomVideo()">Agregar Video</button>
-                <button onclick="clearCustomVideos()">Limpiar Videos</button>
-            </div>
-        </div>
+        <!-- ════════════════════════════════════════════════════════════════ -->
+        <!-- SECCIÓN 1: Formatos Absolutos                                      -->
+        <!-- ════════════════════════════════════════════════════════════════ -->
+        <h2 class="section-title">📌 Formatos Absolutos (inmediatos)</h2>
 
         <div class="video-grid">
+            <!-- Formato 1: Rango exacto [MM:SS-MM:SS] -->
             <div class="video-card">
-                <h3>🎵 Video con OP y ED (Puntos Fijos)</h3>
+                <h3>1️⃣ Rango Exacto <span class="format-badge badge-absoluto">[MM:SS-MM:SS]</span></h3>
                 <div class="video-container">
-                    <iframe src="https://www.youtube.com/embed/a88bwmM2B9Q?op=00:30&ed=03:20"
-                        title="Video de ejemplo con OP y ED como puntos fijos" allowfullscreen>
-                    </iframe>
+                    <iframe src="https://www.yout-ube.com/embed/a88bwmM2B9Q#op=[00:30-02:00]&ed=[02:00-03:30]"
+                        title="Rango exacto" allowfullscreen></iframe>
                 </div>
                 <div class="params-info">
-                    Parámetros: op=00:30&ed=03:20 (puntos fijos)
+                    <code>#op=[00:30-02:00]&ed=[02:00-03:30]</code><br>
+                    → OP: 30s→120s | ED: 120s→210s
                 </div>
             </div>
 
+            <!-- Formato 2: Implícito [MM:SS] -->
             <div class="video-card">
-                <h3>🎬 Video con OP como Rango Implícito</h3>
+                <h3>2️⃣ Rango Implícito <span class="format-badge badge-absoluto">[MM:SS]</span></h3>
                 <div class="video-container">
-                    <iframe src="https://www.youtube.com/embed/a88bwmM2B9Q?d=120&op=[01:30]"
-                        title="Video de ejemplo con OP como rango implícito" allowfullscreen>
-                    </iframe>
+                    <iframe src="https://www.yout-ube.com/embed/a88bwmM2B9Q#d=120&op=[01:30]" title="Rango implícito"
+                        allowfullscreen></iframe>
                 </div>
                 <div class="params-info">
-                    Parámetros: d=120&op=[01:30] (rango: [01:30-03:30])
+                    <code>#d=120&op=[01:30]</code><br>
+                    → OP: 90s→210s (90+120 con d=120)
                 </div>
             </div>
 
+            <!-- Formato 3: Explícito MM:SS+Ns -->
             <div class="video-card">
-                <h3>🎭 Video con ED como Rango Exacto</h3>
+                <h3>3️⃣ Duración Explícita <span class="format-badge badge-absoluto">MM:SS+Ns</span></h3>
                 <div class="video-container">
-                    <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ?ed=[02:00-03:30]"
-                        title="Video de ejemplo con ED como rango exacto" allowfullscreen>
-                    </iframe>
+                    <iframe src="https://www.yout-ube.com/embed/dQw4w9WgXcQ#op=01:00+45s" title="Duración explícita"
+                        allowfullscreen></iframe>
                 </div>
                 <div class="params-info">
-                    Parámetros: ed=[02:00-03:30] (rango exacto)
+                    <code>#op=01:00+45s</code><br>
+                    → OP: 60s→105s (60+45 explícito)
                 </div>
             </div>
 
+            <!-- Formato 4: Punto fijo MM:SS -->
             <div class="video-card">
-                <h3>⏱️ Video con Duración Explícita</h3>
+                <h3>4️⃣ Punto Fijo <span class="format-badge badge-absoluto">MM:SS</span></h3>
                 <div class="video-container">
-                    <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ?op=01:00+45s"
-                        title="Video de ejemplo con duración explícita" allowfullscreen>
-                    </iframe>
+                    <iframe src="https://www.yout-ube.com/embed/a88bwmM2B9Q#op=00:30&ed=03:20" title="Punto fijo"
+                        allowfullscreen></iframe>
                 </div>
                 <div class="params-info">
-                    Parámetros: op=01:00+45s (rango: [01:00-01:45])
+                    <code>#op=00:30&ed=03:20</code><br>
+                    → OP: 30s (punto) | ED: 200s (punto)
+                </div>
+            </div>
+        </div>
+
+        <!-- ════════════════════════════════════════════════════════════════ -->
+        <!-- SECCIÓN 2: Formatos Relativos                                      -->
+        <!-- ════════════════════════════════════════════════════════════════ -->
+        <h2 class="section-title">📐 Formatos Relativos (inicio y final)</h2>
+
+        <div class="video-grid">
+            <!-- Formato 5: Relativo al inicio +N -->
+            <div class="video-card">
+                <h3>5️⃣ Relativo al Inicio <span class="format-badge badge-relativo-inicio">+N</span></h3>
+                <div class="video-container">
+                    <iframe src="https://www.yout-ube.com/embed/a88bwmM2B9Q#op=+30" title="Relativo al inicio"
+                        allowfullscreen></iframe>
+                </div>
+                <div class="params-info">
+                    <code>#op=+30</code><br>
+                    → OP: 0s→30s (primeros 30s)
                 </div>
             </div>
 
+            <!-- Formato 6: Relativo al final -N -->
             <div class="video-card">
-                <h3>🎬 Video solo con duración</h3>
+                <h3>6️⃣ Relativo al Final <span class="format-badge badge-relativo-final">-N</span></h3>
                 <div class="video-container">
-                    <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ?d=120"
-                        title="Video de ejemplo solo con duración" allowfullscreen>
-                    </iframe>
+                    <iframe src="https://www.yout-ube.com/embed/dQw4w9WgXcQ#ed=-90" title="Relativo al final"
+                        allowfullscreen></iframe>
                 </div>
                 <div class="params-info">
-                    Parámetros: d=120 (solo duración, sin botones)
+                    <code>#ed=-90</code><br>
+                    → ED: (duración-90)→duración (últimos 90s)
                 </div>
             </div>
 
+            <!-- Formato 7: Open-ended [MM:SS-] -->
             <div class="video-card">
-                <h3>🎹 Video sin parámetros (normal)</h3>
+                <h3>7️⃣ Hasta el Final <span class="format-badge badge-relativo-final">[MM:SS-]</span></h3>
                 <div class="video-container">
-                    <iframe src="https://www.youtube.com/embed/a88bwmM2B9Q"
-                        title="Video normal sin intervención del DLC" allowfullscreen>
-                    </iframe>
+                    <iframe src="https://www.yout-ube.com/embed/dQw4w9WgXcQ#ed=[02:30-]" title="Open-ended"
+                        allowfullscreen></iframe>
                 </div>
                 <div class="params-info">
-                    Sin parámetros (funciona como video normal, sin botones)
+                    <code>#ed=[02:30-]</code><br>
+                    → ED: 150s→duración (desde 2:30 al final)
                 </div>
             </div>
 
+            <!-- Formato 8: Start-open [-MM:SS] -->
             <div class="video-card">
-                <h3>📹 Video HTML5 nativo</h3>
+                <h3>8️⃣ Desde el Inicio <span class="format-badge badge-relativo-inicio">[-MM:SS]</span></h3>
                 <div class="video-container">
-                    <video data-video-params="d=60&op=[00:10]&ed=00:40" controls>
+                    <iframe src="https://www.yout-ube.com/embed/a88bwmM2B9Q#op=[-01:30]" title="Start-open"
+                        allowfullscreen></iframe>
+                </div>
+                <div class="params-info">
+                    <code>#op=[-01:30]</code><br>
+                    → OP: 0s→90s (desde inicio a 1:30)
+                </div>
+            </div>
+        </div>
+
+        <!-- ════════════════════════════════════════════════════════════════ -->
+        <!-- SECCIÓN 3: Videos HTML5 nativos (.mp4)                             -->
+        <!-- ════════════════════════════════════════════════════════════════ -->
+        <h2 class="section-title">📹 Videos HTML5 Nativos (.mp4 externos)</h2>
+
+        <div class="video-grid">
+            <!-- MP4 de internet - Rango exacto -->
+            <div class="video-card">
+                <h3>🌊 MP4 Externo — Rango Exacto <span class="format-badge badge-html5">HTML5</span></h3>
+                <div class="video-container">
+                    <video data-video-params="op=[00:10-00:30]&ed=[00:35-00:46]" controls>
                         <source src="https://vjs.zencdn.net/v/oceans.mp4" type="video/mp4">
                         Tu navegador no soporta videos HTML5.
                     </video>
                 </div>
                 <div class="params-info">
-                    Parámetros: d=60&op=[00:10]&ed=00:40
+                    <code>data-video-params="op=[00:10-00:30]&ed=[00:35-00:46]"</code><br>
+                    → Fuente: vjs.zencdn.net/v/oceans.mp4 (46s de duración)
                 </div>
             </div>
 
+            <!-- MP4 de internet - Relativo al final -->
             <div class="video-card">
-                <h3>🔧 Combinación Completa</h3>
+                <h3>🌊 MP4 Externo — Relativo al Final <span class="format-badge badge-html5">HTML5</span></h3>
                 <div class="video-container">
-                    <iframe src="https://www.youtube.com/embed/a88bwmM2B9Q?d=90&op=[01:30]&ed=[22:00-23:30]"
-                        title="Video con todos los formatos combinados" allowfullscreen>
-                    </iframe>
+                    <video data-video-params="op=+15&ed=-10" controls>
+                        <source src="https://vjs.zencdn.net/v/oceans.mp4" type="video/mp4">
+                        Tu navegador no soporta videos HTML5.
+                    </video>
                 </div>
                 <div class="params-info">
-                    Parámetros: d=90&op=[01:30]&ed=[22:00-23:30]
+                    <code>data-video-params="op=+15&ed=-10"</code><br>
+                    → OP: 0s→15s | ED: (duración-10)→duración
                 </div>
             </div>
+
+            <!-- MP4 de internet - Implícito -->
+            <div class="video-card">
+                <h3>🌊 MP4 Externo — Rango Implícito <span class="format-badge badge-html5">HTML5</span></h3>
+                <div class="video-container">
+                    <video data-video-params="d=20&op=[00:05]" controls>
+                        <source src="https://vjs.zencdn.net/v/oceans.mp4" type="video/mp4">
+                        Tu navegador no soporta videos HTML5.
+                    </video>
+                </div>
+                <div class="params-info">
+                    <code>data-video-params="d=20&op=[00:05]"</code><br>
+                    → OP: 5s→25s (5+d=20)
+                </div>
+            </div>
+
+            <!-- MP4 de internet - Open-ended -->
+            <div class="video-card">
+                <h3>🌊 MP4 Externo — Open-ended <span class="format-badge badge-html5">HTML5</span></h3>
+                <div class="video-container">
+                    <video data-video-params="ed=[00:30-]" controls>
+                        <source src="https://vjs.zencdn.net/v/oceans.mp4" type="video/mp4">
+                        Tu navegador no soporta videos HTML5.
+                    </video>
+                </div>
+                <div class="params-info">
+                    <code>data-video-params="ed=[00:30-]"</code><br>
+                    → ED: 30s→duración (desde 0:30 al final)
+                </div>
+            </div>
+
+            <!-- MP4 de Google Sample Videos -->
+            <div class="video-card">
+                <h3>🐘 MP4 Externo (Big Buck Bunny) <span class="format-badge badge-html5">HTML5</span></h3>
+                <div class="video-container">
+                    <video data-video-params="op=[00:30-01:00]&ed=[09:00-]" controls>
+                        <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+                            type="video/mp4">
+                        Tu navegador no soporta videos HTML5.
+                    </video>
+                </div>
+                <div class="params-info">
+                    <code>data-video-params="op=[00:30-01:00]&ed=[09:00-]"</code><br>
+                    → Fuente: Google Cloud Storage (10 min de duración)
+                </div>
+            </div>
+
+            <!-- MP4 de Google - Relativo al inicio -->
+            <div class="video-card">
+                <h3>🐘 MP4 Externo — Primeros Segundos <span class="format-badge badge-html5">HTML5</span></h3>
+                <div class="video-container">
+                    <video data-video-params="op=+30&ed=-60" controls>
+                        <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4"
+                            type="video/mp4">
+                        Tu navegador no soporta videos HTML5.
+                    </video>
+                </div>
+                <div class="params-info">
+                    <code>data-video-params="op=+30&ed=-60"</code><br>
+                    → OP: 0s→30s | ED: (duración-60)→duración
+                </div>
+            </div>
+        </div>
+
+        <!-- ════════════════════════════════════════════════════════════════ -->
+        <!-- SECCIÓN 4: Auto-skip y Combinaciones                               -->
+        <!-- ════════════════════════════════════════════════════════════════ -->
+        <h2 class="section-title">🤖 Auto-Skip y Combinaciones Avanzadas</h2>
+
+        <div class="video-grid">
+            <!-- Auto-skip -->
+            <div class="video-card">
+                <h3>🤖 Auto-Skip (sin botones) <span class="format-badge badge-yout-ube">!op</span></h3>
+                <div class="video-container">
+                    <iframe src="https://www.yout-ube.com/embed/a88bwmM2B9Q#!op=[00:30-02:00]#!ed=[02:30-]"
+                        title="Auto-skip" allowfullscreen></iframe>
+                </div>
+                <div class="params-info">
+                    <code>#!op=[00:30-02:00]#!ed=[02:30-]</code><br>
+                    → Salta automáticamente sin mostrar botones
+                </div>
+            </div>
+
+            <!-- Combinación completa -->
+            <div class="video-card">
+                <h3>🔧 Combinación Completa <span class="format-badge badge-yout-ube">Mix</span></h3>
+                <div class="video-container">
+                    <iframe src="https://www.yout-ube.com/embed/a88bwmM2B9Q#d=90&op=[01:30]&ed=-90"
+                        title="Combinación completa" allowfullscreen></iframe>
+                </div>
+                <div class="params-info">
+                    <code>#d=90&op=[01:30]&ed=-90</code><br>
+                    → OP: 90s→180s (implícito+d) | ED: últimos 90s
+                </div>
+            </div>
+
+            <!-- youtu.be → transformación -->
+            <div class="video-card">
+                <h3>🔗 Expansión youtu.be <span class="format-badge badge-yout-ube">youtu.be→</span></h3>
+                <div class="video-container">
+                    <iframe src="https://www.yout-ube.com/embed/dQw4w9WgXcQ#op=[00:20-00:50]"
+                        title="URL original youtu.be transformada" allowfullscreen></iframe>
+                </div>
+                <div class="params-info">
+                    URL original: <code>https://youtu.be/dQw4w9WgXcQ</code><br>
+                    Transformada: <code>https://www.yout-ube.com/watch?v=dQw4w9WgXcQ</code><br>
+                    <code>#op=[00:20-00:50]</code> → OP: 20s→50s
+                </div>
+            </div>
+
+            <!-- Sin parámetros -->
+            <div class="video-card">
+                <h3>🎬 Video sin parámetros (normal)</h3>
+                <div class="video-container">
+                    <iframe src="https://www.yout-ube.com/embed/a88bwmM2B9Q" title="Video normal sin DLC"
+                        allowfullscreen></iframe>
+                </div>
+                <div class="params-info">
+                    Sin parámetros → funciona como video normal, sin botones
+                </div>
+            </div>
+        </div>
+
+        <!-- ════════════════════════════════════════════════════════════════ -->
+        <!-- SECCIÓN 5: Controles manuales                                      -->
+        <!-- ════════════════════════════════════════════════════════════════ -->
+        <div class="controls">
+            <h3>🎛️ Controles Manuales — Agregar Video Personalizado</h3>
+            <div class="control-group">
+                <input type="text" id="videoUrl" placeholder="URL del video (YouTube, yout-ube, o .mp4)"
+                    value="https://www.yout-ube.com/embed/a88bwmM2B9Q" style="flex:1; min-width:300px;">
+                <input type="text" id="videoParams" placeholder="Parámetros hash (ej: op=[01:30]&ed=-90)"
+                    value="op=[01:30]&ed=-90" style="flex:1; min-width:250px;">
+                <button onclick="addCustomVideo()">➕ Agregar Video</button>
+                <button onclick="clearCustomVideos()">🗑️ Limpiar</button>
+            </div>
+            <p style="font-size: 12px; opacity: 0.7; margin-top: 10px;">
+                Nota: Los parámetros van precedidos por <code>#</code> automáticamente. Para MP4 locales, usa ruta
+                relativa como <code>./videos/mi-video.mp4</code>.
+            </p>
         </div>
 
         <div id="customVideos"></div>
 
+        <!-- ════════════════════════════════════════════════════════════════ -->
+        <!-- SECCIÓN 6: Guía de referencia                                      -->
+        <!-- ════════════════════════════════════════════════════════════════ -->
+        <div class="instructions">
+            <h2>📖 Guía de Formatos (Referencia Rápida)</h2>
+            <table class="format-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Sintaxis</th>
+                        <th>Tipo</th>
+                        <th>Ejemplo</th>
+                        <th>Resultado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td><code>[MM:SS-MM:SS]</code></td>
+                        <td>Absoluto</td>
+                        <td><code>op=[01:30-03:00]</code></td>
+                        <td>90s → 180s</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td><code>[MM:SS]</code></td>
+                        <td>Absoluto</td>
+                        <td><code>op=[01:30]</code></td>
+                        <td>90s → 180s (con d=90)</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td><code>MM:SS+Ns</code></td>
+                        <td>Absoluto</td>
+                        <td><code>op=01:30+45s</code></td>
+                        <td>90s → 135s</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td><code>MM:SS</code></td>
+                        <td>Absoluto</td>
+                        <td><code>op=01:30</code></td>
+                        <td>90s (punto fijo)</td>
+                    </tr>
+                    <tr>
+                        <td>5</td>
+                        <td><code>+N</code></td>
+                        <td>Rel. inicio</td>
+                        <td><code>op=+30</code></td>
+                        <td>0s → 30s</td>
+                    </tr>
+                    <tr>
+                        <td>6</td>
+                        <td><code>-N</code></td>
+                        <td>Rel. final</td>
+                        <td><code>ed=-90</code></td>
+                        <td>(dur-90) → dur</td>
+                    </tr>
+                    <tr>
+                        <td>7</td>
+                        <td><code>[MM:SS-]</code></td>
+                        <td>Rel. final</td>
+                        <td><code>ed=[22:00-]</code></td>
+                        <td>1320s → dur</td>
+                    </tr>
+                    <tr>
+                        <td>8</td>
+                        <td><code>[-MM:SS]</code></td>
+                        <td>Rel. inicio</td>
+                        <td><code>op=[-01:30]</code></td>
+                        <td>0s → 90s</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ════════════════════════════════════════════════════════════════ -->
+        <!-- SECCIÓN 7: Características                                         -->
+        <!-- ════════════════════════════════════════════════════════════════ -->
         <div class="feature-list">
             <h2>🚀 Características del DLC</h2>
             <ul>
-                <li>Detección automática de videos con parámetros especiales</li>
-                <li>Botones flotantes con diseño moderno y responsivo</li>
-                <li>Soporte para YouTube, videos HTML5 y otros servicios</li>
-                <li>Lógica de corchetes: [rango] vs punto fijo</li>
-                <li>Duration flexible con parámetro d=</li>
-                <li>Integración con ∞Iframes Matrix Viewer</li>
-                <li>Animaciones suaves y notificaciones visuales</li>
-                <li>Detección automática de nuevos videos via MutationObserver</li>
-                <li>API pública para control programático</li>
-                <li>Compatibilidad con navegadores modernos</li>
-                <li>Código modular y extensible</li>
+                <li><strong>8 formatos de tiempo</strong>: 4 absolutos + 2 relativos al inicio + 2 relativos al final
+                </li>
+                <li><strong>Transformación automática YouTube</strong>: <code>youtube.com</code> →
+                    <code>yout-ube.com</code> y <code>youtu.be</code> → <code>yout-ube.com/watch?v=</code>
+                </li>
+                <li><strong>Soporte HTML5 nativo</strong>: videos <code><video></code> con <code>.mp4</code> locales o
+                    externos</li>
+                <li><strong>Auto-skip</strong>: prefijo <code>!</code> para salto automático sin botones</li>
+                <li><strong>Resolución de duración diferida</strong>: formatos <code>-N</code> y <code>[MM:SS-]</code>
+                    se resuelven al detectar duración</li>
+                <li><strong>Fallback de duración</strong>: si no se detecta duración en 5s, usa <code>d=</code> como
+                    estimación</li>
+                <li><strong>Plataformas</strong>: YouTube, ok.ru, Vimeo, VK, HTML5 <code><video></code></li>
+                <li><strong>Botones flotantes</strong> con diseño moderno, animaciones suaves y auto-ocultamiento</li>
+                <li><strong>Detección automática</strong> de nuevos videos via MutationObserver</li>
+                <li><strong>API pública</strong> para control programático</li>
             </ul>
         </div>
 
+        <!-- ════════════════════════════════════════════════════════════════ -->
+        <!-- SECCIÓN 8: Uso programático                                        -->
+        <!-- ════════════════════════════════════════════════════════════════ -->
         <div class="instructions">
             <h2>🔧 Uso Programático</h2>
             <div class="code-block">
                 // Agregar un video manualmente
-                window.videoSkipButtons.addVideo(elementoVideo, 'd=120&op=[01:30]&ed=02:00');
+                window.videoSkipButtons.addVideo(elementoVideo, 'op=[01:30]&ed=-90');
+
+                // Transformar URL de YouTube programáticamente
+                const url = iframeMatrixViewer.transformYoutubeUrl('https://youtu.be/abc123');
+                // → "https://www.yout-ube.com/watch?v=abc123"
 
                 // Actualizar configuración de un video
                 window.videoSkipButtons.updateVideoConfig('video-id', {
-                op: 60,
-                ed: 180
+                op: { start: 60, end: 180 },
+                ed: { start: 1320, end: 1410 }
                 });
 
                 // Destruir el DLC
@@ -358,7 +679,7 @@
         </div>
     </div>
 
-    <!-- Cargar los Módulos DLC (Auto-inyectan su Core) -->
+    <!-- Cargar el Core Engine + Módulos DLC (Auto-inyectan su Core) -->
     <script src="./src/dlc/skip-buttons.js"></script>
     <script src="./src/dlc/auto-skip.js"></script>
     <script src="./src/dlc/video-loop.js"></script>
@@ -379,26 +700,55 @@
             const container = document.getElementById('customVideos');
             const videoCard = document.createElement('div');
             videoCard.className = 'video-card';
-            videoCard.innerHTML = `
-                <h3>🎹 Video Personalizado</h3>
-                <div class="video-container">
-                    <iframe 
-                        src="${url}?${params}" 
-                        title="Video personalizado"
-                        allowfullscreen>
-                    </iframe>
-                </div>
-                <div class="params-info">
-                    Parámetros: ${params}
-                </div>
-                <button onclick="this.parentElement.remove()" style="margin-top: 10px; padding: 5px 10px; background: rgba(244, 67, 54, 0.8); border: none; border-radius: 4px; color: white; cursor: pointer;">Eliminar</button>
-            `;
+
+            // Detectar si es MP4 (HTML5) o iframe
+            const isMp4 = url.endsWith('.mp4') || url.includes('.mp4');
+            const separator = url.includes('#') ? '&' : '#';
+
+            if (isMp4) {
+                videoCard.innerHTML = `
+                    <h3>🎥 Video Personalizado (MP4)</h3>
+                    <div class="video-container">
+                        <video data-video-params="${params}" controls>
+                            <source src="${url}" type="video/mp4">
+                            Tu navegador no soporta videos HTML5.
+                        </video>
+                    </div>
+                    <div class="params-info">
+                        Fuente: <code>${url}</code><br>
+                        Parámetros: <code>${params}</code>
+                    </div>
+                    <button onclick="this.parentElement.remove()" style="margin-top: 10px; padding: 5px 10px; background: rgba(244, 67, 54, 0.8); border: none; border-radius: 4px; color: white; cursor: pointer;">Eliminar</button>
+                `;
+            } else {
+                videoCard.innerHTML = `
+                    <h3>🎥 Video Personalizado (iframe)</h3>
+                    <div class="video-container">
+                        <iframe
+                            src="${url}${separator}${params}"
+                            title="Video personalizado"
+                            allowfullscreen>
+                        </iframe>
+                    </div>
+                    <div class="params-info">
+                        Fuente: <code>${url}</code><br>
+                        Parámetros: <code>${separator}${params}</code>
+                    </div>
+                    <button onclick="this.parentElement.remove()" style="margin-top: 10px; padding: 5px 10px; background: rgba(244, 67, 54, 0.8); border: none; border-radius: 4px; color: white; cursor: pointer;">Eliminar</button>
+                `;
+            }
 
             container.appendChild(videoCard);
 
-            // Limpiar campos
-            document.getElementById('videoUrl').value = '';
-            document.getElementById('videoParams').value = '';
+            // Si es MP4, notificar al core engine
+            if (isMp4) {
+                const videoEl = videoCard.querySelector('video');
+                if (videoEl) {
+                    document.dispatchEvent(new CustomEvent('matrixItemRendered', {
+                        detail: { element: videoEl, url: `local#${params}` }
+                    }));
+                }
+            }
         }
 
         function clearCustomVideos() {
@@ -406,9 +756,11 @@
             container.innerHTML = '';
         }
 
-        // Esperar a que el DLC esté listo
+        // Esperar a que el DOM esté listo
         document.addEventListener('DOMContentLoaded', () => {
-            console.log('Demo de Video Skip Buttons DLC cargada');
+            console.log('🎬 Demo de Video Skip Buttons DLC cargada');
+            console.log('📋 Formatos disponibles: 8 (4 absolutos + 2 relativos inicio + 2 relativos final)');
+            console.log('🔗 Transformación YouTube: youtube.com → yout-ube.com | youtu.be → yout-ube.com/watch?v=');
         });
     </script>
 </body>

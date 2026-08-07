@@ -2,6 +2,11 @@
  * DLC Module: Skip Buttons
  * Dibuja botones flotantes superpuestos al iframe basándose en los rangos de OP y ED configurados.
  * Auto-ocultamiento tras 5s con chevron invocador en el lateral más próximo al borde.
+ *
+ * Principio de visibilidad: los botones solo se muestran cuando el tiempo actual del
+ * video cae dentro del rango [start, end] de su OP o ED correspondiente. Si ambos
+ * rangos se solapan en un instante (interpolación entre rangos contiguos), ambos
+ * botones pueden aparecer simultáneamente de forma excepcional.
  */
 class SkipButtonsDLC {
     constructor() {
@@ -33,6 +38,27 @@ class SkipButtonsDLC {
         const style = document.createElement('style');
         style.id = 'dlc-skip-buttons-styles';
         style.textContent = `
+            /* ═══ WRAPPER: invisible al layout, solo contexto de posicionamiento ═══ */
+            .video-wrapper {
+                position: relative;
+                width: 100%;
+                height: 100%;
+                display: block;
+                margin: 0;
+                padding: 0;
+                /* No altera el flujo: hereda dimensiones exactas del padre */
+            }
+
+            /* Los iframes/videos dentro del wrapper llenan el 100% */
+            .video-wrapper > iframe,
+            .video-wrapper > video {
+                width: 100%;
+                height: 100%;
+                border: none;
+                display: block;
+            }
+
+            /* ═══ CONTENEDOR DE BOTONES: puramente overlay (no ocupa espacio) ═══ */
             .video-skip-container {
                 position: absolute;
                 top: 10px;
@@ -69,6 +95,10 @@ class SkipButtonsDLC {
                 min-width: 80px;
                 justify-content: center;
                 pointer-events: auto;
+                user-select: none;
+                -webkit-user-select: none;
+                -moz-user-select: none;
+                -ms-user-select: none;
             }
 
             .video-skip-button.visible {
@@ -86,17 +116,17 @@ class SkipButtonsDLC {
             .video-skip-button.op-skip:hover { background: linear-gradient(135deg, rgba(33, 150, 243, 0.9), rgba(33, 150, 243, 0.7)); }
             .video-skip-button.ed-skip:hover { background: linear-gradient(135deg, rgba(76, 175, 80, 0.9), rgba(76, 175, 80, 0.7)); }
 
-            /* Chevron invocador: aparece cuando los botones están ocultos */
+            /* ═══ CHEVRON INVOCADOR: overlay puro, sin ocupar espacio del video ═══ */
             .skip-chevron-invoker {
                 position: absolute;
-                top: 10px;
-                right: 0px;
+                top: 50%;
+                right: 0;
+                transform: translateY(-50%) translateX(100%);
                 z-index: 9998;
-                width: 28px;
-                height: 28px;
-                background: linear-gradient(135deg, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.6));
-                border: 1px solid rgba(255, 255, 255, 0.3);
-                border-right: none;
+                width: 24px;
+                height: 48px;
+                background: linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.7));
+                border: none;
                 border-radius: 6px 0 0 6px;
                 display: flex;
                 align-items: center;
@@ -104,29 +134,28 @@ class SkipButtonsDLC {
                 cursor: pointer;
                 pointer-events: auto;
                 opacity: 0;
-                transform: translateX(100%);
                 transition: opacity 0.3s ease, transform 0.3s ease;
-                backdrop-filter: blur(4px);
+                backdrop-filter: blur(2px);
             }
 
             .skip-chevron-invoker.visible {
                 opacity: 1;
-                transform: translateX(0);
+                transform: translateY(-50%) translateX(0);
+            }
+
+            .skip-chevron-invoker:hover {
+                background: linear-gradient(90deg, transparent, rgba(33, 150, 243, 0.8));
             }
 
             .skip-chevron-invoker svg {
-                width: 16px;
-                height: 16px;
+                width: 14px;
+                height: 14px;
                 fill: white;
                 transition: transform 0.3s ease;
             }
 
             .skip-chevron-invoker:hover svg {
-                transform: scale(1.2);
-            }
-
-            .video-wrapper {
-                position: relative;
+                transform: scale(1.3);
             }
         `;
         document.head.appendChild(style);
@@ -136,16 +165,21 @@ class SkipButtonsDLC {
         // Ignorar si no hay OP o ED configurados para botones (Auto-skips u otros comandos se ignoran aquí)
         if (!config.op && !config.ed) return;
 
-        // Envolver el elemento si no está envuelto
-        if (!element.parentElement.classList.contains('video-wrapper')) {
-            const wrapper = document.createElement('div');
-            wrapper.className = 'video-wrapper';
-            wrapper.style.position = element.style.position || 'relative';
-            element.parentNode.insertBefore(wrapper, element);
-            wrapper.appendChild(element);
+        // Evitar crear duplicados si el core-engine re-despacha el evento (ej: al resolver rangos relativos)
+        if (this.buttons.has(videoId)) return;
+
+        // ═══ PRINCIPIO: NO crear wrappers extras ═══
+        // Los botones se anclan directamente al contenedor padre del video/iframe.
+        // Esto evita alterar el flujo del layout o agregar altura fantasma.
+        const container = element.parentElement;
+        if (!container) return;
+
+        // Asegurar que el contenedor padre sea contexto de posicionamiento (para absolute)
+        const pos = window.getComputedStyle(container).position;
+        if (pos === 'static' || pos === '') {
+            container.style.position = 'relative';
         }
 
-        const wrapper = element.parentElement;
         const buttonContainer = document.createElement('div');
         buttonContainer.className = 'video-skip-container';
         buttonContainer.id = `skip-buttons-${videoId}`;
@@ -181,7 +215,7 @@ class SkipButtonsDLC {
             this.expandButtons(videoId);
         });
 
-        wrapper.appendChild(chevron);
+        container.appendChild(chevron);
         buttonsMap.chevron = chevron;
 
         // Cuando el mouse entra a los botones, cancelar el timer de ocultamiento
@@ -194,8 +228,11 @@ class SkipButtonsDLC {
             this.startHideTimer(videoId);
         });
 
-        wrapper.appendChild(buttonContainer);
-        this.buttons.set(videoId, { container: buttonContainer, buttons: buttonsMap, wrapper });
+        container.appendChild(buttonContainer);
+        this.buttons.set(videoId, { container: buttonContainer, buttons: buttonsMap, host: container, _inRange: false });
+
+        // Estado inicial: contenedor retraído (sin botones visibles hasta entrar en rango)
+        buttonContainer.classList.add('retracted');
     }
 
     // Expandir los botones (quitar retraído) y ocultar el chevron
@@ -259,24 +296,45 @@ class SkipButtonsDLC {
         const btnData = this.buttons.get(videoId);
         if (!btnData) return;
 
-        let anyVisible = false;
+        // ── Fuente de verdad: un botón se muestra solo si currentTime cae dentro
+        //    de su rango [start, end]. Si OP y ED se solapan en un instante (caso
+        //    de interpolación entre rangos contiguos), ambos pueden aparecer. ──
+        let opInRange = false;
+        let edInRange = false;
 
         if (config.op && !config.op.auto && btnData.buttons.op) {
-            const visible = currentTime >= config.op.start && currentTime <= config.op.end;
-            btnData.buttons.op.classList.toggle('visible', visible);
-            if (visible) anyVisible = true;
+            opInRange = currentTime >= config.op.start && currentTime <= config.op.end;
         }
 
         if (config.ed && !config.ed.auto && btnData.buttons.ed) {
-            const visible = currentTime >= config.ed.start && currentTime <= config.ed.end;
-            btnData.buttons.ed.classList.toggle('visible', visible);
-            if (visible) anyVisible = true;
+            edInRange = currentTime >= config.ed.start && currentTime <= config.ed.end;
         }
 
-        // Cuando un botón se vuelve visible, iniciar el timer de auto-ocultamiento
-        if (anyVisible && !this.hideTimers.has(videoId)) {
+        // Sincronizar visibilidad de cada botón con su rango (siempre)
+        if (btnData.buttons.op) btnData.buttons.op.classList.toggle('visible', opInRange);
+        if (btnData.buttons.ed) btnData.buttons.ed.classList.toggle('visible', edInRange);
+
+        const anyInRange = opInRange || edInRange;
+        const wasInRange = btnData._inRange || false;
+
+        // ── Gestión del contenedor y timer de auto-ocultamiento ──
+        // Solo animar/expander cuando hay un cambio de estado de rango.
+        // Mientras se permanece dentro del rango, el timer controla el retraer.
+        if (anyInRange && !wasInRange) {
+            // Entramos en un rango de skip: expandir y reiniciar el timer
+            btnData._inRange = true;
+            btnData.container.style.display = '';
+            btnData.container.classList.remove('retracted');
+            if (btnData.buttons.chevron) btnData.buttons.chevron.classList.remove('visible');
             this.startHideTimer(videoId);
+        } else if (!anyInRange && wasInRange) {
+            // Salimos del rango de skip: retraer inmediatamente, sin chevron
+            btnData._inRange = false;
+            this.cancelHideTimer(videoId);
+            btnData.container.classList.add('retracted');
+            if (btnData.buttons.chevron) btnData.buttons.chevron.classList.remove('visible');
         }
+        // Si anyInRange && wasInRange: no hacer nada (el timer controla el retraer)
     }
 }
 

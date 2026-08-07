@@ -811,10 +811,7 @@ class IframeMatrixViewer {
 			});
 		}
 
-		// Configurar los botones de navegación
-		this.setupNavigationButtons();
-
-		// Configurar los detectores de bordes
+		// Configurar los detectores de bordes (incluyen botones integrados .edge-nav-button)
 		this.setupEdgeDetectors();
 
 		// Configurar el botón de alternar visibilidad
@@ -1192,64 +1189,121 @@ class IframeMatrixViewer {
 		document.querySelectorAll('.edge-detector').forEach(detector => {
 			const edge = detector.dataset.edge;
 
-			// mouseenter: SIEMPRE activar el borde (sin requerir Shift)
+			// mouseenter: Fase ENTRY — botón aparece desde afuera animándose hacia el centro
 			detector.addEventListener('mouseenter', () => {
 				if (this.isLoading || this.animationInProgress) return;
 
-				// Limpiar timeout anterior si existe (evitar conflictos de hover múltiple)
-				if (this.edgeStates[edge] && this.edgeStates[edge].timeout) {
-					clearTimeout(this.edgeStates[edge].timeout);
-					this.edgeStates[edge].timeout = null;
-				}
+				this.clearEdgeTimers(edge);
 
 				this.activeEdges[edge] = true;
-				this.edgeStates[edge] = this.edgeStates[edge] || {};
-				this.edgeStates[edge].active = true;
-				this.edgeStates[edge].shifted = false;
+				const st = this.edgeStates[edge] || {};
+				st.active = true;
+				st.shifted = false;
+				st.phase = 'entering';
+				this.edgeStates[edge] = st;
 
-				// Expandir la hitbox siempre
+				// Expandir hitbox
 				this.expandEdge(detector, edge);
+
+				// Animar botón desde afuera hacia el centro
+				const btn = detector.querySelector('.edge-nav-button');
+				if (btn) {
+					// Posición inicial: fuera del borde (translate negativo)
+					btn.style.transition = 'transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease';
+					// Reset inline arc positions
+					btn.style.left = '';
+					btn.style.right = '';
+					btn.style.top = '';
+					btn.style.bottom = '';
+					// Forzar estado inicial fuera
+					btn.style.opacity = '0';
+					btn.style.transform = `translate(-50%, -50%) scale(0.3)`;
+
+					// En el siguiente frame, animar al centro visible
+					requestAnimationFrame(() => {
+						btn.style.opacity = '1';
+						btn.style.transform = `translate(-50%, -50%) scale(1)`;
+					});
+
+					// Después de la animación de entrada, pasar a fase ARC
+					st.entryTimer = setTimeout(() => {
+						if (this.edgeStates[edge] && this.edgeStates[edge].active) {
+							this.edgeStates[edge].phase = 'arc';
+							// Iniciar timer de inacción (3s → volver al centro)
+							this.startInactivityTimer(edge);
+						}
+					}, 350);
+				}
 
 				this.showEdgeButtons(edge);
 			});
 
-			// mouseleave: colapsar y programar reset
+			// mouseleave: Fase EXIT reverso — botón sale desapareciendo
 			detector.addEventListener('mouseleave', () => {
 				if (this.isLoading || this.animationInProgress) return;
 				this.activeEdges[edge] = false;
-				if (this.edgeStates[edge]) this.edgeStates[edge].active = false;
+				const st = this.edgeStates[edge];
+				if (st) st.active = false;
 
-				this.collapseEdge(detector, edge);
+				this.clearEdgeTimers(edge);
 
-				if (!this.buttonsVisible) {
-					setTimeout(() => {
+				// Animar salida: el botón se encoge y desaparece
+				const btn = detector.querySelector('.edge-nav-button');
+				if (btn) {
+					btn.style.transition = 'transform 0.3s cubic-bezier(0.4, 0, 0.6, 1), opacity 0.25s ease';
+					btn.style.opacity = '0';
+					btn.style.transform = `translate(-50%, -50%) scale(0.3)`;
+				}
+
+				// Colapsar hitbox después de la animación de salida
+				if (st) {
+					st.timeout = setTimeout(() => {
 						if (!this.activeEdges[edge]) {
-							this.hideEdgeButtons(edge);
+							this.collapseEdge(detector, edge);
+							if (!this.buttonsVisible) this.hideEdgeButtons(edge);
 						}
-					}, 100);
+					}, 300);
 				}
 			});
 
-			// mousemove: arco elástico (sin Shift) o seguimiento directo (con Shift)
+			// mousemove: arco (sin Shift) o seguimiento directo (con Shift)
 			detector.addEventListener('mousemove', (e) => {
 				if (this.isLoading || this.animationInProgress) return;
 				if (!this.activeEdges[edge]) return;
+
+				const st = this.edgeStates[edge];
+				if (!st) return;
+				// Solo seguir el mouse si estamos en fase ARC o SHIFT
+				if (st.phase !== 'arc' && st.phase !== 'shift') return;
 
 				const btn = detector.querySelector('.edge-nav-button');
 				if (!btn) return;
 
 				const rect = detector.getBoundingClientRect();
 
-				// Con Shift: el botón se desvincula del arco y sigue al mouse directamente
+				// Resetear timer de inacción en cada movimiento
+				this.resetInactivityTimer(edge);
+
+				// Con Shift: seguimiento directo del mouse
 				if (this.ctrlPressed) {
-					if (this.edgeStates[edge]) this.edgeStates[edge].shifted = true;
-					btn.style.transition = 'opacity 0.3s ease';
+					st.shifted = true;
+					st.phase = 'shift';
+					btn.style.transition = 'opacity 0.2s ease';
 					btn.style.left = `${e.clientX - rect.left}px`;
 					btn.style.top = `${e.clientY - rect.top}px`;
+					btn.style.right = '';
+					btn.style.bottom = '';
+					btn.style.transform = `translate(-50%, -50%) scale(1)`;
 					return;
 				}
 
-				// Sin Shift: arco elíptico (posición en la mitad correspondiente al borde)
+				// Sin Shift en modo shift: volver al arco
+				if (st.shifted) {
+					st.shifted = false;
+					st.phase = 'arc';
+				}
+
+				// Arco cóncavo natural
 				btn.style.transition = '';
 				let progress = 0;
 				let archDepth = 0;
@@ -1257,8 +1311,8 @@ class IframeMatrixViewer {
 
 				if (edge === 'top' || edge === 'bottom') {
 					progress = (e.clientX - rect.left) / rect.width;
-					const archFactor = Math.sin(progress * Math.PI);
-					archDepth = archFactor * (innerHeight * 0.25);
+					const archFactor = 1 - Math.sin(progress * Math.PI);
+					archDepth = archFactor * (innerHeight * 0.12);
 
 					btn.style.left = `${e.clientX - rect.left}px`;
 					if (edge === 'top') {
@@ -1270,8 +1324,8 @@ class IframeMatrixViewer {
 					}
 				} else {
 					progress = (e.clientY - rect.top) / rect.height;
-					const archFactor = Math.sin(progress * Math.PI);
-					archDepth = archFactor * (innerWidth * 0.25);
+					const archFactor = 1 - Math.sin(progress * Math.PI);
+					archDepth = archFactor * (innerWidth * 0.12);
 
 					btn.style.top = `${e.clientY - rect.top}px`;
 					if (edge === 'left') {
@@ -1321,65 +1375,120 @@ class IframeMatrixViewer {
 	expandEdge(detector, edge) {
 		detector.classList.add('expanded');
 
-		// Expandir el grosor de la hitbox para capturar mejor el movimiento
+		// Expandir el grosor de la hitbox moderadamente
 		if (edge === 'top' || edge === 'bottom') {
-			detector.style.height = '15vh';
+			detector.style.height = '8vh';
 		} else {
-			detector.style.width = '15vw';
-		}
-
-		// Centrar el botón inicialmente
-		const btn = detector.querySelector('.edge-nav-button');
-		if (btn) {
-			if (edge === 'top' || edge === 'bottom') {
-				btn.style.left = '50%';
-				btn.style[edge] = '0px';
-			} else {
-				btn.style.top = '50%';
-				btn.style[edge] = '0px';
-			}
+			detector.style.width = '8vw';
 		}
 	}
 
 	collapseEdge(detector, edge) {
-		// Resetear posición del botón
+		// Limpiar estilos inline del botón
 		const btn = detector.querySelector('.edge-nav-button');
 		if (btn) {
-			if (edge === 'top' || edge === 'bottom') {
-				btn.style.left = '50%';
-				btn.style[edge] = '0px';
-			} else {
-				btn.style.top = '50%';
-				btn.style[edge] = '0px';
-			}
+			btn.style.left = '';
+			btn.style.right = '';
+			btn.style.top = '';
+			btn.style.bottom = '';
+			btn.style.transition = '';
+			btn.style.opacity = '';
+			btn.style.transform = '';
 		}
 
-		// Después de 3 segundos, restaurar el grosor del borde (hitbox)
-		// Esto evita confusiones con múltiples hovers casuales simultáneos
-		if (this.edgeStates[edge] && this.edgeStates[edge].timeout) {
-			clearTimeout(this.edgeStates[edge].timeout);
+		// Restaurar hitbox inmediatamente
+		detector.classList.remove('expanded');
+		const inset = this.calculateInset(this.currentPosition.depth);
+		if (edge === 'top' || edge === 'bottom') {
+			detector.style.height = inset;
+		} else {
+			detector.style.width = inset;
 		}
 
-		if (this.edgeStates[edge]) {
-			this.edgeStates[edge].timeout = setTimeout(() => {
-				// Solo colapsar si el borde no está activo (mouse ya salió)
-				if (!this.activeEdges[edge]) {
-					detector.classList.remove('expanded');
-					const inset = this.calculateInset(this.currentPosition.depth);
-					if (edge === 'top' || edge === 'bottom') {
-						detector.style.height = inset;
-					} else {
-						detector.style.width = inset;
+		// Resetear estado
+		this.clearEdgeTimers(edge);
+		this.edgeStates[edge] = {
+			active: false,
+			timeout: null,
+			shifted: false,
+			phase: 'idle'
+		};
+	}
+
+	/**
+	 * Timer de inacción #1: 3s sin click/shift → botón vuelve al centro del arco.
+	 * Luego inicia timer #2: 2s más → botón sale desapareciendo.
+	 */
+	startInactivityTimer(edge) {
+		const st = this.edgeStates[edge];
+		if (!st) return;
+
+		// Limpiar timers previos
+		if (st.inactivityTimer) clearTimeout(st.inactivityTimer);
+		if (st.exitTimer) clearTimeout(st.exitTimer);
+
+		// Timer #1: 3s de inacción → volver al centro
+		st.inactivityTimer = setTimeout(() => {
+			if (!this.activeEdges[edge]) return;
+			const detector = document.querySelector(`.edge-detector[data-edge="${edge}"]`);
+			if (!detector) return;
+			const btn = detector.querySelector('.edge-nav-button');
+			if (!btn) return;
+
+			// Animar botón al centro con transición suave
+			btn.style.transition = 'left 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), top 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), right 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), bottom 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease';
+			btn.style.left = '50%';
+			btn.style.right = '';
+			btn.style.top = '50%';
+			btn.style.bottom = '';
+			btn.style.opacity = '0.7';
+
+			st.phase = 'returning';
+
+			// Timer #2: 2s más → salir desapareciendo (reverso de entrada)
+			st.exitTimer = setTimeout(() => {
+				if (!this.activeEdges[edge]) return;
+				btn.style.transition = 'transform 0.3s cubic-bezier(0.4, 0, 0.6, 1), opacity 0.25s ease';
+				btn.style.opacity = '0';
+				btn.style.transform = `translate(-50%, -50%) scale(0.3)`;
+
+				st.phase = 'exiting';
+
+				// Resetear completamente después de la salida
+				setTimeout(() => {
+					if (!this.activeEdges[edge]) {
+						this.collapseEdge(detector, edge);
 					}
-					// Regenerar estado inicial para nueva interacción limpia
-					this.edgeStates[edge] = {
-						active: false,
-						timeout: null,
-						shifted: false
-					};
-				}
-			}, 3000);
+				}, 300);
+			}, 2000);
+		}, 3000);
+	}
+
+	/**
+	 * Resetea el timer de inacción (llamar en cada mousemove o click).
+	 */
+	resetInactivityTimer(edge) {
+		const st = this.edgeStates[edge];
+		if (!st || !st.active) return;
+		if (st.phase === 'arc' || st.phase === 'shift') {
+			this.startInactivityTimer(edge);
 		}
+	}
+
+	/**
+	 * Limpia todos los timers asociados a un borde.
+	 */
+	clearEdgeTimers(edge) {
+		const st = this.edgeStates[edge];
+		if (!st) return;
+		if (st.timeout) clearTimeout(st.timeout);
+		if (st.entryTimer) clearTimeout(st.entryTimer);
+		if (st.inactivityTimer) clearTimeout(st.inactivityTimer);
+		if (st.exitTimer) clearTimeout(st.exitTimer);
+		st.timeout = null;
+		st.entryTimer = null;
+		st.inactivityTimer = null;
+		st.exitTimer = null;
 	}
 	getButtonsForEdge(edge) {
 		const currentMatrix = this.matrixStack[this.currentPosition.depth - this.initialDepth];
@@ -1815,12 +1924,19 @@ class IframeMatrixViewer {
 		const hasMultipleRows = currentMatrix && currentMatrix.length > 1;
 		const hasMultipleColumns = currentMatrix && currentMatrix[0] && currentMatrix[0].length > 1;
 
-		// Solo crear bordes que tengan sentido según las dimensiones
-		// - Bordes top/bottom: solo si hay múltiples filas (navegación vertical)
-		// - Bordes left/right: solo si hay múltiples columnas (navegación horizontal)
+		// Instanciación inteligente de bordes: solo crear los que tengan sentido
+		// para las dimensiones actuales de la matriz.
+		// - 1x1: ningún borde (no hay movimiento posible)
+		// - 1xN: solo left/right (movimiento horizontal)
+		// - Nx1: solo top/bottom (movimiento vertical)
+		// - NxM: los 4 bordes
 		const edges = [];
-		if (hasMultipleRows) edges.push('top', 'bottom');
-		if (hasMultipleColumns) edges.push('left', 'right');
+		if (hasMultipleColumns) {
+			edges.push('left', 'right');
+		}
+		if (hasMultipleRows) {
+			edges.push('top', 'bottom');
+		}
 
 		const iconPaths = {
 			top: 'M5 15l7-7 7 7',
@@ -1877,24 +1993,18 @@ class IframeMatrixViewer {
 			this.root.appendChild(detector);
 		});
 
-		// Esquinas: solo crear las que tienen sentido según las dimensiones
-		// - top-left/top-right: solo si hay múltiples filas (navegación vertical disponible)
-		// - bottom-left/bottom-right: solo si hay múltiples filas o si hay funciones extra (settings, exit)
-		// En matriz 1x1 (elemento único), no se crean esquinas de navegación
+		// Esquinas: solo en matrices 2D (múltiples filas Y columnas) o anidadas
+		// Sitios unidimensionales (1xN o Nx1) no necesitan esquinas de navegación
 		const corners = [];
+		const is2D = hasMultipleRows && hasMultipleColumns;
 
-		if (hasMultipleRows) {
-			corners.push('top-left', 'top-right');
+		if (is2D) {
+			corners.push('top-left', 'top-right', 'bottom-left', 'bottom-right');
+		} else if (this.currentPosition.depth > this.initialDepth) {
+			// Matriz anidada unidimensional: bottom-right para exit
+			corners.push('bottom-right');
 		}
-
-		if (this.currentPosition.depth > this.initialDepth) {
-			// Matriz anidada: siempre crear bottom corners (exit + settings)
-			corners.push('bottom-left', 'bottom-right');
-		} else if (hasMultipleRows || hasMultipleColumns) {
-			// Matriz raíz navegable: bottom corners tienen settings/json + navegación
-			corners.push('bottom-left', 'bottom-right');
-		}
-		// En matriz 1x1 raíz (no anidada, elemento único): sin esquinas
+		// En matriz 1D raíz: sin esquinas (settings accesible con tecla 'b')
 
 		corners.forEach(corner => {
 			const cornerDet = document.createElement('div');
@@ -2266,8 +2376,8 @@ class IframeMatrixViewer {
 			// Crear los botones de navegación
 			//this.renderNavigationButtons();
 
-			// Crear el botón de alternar visibilidad
-			//this.renderToggleButton();
+			// Crear el botón de alternar visibilidad (toggle para acceso a settings/json/theme en 1D)
+			this.renderToggleButton();
 
 			// Crear el selector de JSON
 			this.renderJsonSelector();
@@ -2478,7 +2588,7 @@ class IframeMatrixViewer {
 					console.warn("URL sanitizada para prevenir bucle infinito:", item);
 					return "about:blank?infinite-loop-prevented=true";
 				}
-				return item;
+				return this.transformYoutubeUrl(item);
 			} else if (Array.isArray(item)) {
 				return item.map(sanitizeItem); // Procesar arrays recursivamente
 			}
@@ -2487,6 +2597,56 @@ class IframeMatrixViewer {
 
 		// Aplicar sanitización a la matriz completa
 		return sanitizeItem(matrix);
+	}
+
+	/**
+	 * Transforma URLs de YouTube al formato yout-ube.com (con guión) para evitar
+	 * restricciones de reproducción en iframes embebidos.
+	 *
+	 * Transformaciones:
+	 *   - https://www.youtube.com/watch?v=ID     → https://www.yout-ube.com/watch?v=ID
+	 *   - https://youtube.com/watch?v=ID         → https://yout-ube.com/watch?v=ID
+	 *   - https://youtu.be/ID                    → https://www.yout-ube.com/watch?v=ID
+	 *   - https://www.youtube.com/embed/ID       → https://www.yout-ube.com/embed/ID
+	 *
+	 * Conserva parámetros DLC del hash (#op=...&ed=...&d=...).
+	 * Solo transforma URLs que contengan "youtube" o "youtu.be".
+	 */
+	transformYoutubeUrl(url) {
+		if (typeof url !== 'string') return url;
+
+		// Separar hash DLC del resto de la URL (preservar parámetros DLC)
+		const hashIndex = url.indexOf('#');
+		const hash = hashIndex !== -1 ? url.substring(hashIndex) : '';
+		let cleanUrl = hashIndex !== -1 ? url.substring(0, hashIndex) : url;
+
+		let transformed = cleanUrl;
+		let changed = false;
+
+		// Transformación 1: youtu.be/VIDEO_ID → www.yout-ube.com/watch?v=VIDEO_ID
+		const shortMatch = cleanUrl.match(/^(https?:\/\/)(?:www\.)?youtu\.be\/(.+)$/);
+		if (shortMatch) {
+			const protocol = shortMatch[1];
+			const videoPart = shortMatch[2];
+			// Separar parámetros de query si existen (ej: ?t=30)
+			const queryIndex = videoPart.indexOf('?');
+			const videoId = queryIndex !== -1 ? videoPart.substring(0, queryIndex) : videoPart;
+			const query = queryIndex !== -1 ? videoPart.substring(queryIndex) : '';
+			transformed = `${protocol}www.yout-ube.com/watch?v=${videoId}${query}`;
+			changed = true;
+		}
+		// Transformación 2: youtube.com → yout-ube.com (cualquier path: /watch, /embed, etc.)
+		else if (cleanUrl.includes('youtube.com')) {
+			transformed = cleanUrl.replace(/youtube\.com/g, 'yout-ube.com');
+			changed = true;
+		}
+
+		if (changed) {
+			console.log(`[URL Transform] ${cleanUrl} → ${transformed}`);
+		}
+
+		// Reconstruir URL con hash DLC preservado
+		return transformed + hash;
 	}
 
 	isSubmatrixCandidate(cell) {
@@ -2784,4 +2944,39 @@ class CentralNavigation {
 document.addEventListener('DOMContentLoaded', () => {
 	document.body.innerHTML = `<div id="root"></div>`;
 	window.iframeMatrixViewer = new IframeMatrixViewer(document.getElementById('root'));
+
+	// ═══════════════════════════════════════════════════════════════════
+	// AUTO-CARGA DE MÓDULOS DLC
+	// Detecta si los módulos DLC están cargados; si no, los inyecta
+	// automáticamente usando la ruta relativa de este script.js
+	// ═══════════════════════════════════════════════════════════════════
+	if (!window.dlcCoreEngine) {
+		// Resolver la ruta base hacia /src/dlc/ desde la ubicación de script.js
+		const scripts = document.querySelectorAll('script[src*="script.js"]');
+		const lastScript = scripts[scripts.length - 1];
+		let dlcBasePath = './src/dlc/'; // fallback por defecto
+
+		if (lastScript && lastScript.src) {
+			// script.js está en .../src/script.js → dlc está en .../src/dlc/
+			dlcBasePath = lastScript.src.replace(/script\.js.*$/, 'dlc/');
+		}
+
+		const dlcModules = [
+			'core-engine.js',    // ← Debe cargarse PRIMERO (instancia window.dlcCoreEngine)
+			'skip-buttons.js',
+			'auto-skip.js',
+			'video-loop.js',
+			'video-modifiers.js',
+			'video-chapters.js'
+		];
+
+		dlcModules.forEach(moduleName => {
+			const script = document.createElement('script');
+			script.src = dlcBasePath + moduleName;
+			script.async = false; // Mantener orden de carga
+			document.head.appendChild(script);
+		});
+
+		console.log(`[DLC] Auto-cargando ${dlcModules.length} módulos desde: ${dlcBasePath}`);
+	}
 });
