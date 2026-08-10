@@ -1,23 +1,86 @@
 <!DOCTYPE html>
-<html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="stylesheet" type="text/css" href="../../HTML-CoreProyects/∞Iframes/src/style.css">
+<html lang="es">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" type="text/css" href="../../HTML-CoreProyects/∞Iframes/src/style.css">
 	<script>
 		// Define las variables globales para la matriz y establecer el titulo del sitio web
 		window.title = "My Tiny Senpai";
+
+		// ═══════════════════════════════════════════════════════════════════
+		// PARÁMETROS DLC EN HASH — Sistema flexible de rangos de tiempo
+		// ═══════════════════════════════════════════════════════════════════
+		//
+		// FORMATOS SOPORTADOS PARA op / ed / loop:
+		//
+		// ┌─────────────────────────────────────────────────────────────────┐
+		// │ FORMATOS ABSOLUTOS (inmediatos)                                │
+		// ├─────────────────────────────────────────────────────────────────┤
+		// │ [MM:SS-MM:SS]  Rango exacto          → op=[01:31-03:01]        │
+		// │ [MM:SS]        Desde MM:SS + d seg   → op=[01:31]              │
+		// │ MM:SS+Ns       Desde MM:SS + N seg   → op=01:31+90s            │
+		// │ MM:SS          Punto fijo            → op=01:31                │
+		// ├─────────────────────────────────────────────────────────────────┤
+		// │ FORMATOS RELATIVOS AL INICIO (inmediatos)                      │
+		// ├─────────────────────────────────────────────────────────────────┤
+		// │ +N / start+N   Primeros N segundos   → op=+90                  │
+		// ├─────────────────────────────────────────────────────────────────┤
+		// │ FORMATOS RELATIVOS AL FINAL (diferidos)                        │
+		// ├─────────────────────────────────────────────────────────────────┤
+		// │ -N / end-N     Últimos N segundos    → ed=-90                  │
+		// │ [MM:SS-]       Desde MM:SS al final  → ed=[22:00-]             │
+		// │ [-MM:SS]       Desde inicio a MM:SS  → op=[-01:31]             │
+		// └─────────────────────────────────────────────────────────────────┘
+		//
+		// PARÁMETROS ADICIONALES:
+		//   d=N       Duración por defecto (90s) para formatos implícitos
+		//   !op=...   Auto-skip (salto automático sin botón)
+		//   loop=...  Reproducción en bucle del rango
+		//   speed=...  Velocidad de reproducción (ej: 1.5@[01:00])
+		//   mute=...  Silenciar en rango
+		//   ch=...    Capítulos: Intro(00:00),Batalla(05:30)
+		//
+		// EJEMPLO DE COMBINACIONES:
+		//   #op=[01:31]&ed=-90          → OP exacto + ED últimos 90s
+		//   #op=[01:31]&ed=[22:00-]     → OP exacto + ED desde 22:00 al final
+		//   #op=01:31+90s&ed=-90        → OP desde 01:31 durante 90s
+		//   #!op=[01:31]&!ed=-90        → Auto-skip OP y ED (sin botones)
+		//   #op=[-01:31]&ed=[22:00-]    → OP inicio→01:31, ED 22:00→final
+		//
+		// RESOLUCIÓN DE DURACIÓN (para formatos relativos al final):
+		//   1. postMessage API (ok.ru, YouTube, Vimeo, VK) → duración exacta
+		//   2. Fallback tras 5s: usa d= como estimación si no se detecta
+		// ═══════════════════════════════════════════════════════════════════
+
 		window.urlRowsIframe = [
 			[
-			"https://ok.ru/videoembed/5790310468295",
-			"https://ok.ru/videoembed/5859417197252",
-			"https://ok.ru/videoembed/6298889685514",
-			"https://ok.ru/videoembed/7275947887185",
-			"https://ok.ru/videoembed/6563539520112",
-			"https://ok.ru/videoembed/6804979452588",
-			"https://ok.ru/videoembed/6836365232848",
-			"https://ok.ru/videoembed/6669765249648",
-			"https://ok.ru/videoembed/6887484295888",
-			"https://ok.ru/videoembed/6394812500679",
-			"https://ok.ru/videoembed/6417154116295",
-			"https://ok.ru/videoembed/7498842638929"
+				"https://ok.ru/videoembed/5790310468295#op=[01:31]&ed=-90&d=90",
+				"https://ok.ru/videoembed/5859417197252#op=[01:59]&ed=-90&d=90",
+				"https://ok.ru/videoembed/6298889685514#op=[01:24]&ed=-90&d=90",
+				"https://ok.ru/videoembed/7275947887185#op=[00:49]&ed=-90&d=90",
+				"https://ok.ru/videoembed/6563539520112#op=[01:26]&ed=-90&d=90",
+				"https://ok.ru/videoembed/6804979452588#op=[01:34]&ed=-90&d=90",
+				"https://ok.ru/videoembed/6836365232848#op=[01:39]&ed=-90&d=90",
+				"https://ok.ru/videoembed/6669765249648#op=[02:13]&ed=-90&d=90",
+				"https://ok.ru/videoembed/6887484295888#op=[00:27]&ed=-90&d=90",
+				"https://ok.ru/videoembed/6394812500679#op=[01:37]&ed=-90&d=90",
+				"https://ok.ru/videoembed/6417154116295#op=[00:37]&ed=-90&d=90",
+				"https://ok.ru/videoembed/7498842638929#op=[01:58]&ed=-90&d=90"
 			]
 		];
 	</script>
-</head><script src="../../HTML-CoreProyects/∞Iframes/src/script.js"></script></html>
+</head>
+
+<body>
+	<script src="../../HTML-CoreProyects/∞Iframes/src/script.js"></script>
+	<!-- Cargar el Core Engine + Módulos DLC (Auto-inyectan su Core) -->
+	<script src="../../HTML-CoreProyects/∞Iframes/src/dlc/skip-buttons.js"></script>
+	<script src="../../HTML-CoreProyects/∞Iframes/src/dlc/auto-skip.js"></script>
+	<script src="../../HTML-CoreProyects/∞Iframes/src/dlc/video-loop.js"></script>
+	<script src="../../HTML-CoreProyects/∞Iframes/src/dlc/video-modifiers.js"></script>
+	<script src="../../HTML-CoreProyects/∞Iframes/src/dlc/video-chapters.js"></script>
+</body>
+
+</html>
