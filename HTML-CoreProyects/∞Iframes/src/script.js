@@ -1189,48 +1189,55 @@ class IframeMatrixViewer {
 		document.querySelectorAll('.edge-detector').forEach(detector => {
 			const edge = detector.dataset.edge;
 
-			// mouseenter: Fase ENTRY — botón aparece desde afuera animándose hacia el centro
+			// mouseenter: activar el borde + animar botón desde fuera de la pantalla
 			detector.addEventListener('mouseenter', () => {
 				if (this.isLoading || this.animationInProgress) return;
 
-				this.clearEdgeTimers(edge);
+				// Limpiar timeout anterior si existe (evitar conflictos de hover múltiple)
+				if (this.edgeStates[edge] && this.edgeStates[edge].timeout) {
+					clearTimeout(this.edgeStates[edge].timeout);
+					this.edgeStates[edge].timeout = null;
+				}
 
 				this.activeEdges[edge] = true;
-				const st = this.edgeStates[edge] || {};
-				st.active = true;
-				st.shifted = false;
-				st.phase = 'entering';
-				this.edgeStates[edge] = st;
+				this.edgeStates[edge] = this.edgeStates[edge] || {};
+				this.edgeStates[edge].active = true;
+				this.edgeStates[edge].shifted = false;
+				this.edgeStates[edge].entering = true; // Bloquear arco durante la entrada
 
-				// Expandir hitbox
+				// Expandir la hitbox siempre
 				this.expandEdge(detector, edge);
 
-				// Animar botón desde afuera hacia el centro
+				// Animar botón desde fuera de la pantalla hacia el borde
 				const btn = detector.querySelector('.edge-nav-button');
 				if (btn) {
-					// Posición inicial: fuera del borde (translate negativo)
-					btn.style.transition = 'transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease';
-					// Reset inline arc positions
-					btn.style.left = '';
-					btn.style.right = '';
-					btn.style.top = '';
-					btn.style.bottom = '';
-					// Forzar estado inicial fuera
-					btn.style.opacity = '0';
-					btn.style.transform = `translate(-50%, -50%) scale(0.3)`;
+					// Determinar dirección de entrada según el borde
+					let enterTransform = '';
+					if (edge === 'top') enterTransform = 'translate(-50%, -180%)';
+					else if (edge === 'bottom') enterTransform = 'translate(-50%, 180%)';
+					else if (edge === 'left') enterTransform = 'translate(-180%, -50%)';
+					else if (edge === 'right') enterTransform = 'translate(180%, -50%)';
 
-					// En el siguiente frame, animar al centro visible
+					// Estado inicial: fuera de la pantalla, invisible
+					btn.style.transition = 'none';
+					btn.style.transform = enterTransform;
+					btn.style.opacity = '0';
+
+					// Forzar reflow para que el estado inicial se aplique
+					btn.offsetHeight;
+
+					// Animar hacia posición final en el borde
 					requestAnimationFrame(() => {
+						btn.style.transition = 'transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease';
+						btn.style.transform = 'translate(-50%, -50%)';
 						btn.style.opacity = '1';
-						btn.style.transform = `translate(-50%, -50%) scale(1)`;
 					});
 
-					// Después de la animación de entrada, pasar a fase ARC
-					st.entryTimer = setTimeout(() => {
-						if (this.edgeStates[edge] && this.edgeStates[edge].active) {
-							this.edgeStates[edge].phase = 'arc';
-							// Iniciar timer de inacción (3s → volver al centro)
-							this.startInactivityTimer(edge);
+					// Después de la animación de entrada, activar el arco de seguimiento
+					if (this.edgeStates[edge].enterTimer) clearTimeout(this.edgeStates[edge].enterTimer);
+					this.edgeStates[edge].enterTimer = setTimeout(() => {
+						if (this.edgeStates[edge] && this.activeEdges[edge]) {
+							this.edgeStates[edge].entering = false;
 						}
 					}, 350);
 				}
@@ -1238,72 +1245,54 @@ class IframeMatrixViewer {
 				this.showEdgeButtons(edge);
 			});
 
-			// mouseleave: Fase EXIT reverso — botón sale desapareciendo
+			// mouseleave: colapsar y programar reset
 			detector.addEventListener('mouseleave', () => {
 				if (this.isLoading || this.animationInProgress) return;
 				this.activeEdges[edge] = false;
-				const st = this.edgeStates[edge];
-				if (st) st.active = false;
-
-				this.clearEdgeTimers(edge);
-
-				// Animar salida: el botón se encoge y desaparece
-				const btn = detector.querySelector('.edge-nav-button');
-				if (btn) {
-					btn.style.transition = 'transform 0.3s cubic-bezier(0.4, 0, 0.6, 1), opacity 0.25s ease';
-					btn.style.opacity = '0';
-					btn.style.transform = `translate(-50%, -50%) scale(0.3)`;
+				if (this.edgeStates[edge]) {
+					this.edgeStates[edge].active = false;
+					// Cancelar timer de entrada pendiente si el mouse sale antes
+					if (this.edgeStates[edge].enterTimer) {
+						clearTimeout(this.edgeStates[edge].enterTimer);
+						this.edgeStates[edge].enterTimer = null;
+					}
+					this.edgeStates[edge].entering = false;
 				}
 
-				// Colapsar hitbox después de la animación de salida
-				if (st) {
-					st.timeout = setTimeout(() => {
+				this.collapseEdge(detector, edge);
+
+				if (!this.buttonsVisible) {
+					setTimeout(() => {
 						if (!this.activeEdges[edge]) {
-							this.collapseEdge(detector, edge);
-							if (!this.buttonsVisible) this.hideEdgeButtons(edge);
+							this.hideEdgeButtons(edge);
 						}
-					}, 300);
+					}, 100);
 				}
 			});
 
-			// mousemove: arco (sin Shift) o seguimiento directo (con Shift)
+			// mousemove: arco elástico (sin Shift) o seguimiento directo (con Shift)
 			detector.addEventListener('mousemove', (e) => {
 				if (this.isLoading || this.animationInProgress) return;
 				if (!this.activeEdges[edge]) return;
 
-				const st = this.edgeStates[edge];
-				if (!st) return;
-				// Solo seguir el mouse si estamos en fase ARC o SHIFT
-				if (st.phase !== 'arc' && st.phase !== 'shift') return;
+				// Bloquear seguimiento durante la animación de entrada
+				if (this.edgeStates[edge] && this.edgeStates[edge].entering) return;
 
 				const btn = detector.querySelector('.edge-nav-button');
 				if (!btn) return;
 
 				const rect = detector.getBoundingClientRect();
 
-				// Resetear timer de inacción en cada movimiento
-				this.resetInactivityTimer(edge);
-
-				// Con Shift: seguimiento directo del mouse
+				// Con Shift: el botón se desvincula del arco y sigue al mouse directamente
 				if (this.ctrlPressed) {
-					st.shifted = true;
-					st.phase = 'shift';
-					btn.style.transition = 'opacity 0.2s ease';
+					if (this.edgeStates[edge]) this.edgeStates[edge].shifted = true;
+					btn.style.transition = 'opacity 0.3s ease';
 					btn.style.left = `${e.clientX - rect.left}px`;
 					btn.style.top = `${e.clientY - rect.top}px`;
-					btn.style.right = '';
-					btn.style.bottom = '';
-					btn.style.transform = `translate(-50%, -50%) scale(1)`;
 					return;
 				}
 
-				// Sin Shift en modo shift: volver al arco
-				if (st.shifted) {
-					st.shifted = false;
-					st.phase = 'arc';
-				}
-
-				// Arco cóncavo natural
+				// Sin Shift: arco elíptico (posición en la mitad correspondiente al borde)
 				btn.style.transition = '';
 				let progress = 0;
 				let archDepth = 0;
@@ -1311,8 +1300,9 @@ class IframeMatrixViewer {
 
 				if (edge === 'top' || edge === 'bottom') {
 					progress = (e.clientX - rect.left) / rect.width;
+					// Magnitud contraria: en esquinas el botón se aleja del borde, en el centro se acerca
 					const archFactor = 1 - Math.sin(progress * Math.PI);
-					archDepth = archFactor * (innerHeight * 0.12);
+					archDepth = archFactor * (innerHeight * 0.25);
 
 					btn.style.left = `${e.clientX - rect.left}px`;
 					if (edge === 'top') {
@@ -1324,8 +1314,9 @@ class IframeMatrixViewer {
 					}
 				} else {
 					progress = (e.clientY - rect.top) / rect.height;
+					// Magnitud contraria: en esquinas el botón se aleja del borde, en el centro se acerca
 					const archFactor = 1 - Math.sin(progress * Math.PI);
-					archDepth = archFactor * (innerWidth * 0.12);
+					archDepth = archFactor * (innerWidth * 0.25);
 
 					btn.style.top = `${e.clientY - rect.top}px`;
 					if (edge === 'left') {
@@ -1375,121 +1366,71 @@ class IframeMatrixViewer {
 	expandEdge(detector, edge) {
 		detector.classList.add('expanded');
 
-		// Expandir el grosor de la hitbox moderadamente
+		// Expandir el grosor de la hitbox para capturar mejor el movimiento
 		if (edge === 'top' || edge === 'bottom') {
-			detector.style.height = '8vh';
+			detector.style.height = '15vh';
 		} else {
-			detector.style.width = '8vw';
+			detector.style.width = '15vw';
+		}
+
+		// Centrar el botón inicialmente
+		const btn = detector.querySelector('.edge-nav-button');
+		if (btn) {
+			if (edge === 'top' || edge === 'bottom') {
+				btn.style.left = '50%';
+				btn.style[edge] = '0px';
+			} else {
+				btn.style.top = '50%';
+				btn.style[edge] = '0px';
+			}
 		}
 	}
 
 	collapseEdge(detector, edge) {
-		// Limpiar estilos inline del botón
+		// Resetear posición y transformación del botón
 		const btn = detector.querySelector('.edge-nav-button');
 		if (btn) {
-			btn.style.left = '';
-			btn.style.right = '';
-			btn.style.top = '';
-			btn.style.bottom = '';
-			btn.style.transition = '';
-			btn.style.opacity = '';
+			if (edge === 'top' || edge === 'bottom') {
+				btn.style.left = '50%';
+				btn.style[edge] = '0px';
+			} else {
+				btn.style.top = '50%';
+				btn.style[edge] = '0px';
+			}
+			// Limpiar transform y opacity de la animación de entrada
 			btn.style.transform = '';
+			btn.style.opacity = '';
+			btn.style.transition = '';
 		}
 
-		// Restaurar hitbox inmediatamente
-		detector.classList.remove('expanded');
-		const inset = this.calculateInset(this.currentPosition.depth);
-		if (edge === 'top' || edge === 'bottom') {
-			detector.style.height = inset;
-		} else {
-			detector.style.width = inset;
+		// Después de 3 segundos, restaurar el grosor del borde (hitbox)
+		// Esto evita confusiones con múltiples hovers casuales simultáneos
+		if (this.edgeStates[edge] && this.edgeStates[edge].timeout) {
+			clearTimeout(this.edgeStates[edge].timeout);
 		}
 
-		// Resetear estado
-		this.clearEdgeTimers(edge);
-		this.edgeStates[edge] = {
-			active: false,
-			timeout: null,
-			shifted: false,
-			phase: 'idle'
-		};
-	}
-
-	/**
-	 * Timer de inacción #1: 3s sin click/shift → botón vuelve al centro del arco.
-	 * Luego inicia timer #2: 2s más → botón sale desapareciendo.
-	 */
-	startInactivityTimer(edge) {
-		const st = this.edgeStates[edge];
-		if (!st) return;
-
-		// Limpiar timers previos
-		if (st.inactivityTimer) clearTimeout(st.inactivityTimer);
-		if (st.exitTimer) clearTimeout(st.exitTimer);
-
-		// Timer #1: 3s de inacción → volver al centro
-		st.inactivityTimer = setTimeout(() => {
-			if (!this.activeEdges[edge]) return;
-			const detector = document.querySelector(`.edge-detector[data-edge="${edge}"]`);
-			if (!detector) return;
-			const btn = detector.querySelector('.edge-nav-button');
-			if (!btn) return;
-
-			// Animar botón al centro con transición suave
-			btn.style.transition = 'left 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), top 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), right 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), bottom 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease';
-			btn.style.left = '50%';
-			btn.style.right = '';
-			btn.style.top = '50%';
-			btn.style.bottom = '';
-			btn.style.opacity = '0.7';
-
-			st.phase = 'returning';
-
-			// Timer #2: 2s más → salir desapareciendo (reverso de entrada)
-			st.exitTimer = setTimeout(() => {
-				if (!this.activeEdges[edge]) return;
-				btn.style.transition = 'transform 0.3s cubic-bezier(0.4, 0, 0.6, 1), opacity 0.25s ease';
-				btn.style.opacity = '0';
-				btn.style.transform = `translate(-50%, -50%) scale(0.3)`;
-
-				st.phase = 'exiting';
-
-				// Resetear completamente después de la salida
-				setTimeout(() => {
-					if (!this.activeEdges[edge]) {
-						this.collapseEdge(detector, edge);
+		if (this.edgeStates[edge]) {
+			this.edgeStates[edge].timeout = setTimeout(() => {
+				// Solo colapsar si el borde no está activo (mouse ya salió)
+				if (!this.activeEdges[edge]) {
+					detector.classList.remove('expanded');
+					const inset = this.calculateInset(this.currentPosition.depth);
+					if (edge === 'top' || edge === 'bottom') {
+						detector.style.height = inset;
+					} else {
+						detector.style.width = inset;
 					}
-				}, 300);
-			}, 2000);
-		}, 3000);
-	}
-
-	/**
-	 * Resetea el timer de inacción (llamar en cada mousemove o click).
-	 */
-	resetInactivityTimer(edge) {
-		const st = this.edgeStates[edge];
-		if (!st || !st.active) return;
-		if (st.phase === 'arc' || st.phase === 'shift') {
-			this.startInactivityTimer(edge);
+				}
+				// Regenerar estado inicial para nueva interacción limpia
+				this.edgeStates[edge] = {
+					active: false,
+					timeout: null,
+					shifted: false
+				};
+			}, 3000);
 		}
 	}
 
-	/**
-	 * Limpia todos los timers asociados a un borde.
-	 */
-	clearEdgeTimers(edge) {
-		const st = this.edgeStates[edge];
-		if (!st) return;
-		if (st.timeout) clearTimeout(st.timeout);
-		if (st.entryTimer) clearTimeout(st.entryTimer);
-		if (st.inactivityTimer) clearTimeout(st.inactivityTimer);
-		if (st.exitTimer) clearTimeout(st.exitTimer);
-		st.timeout = null;
-		st.entryTimer = null;
-		st.inactivityTimer = null;
-		st.exitTimer = null;
-	}
 	getButtonsForEdge(edge) {
 		const currentMatrix = this.matrixStack[this.currentPosition.depth - this.initialDepth];
 		if (!currentMatrix) return [];

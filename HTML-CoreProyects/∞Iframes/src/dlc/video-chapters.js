@@ -1,5 +1,5 @@
 // Universal DLC Auto-Loader Wrapper
-(window._dlcBoot = window._dlcBoot || function(init) {
+(window._dlcBoot = window._dlcBoot || function (init) {
     if (window.dlcCoreEngine) return init();
     if (!window._dlcWait) {
         window._dlcWait = true;
@@ -7,7 +7,7 @@
         s.src = (document.currentScript ? document.currentScript.src.replace(/[^\/]+$/, '') : './src/dlc/') + 'core-engine.js';
         s.onload = () => { document.dispatchEvent(new CustomEvent('dlc:core')); init(); };
         document.head.appendChild(s);
-    } else document.addEventListener('dlc:core', init, {once:true});
+    } else document.addEventListener('dlc:core', init, { once: true });
 })(() => {
 
     /**
@@ -21,7 +21,7 @@
 
         init() {
             this.setupStyles();
-            
+
             document.addEventListener('dlc:videoConfigured', (e) => {
                 const { videoId, element, config } = e.detail;
                 if (config.chapters) {
@@ -106,10 +106,10 @@
             }
 
             const wrapper = element.parentElement;
-            
+
             const container = document.createElement('div');
             container.className = 'video-chapters-container';
-            
+
             const title = document.createElement('div');
             title.className = 'video-chapters-title';
             title.textContent = 'Capítulos';
@@ -118,20 +118,20 @@
             chapters.forEach(ch => {
                 const btn = document.createElement('button');
                 btn.className = 'video-chapter-btn';
-                
+
                 const formatTime = (secs) => {
                     const m = Math.floor(secs / 60).toString().padStart(2, '0');
                     const s = (secs % 60).toString().padStart(2, '0');
-                    return \`\${m}:\${s}\`;
+                    return `${m}:${s}`;
                 };
 
-                btn.innerHTML = \`<span>\${ch.label}</span> <span class="video-chapter-time">\${formatTime(ch.time)}</span>\`;
-                
+                btn.innerHTML = `<span>${ch.label}</span> <span class="video-chapter-time">${formatTime(ch.time)}</span>`;
+
                 btn.addEventListener('click', (e) => {
                     e.stopPropagation();
                     window.dlcCoreEngine.seekVideo(element, ch.time);
                 });
-                
+
                 container.appendChild(btn);
             });
 
