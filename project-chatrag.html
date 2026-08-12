@@ -89,13 +89,20 @@
                     A real-time, low-latency, multilingual AI assistant powered by a complex Retrieval-Augmented Generation (RAG) pipeline and a robust Tri-DB persistence layer.
                 </p>
                 <div>
+                    <span class="tech-pill">Python</span>
+                    <span class="tech-pill">LangChain</span>
+                    <span class="tech-pill">RAG (Hybrid)</span>
+                    <span class="tech-pill">LLMs (GPT/LLaMA/Gemini)</span>
+                    <span class="tech-pill">Prompt Engineering</span>
+                    <span class="tech-pill">APIs REST</span>
                     <span class="tech-pill">Node.js</span>
                     <span class="tech-pill">WebSockets</span>
                     <span class="tech-pill">Redis</span>
                     <span class="tech-pill">PostgreSQL</span>
                     <span class="tech-pill">LanceDB</span>
+                    <span class="tech-pill">ElevenLabs TTS</span>
                     <span class="tech-pill">AssemblyAI (STT)</span>
-                    <span class="tech-pill">Edge-TTS</span>
+                    <span class="tech-pill">Docker</span>
                     <span class="tech-pill">Live2D Cubism</span>
                 </div>
             </div>
@@ -153,12 +160,27 @@
             <!-- Multimedia Section -->
             <div class="fade-in" style="margin-bottom: 4rem;">
                 <h2 style="margin-bottom: 1rem; font-size: 2rem;">Multimedia Showcase</h2>
-                <p style="color: var(--text-secondary);">Watch the real-time interaction and Live2D synchronization in action.</p>
+                <p style="color: var(--text-secondary); margin-bottom: 2rem;">See the real-time interaction, Live2D synchronization, and RAG pipeline in action.</p>
                 
-                <!-- Video placeholder -->
-                <div class="media-placeholder animate-float">
-                    [ Video Component / Gallery will be inserted here ]<br>
-                    Showcasing UI, Live2D avatar, and Real-Time TTS/STT speeds.
+                <!-- Hero Screenshot -->
+                <div style="margin-bottom: 2rem;">
+                    <img src="assets/img/chatrag-hero.jpg" alt="MHT-ChatRAG AI Assistant Interface - Live2D Avatar with real-time chat" style="width: 100%; border-radius: 12px; border: 1px solid var(--glass-border);">
+                    <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.75rem; text-align: center;">AI Chat Assistant with Live2D Avatar — Real-time voice & text interaction</p>
+                </div>
+
+                <!-- Demo Video -->
+                <div style="margin-bottom: 2rem;">
+                    <video controls preload="metadata" poster="assets/img/chatrag-hero.jpg" style="width: 100%; border-radius: 12px; border: 1px solid var(--glass-border); background: var(--bg-accent);">
+                        <source src="assets/video/chatrag-demo.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                    <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.75rem; text-align: center;">Demo: Full E2E interaction — STT → RAG → LLM Streaming → TTS → Lip-Sync</p>
+                </div>
+
+                <!-- RAG Pipeline Diagram -->
+                <div>
+                    <img src="assets/img/rag-pipeline-diagram.jpg" alt="RAG Pipeline Architecture - Hybrid retrieval with multi-provider LLM fallback" style="width: 100%; border-radius: 12px; border: 1px solid var(--glass-border);">
+                    <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.75rem; text-align: center;">RAG Pipeline Architecture — Embedding → Vector Search → Multi-Provider LLM → TTS</p>
                 </div>
             </div>
 
@@ -175,7 +197,7 @@ Query → Hybrid Retriever → <span class="code-string">Vector + FTS Results</s
                                       ↓
                           Context Assembly
                                       ↓
-                          LLM Generation <span class="code-comment">(Cerebras/Groq/OpenAI)</span>
+                          LLM Generation <span class="code-comment">(Cerebras/Gemini/OpenAI/Ollama)</span>
                                       ↓
                           Response Stream <span class="code-comment">(TTS Chunking)</span>
                 </div>

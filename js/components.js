@@ -25,7 +25,8 @@ const Components = {
                 </p>
                 <div style="margin-top: 1.5rem; display: flex; gap: 1rem; justify-content: center;">
                     <a href="https://github.com/misterbartra" target="_blank" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.8rem;">GitHub</a>
-                    <a href="mailto:contact@example.com" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.8rem;">Contact</a>
+                    <a href="https://linkedin.com/in/misterbartra" target="_blank" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.8rem;">LinkedIn</a>
+                    <a href="mailto:jedubartra21@gmail.com" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.8rem;">Contact</a>
                 </div>
             </div>
         </footer>
