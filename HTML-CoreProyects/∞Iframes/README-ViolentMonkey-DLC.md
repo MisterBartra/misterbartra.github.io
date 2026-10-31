@@ -55,8 +55,14 @@ El plugin funciona como un **puente (bridge)** entre la página visitada y los m
 │  │Video Modifiers │  │ Video Chapters   │               │
 │  │(speed/mute)    │  │(capítulos)       │               │
 │  └────────────────┘  └──────────────────┘               │
+│  ┌──────────────────────────────────────────┐           │
+│  │ Auto-Advance DLC (auto-advance.js)       │           │
+│  │ • Detecta fin de video / ED              │           │
+│  │ • Orquesta matriz: goToPosition(X+1, Y)  │           │
+│  │ • Auto-skip OP (90s) al aterrizar frame  │           │
+│  └──────────────────────────────────────────┘           │
 │                                                           │
-│  📺 Video HTML5 / YouTube Embed                          │
+│  📺 Video HTML5 / YouTube Embed / ∞Iframes Matrix        │
 └─────────────────────────────────────────────────────────┘
 ```
 
@@ -66,17 +72,19 @@ El plugin funciona como un **puente (bridge)** entre la página visitada y los m
 |---|---|---|---|
 | `matrixItemRendered` | VM Plugin / ∞Iframes | `core-engine.js` | Registro inicial del video |
 | `dlc:videoConfigured` | `core-engine.js` | Todos los módulos DLC | Notifica configuración parseada |
-| `dlc:timeUpdate` | `core-engine.js` / VM Bridge | Todos los módulos DLC | Sincronización de tiempo |
+| `dlc:timeUpdate` | `core-engine.js` / VM Bridge | Módulos DLC | Sincronización de tiempo |
+| `dlc:videoEnded` | `core-engine.js` / Video | `auto-advance.js` | Dispara avance automático de frame en matriz |
+| `dlc:matrixNavigated` | Matriz / Auto-Advance | Todos los DLCs / Panel VM | Sincroniza coordenadas vivas entre todos los módulos y la UI |
 
 ---
 
 ## 🎮 Uso del Panel UI
 
-El plugin inyecta un panel flotante (abajo a la derecha) con:
+El plugin inyecta un panel flotante retráctil (abajo a la derecha) con:
 
-### Controles disponibles
+### Controles de Video & Salto
 
-| Campo | Formato | Ejemplo | Descripción |
+| Campo / Control | Formato / Tipo | Ejemplo | Descripción |
 |---|---|---|---|
 | **OP** | `[MM:SS]`, `MM:SS`, `[MM:SS-MM:SS]` | `[01:30]` | Saltar Opening |
 | **ED** | `[MM:SS-MM:SS]`, `MM:SS` | `[22:00-23:30]` | Saltar Ending |
@@ -84,11 +92,25 @@ El plugin inyecta un panel flotante (abajo a la derecha) con:
 | **Loop** | `[MM:SS-MM:SS]` | `[05:00-06:00]` | Bucle de sección |
 | **Velocidad** | `X.XX@[MM:SS]` | `1.5@[01:00]` | Cambiar playback rate |
 | **Mute** | `[MM:SS]` | `[10:00]` | Silenciar en rango |
+| **⚡ Auto-Skip OP** | Checkbox | Activado | Salta automáticamente el Opening sin requerir clic |
+| **⚡ Auto-Skip ED** | Checkbox | Activado | Salta automáticamente el Ending sin requerir clic |
+| **⏭️ Auto-Avanzar Frame** | Checkbox | Activado | Salta al siguiente frame `(X+1, Y)` de la matriz al llegar al ED |
+
+### Navegación en la Matriz 2D de Iframes
+
+| Control | Tipo | Descripción |
+|---|---|---|
+| **Coord X / Y** | Inputs numéricos | Muestra y edita las coordenadas de la matriz en tiempo real |
+| **Ir a [X,Y]** | Botón | Ejecuta `window.iframeMatrixViewer.goToPosition(x, y)` |
+| **➡️ Frame [X+1, Y]** | Botón | Avanza horizontalmente al siguiente frame |
+| **⬇️ Fila [X, Y+1]** | Botón | Avanza verticalmente a la siguiente fila |
+| **Flujo Auto** | Selector | Alterna entre avance ➡️ Horizontal (X+1) y ⬇️ Vertical (Y+1) |
 
 ### Botones de acción
 - **✨ Aplicar**: Registra el video con la configuración ingresada
 - **⏭️ Saltar OP/ED**: Salta directamente al tiempo definido
 - **🗑️ Limpiar**: Borra todos los campos
+
 
 ---
 

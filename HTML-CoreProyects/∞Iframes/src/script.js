@@ -434,6 +434,9 @@ class IframeMatrixViewer {
 		if (newX < 0) newX = row.length - 1;
 		else if (newX >= row.length) newX = 0;
 
+		const oldX = this.currentPosition.x;
+		const oldY = this.currentPosition.y;
+
 		this.currentPosition.x = newX;
 		this.currentPosition.y = newY;
 
@@ -609,11 +612,13 @@ class IframeMatrixViewer {
 			buttons.forEach(button => {
 				button.classList.add('visible');
 			});
+			document.querySelector('.toggle-button')?.classList.add('visible');
 		} else {
 			// Ocultar botones
 			buttons.forEach(button => {
 				button.classList.remove('visible');
 			});
+			document.querySelector('.toggle-button')?.classList.remove('visible');
 		}
 
 		// Actualizar el icono del botón de alternar
@@ -736,7 +741,7 @@ class IframeMatrixViewer {
 		document.body.appendChild(tooltip);
 
 		element.addEventListener('mouseenter', () => {
-			if (!element.classList.contains('visible')) return;
+			if (!element.classList.contains('visible') && !element.classList.contains('toggle-button')) return;
 
 			const rect = element.getBoundingClientRect();
 			tooltip.style.left = `${rect.left + rect.width / 2 - tooltip.offsetWidth / 2}px`;
@@ -1329,34 +1334,58 @@ class IframeMatrixViewer {
 				}
 			});
 
-			// Navegación con rueda del mouse sobre el borde
+			// Navegación sensitiva con rueda del mouse / trackpad sobre el borde (vectorizada e inteligente)
 			detector.addEventListener('wheel', (e) => {
 				if (this.isLoading || this.animationInProgress) return;
 				if (!this.activeEdges[edge]) return;
 
 				e.preventDefault();
 
-				const delta = e.deltaY;
-				if (delta === 0) return;
+				// Soporte completo para ambos ejes: deltaY (rueda vertical convencional) y deltaX (trackpad / tilt)
+				const absX = Math.abs(e.deltaX);
+				const absY = Math.abs(e.deltaY);
+				if (absX === 0 && absY === 0) return;
 
 				if (this._wheelThrottle) return;
 				this._wheelThrottle = true;
-				setTimeout(() => { this._wheelThrottle = false; }, 300);
+				setTimeout(() => { this._wheelThrottle = false; }, 280);
+
+				const currentMatrix = this.matrixStack[this.currentPosition.depth - this.initialDepth];
+				const isVectorRow = !currentMatrix || currentMatrix.length <= 1; // Vector horizontal 1D (1xN)
+				const isVectorCol = currentMatrix && currentMatrix[0] && currentMatrix[0].length <= 1; // Vector vertical 1D (Nx1)
 
 				const isShift = e.shiftKey;
-				const scrollDown = delta > 0;
+				const isHorizontalGesture = absX > absY;
+				const rawDelta = isHorizontalGesture ? e.deltaX : e.deltaY;
+				const isForward = rawDelta > 0;
+				const step = isForward ? 1 : -1;
 
+				// 1. Vector Horizontal Fila (1xN, ej. anime en una fila como MagicMaker):
+				// Reactividad prioritaria en dirección al vector horizontal sin shift
+				if (isVectorRow && !isVectorCol) {
+					this.navigate(step, 0);
+					return;
+				}
+
+				// 2. Vector Vertical Columna (Nx1, ej. lista vertical de videos):
+				// Reactividad prioritaria en dirección al vector vertical sin shift
+				if (isVectorCol && !isVectorRow) {
+					this.navigate(0, step);
+					return;
+				}
+
+				// 3. Matriz Bidimensional Completa (NxM):
 				if (edge === 'top' || edge === 'bottom') {
-					if (isShift) {
-						this.navigate(scrollDown ? 1 : -1, 0);
+					if (isShift || isHorizontalGesture) {
+						this.navigate(step, 0);
 					} else {
-						this.navigate(0, scrollDown ? 1 : -1);
+						this.navigate(0, step);
 					}
 				} else {
-					if (isShift) {
-						this.navigate(0, scrollDown ? 1 : -1);
+					if (isShift && !isHorizontalGesture) {
+						this.navigate(0, step);
 					} else {
-						this.navigate(scrollDown ? 1 : -1, 0);
+						this.navigate(step, 0);
 					}
 				}
 			}, { passive: false });
@@ -1387,47 +1416,47 @@ class IframeMatrixViewer {
 	}
 
 	collapseEdge(detector, edge) {
-		// Resetear posición y transformación del botón
+		// Resetear posición y transformación del botón suavemente
 		const btn = detector.querySelector('.edge-nav-button');
 		if (btn) {
-			if (edge === 'top' || edge === 'bottom') {
-				btn.style.left = '50%';
-				btn.style[edge] = '0px';
-			} else {
-				btn.style.top = '50%';
-				btn.style[edge] = '0px';
-			}
-			// Limpiar transform y opacity de la animación de entrada
-			btn.style.transform = '';
+			// Dejar que el CSS anime la opacidad a 0 y la escala a 0.5 suavemente
 			btn.style.opacity = '';
+			btn.style.transform = '';
 			btn.style.transition = '';
-		}
-
-		// Después de 3 segundos, restaurar el grosor del borde (hitbox)
-		// Esto evita confusiones con múltiples hovers casuales simultáneos
-		if (this.edgeStates[edge] && this.edgeStates[edge].timeout) {
-			clearTimeout(this.edgeStates[edge].timeout);
-		}
-
-		if (this.edgeStates[edge]) {
-			this.edgeStates[edge].timeout = setTimeout(() => {
-				// Solo colapsar si el borde no está activo (mouse ya salió)
+			setTimeout(() => {
 				if (!this.activeEdges[edge]) {
-					detector.classList.remove('expanded');
-					const inset = this.calculateInset(this.currentPosition.depth);
 					if (edge === 'top' || edge === 'bottom') {
-						detector.style.height = inset;
+						btn.style.left = '50%';
+						btn.style[edge] = '0px';
 					} else {
-						detector.style.width = inset;
+						btn.style.top = '50%';
+						btn.style[edge] = '0px';
 					}
 				}
-				// Regenerar estado inicial para nueva interacción limpia
-				this.edgeStates[edge] = {
-					active: false,
-					timeout: null,
-					shifted: false
-				};
-			}, 3000);
+			}, 300);
+		}
+
+		// Limpiar timeout pendiente si lo hubiera
+		if (this.edgeStates[edge] && this.edgeStates[edge].timeout) {
+			clearTimeout(this.edgeStates[edge].timeout);
+			this.edgeStates[edge].timeout = null;
+		}
+
+		// Colapsar inmediatamente el grosor de la hitbox para evitar bloqueos y falsos hovers sobre el contenido
+		detector.classList.remove('expanded');
+		const inset = this.calculateInset(this.currentPosition.depth);
+		if (edge === 'top' || edge === 'bottom') {
+			detector.style.height = inset;
+		} else {
+			detector.style.width = inset;
+		}
+
+		// Regenerar estado para interacción limpia
+		if (this.edgeStates[edge]) {
+			this.edgeStates[edge].active = false;
+			this.edgeStates[edge].timeout = null;
+			this.edgeStates[edge].shifted = false;
+			this.edgeStates[edge].entering = false;
 		}
 	}
 
@@ -1973,12 +2002,15 @@ class IframeMatrixViewer {
 
 		// Verificar que la posición sea válida
 		const currentMatrix = this.matrixStack[this.currentPosition.depth - this.initialDepth];
-		if (!currentMatrix || y >= currentMatrix.length || x >= currentMatrix[0].length) {
+		if (!currentMatrix || y >= currentMatrix.length || !currentMatrix[y] || x >= currentMatrix[y].length) {
 			console.warn(`Posición inválida: [${y}][${x}]`);
 			return;
 		}
 
 		this.animationInProgress = true;
+
+		const oldX = this.currentPosition.x;
+		const oldY = this.currentPosition.y;
 
 		// Actualizar posición
 		this.currentPosition.x = x;
@@ -2367,13 +2399,17 @@ class IframeMatrixViewer {
 	}
 
 	renderToggleButton() {
+		const toggleContainer = document.createElement('div');
+		toggleContainer.className = 'toggle-button-container';
+
 		const toggleButton = document.createElement('button');
 		toggleButton.className = 'toggle-button';
-		toggleButton.style.opacity = '0.5';
 		toggleButton.innerHTML = this.buttonsVisible ?
 			'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none"></circle><circle cx="12" cy="12" r="4"></circle></svg>' :
 			'<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" fill="none"></circle></svg>';
-		this.root.appendChild(toggleButton);
+
+		toggleContainer.appendChild(toggleButton);
+		this.root.appendChild(toggleContainer);
 	}
 
 	renderJsonSelector() {
@@ -2906,6 +2942,7 @@ document.addEventListener('DOMContentLoaded', () => {
 			'core-engine.js',    // ← Debe cargarse PRIMERO (instancia window.dlcCoreEngine)
 			'skip-buttons.js',
 			'auto-skip.js',
+			'auto-advance.js',
 			'video-loop.js',
 			'video-modifiers.js',
 			'video-chapters.js'

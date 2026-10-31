@@ -28,6 +28,7 @@
         'core-engine.js',
         'skip-buttons.js',
         'auto-skip.js',
+        'auto-advance.js',
         'video-loop.js',
         'video-modifiers.js',
         'video-chapters.js'
@@ -381,6 +382,13 @@
             #vm-dlc-panel .vm-status { font-size: 11px; opacity: 0.6; margin-top: 6px; text-align: center; }
             #vm-dlc-panel .vm-sep { height: 1px; background: rgba(255,255,255,0.1); margin: 8px 0; }
             #vm-dlc-panel .vm-target-select { margin-bottom: 8px; }
+            #vm-dlc-panel .vm-check-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+            #vm-dlc-panel .vm-check-row label { margin-bottom: 0; font-size: 11px; cursor: pointer; opacity: 0.9; }
+            #vm-dlc-panel .vm-check-row input[type="checkbox"] { width: auto; cursor: pointer; }
+            #vm-dlc-panel .vm-coord-row { display: flex; gap: 6px; align-items: center; margin-bottom: 8px; }
+            #vm-dlc-panel .vm-coord-col { flex: 1; }
+            #vm-dlc-panel .vm-btn-secondary { background: rgba(255,255,255,0.15) !important; color: #fff !important; }
+            #vm-dlc-panel .vm-btn-secondary:hover { background: rgba(255,255,255,0.25) !important; }
         `);
 
         const panel = document.createElement('div');
@@ -419,6 +427,42 @@
                 <div class="vm-field">
                     <label>Mute: ej. [10:00]</label>
                     <input type="text" id="vm-mute" placeholder="[10:00]">
+                </div>
+                <div class="vm-sep"></div>
+                <div class="vm-check-row">
+                    <label for="vm-auto-op">⚡ Auto-Skip OP</label>
+                    <input type="checkbox" id="vm-auto-op">
+                </div>
+                <div class="vm-check-row">
+                    <label for="vm-auto-ed">⚡ Auto-Skip ED</label>
+                    <input type="checkbox" id="vm-auto-ed">
+                </div>
+                <div class="vm-check-row">
+                    <label for="vm-auto-advance">⏭️ Auto-Avanzar Frame en ED</label>
+                    <input type="checkbox" id="vm-auto-advance" checked>
+                </div>
+                <div class="vm-sep"></div>
+                <div class="vm-coord-row">
+                    <div class="vm-coord-col">
+                        <label>Coord X:</label>
+                        <input type="number" id="vm-coord-x" value="0" min="0">
+                    </div>
+                    <div class="vm-coord-col">
+                        <label>Coord Y:</label>
+                        <input type="number" id="vm-coord-y" value="0" min="0">
+                    </div>
+                    <button id="vm-goto-coord" class="vm-btn-secondary" style="margin-top:14px; height:28px; padding:0 6px;">Ir a [X,Y]</button>
+                </div>
+                <div style="display:flex; gap:6px; margin-bottom:6px;">
+                    <button id="vm-next-frame" class="vm-btn-secondary" style="flex:1; padding:4px 2px;">➡️ Frame [X+1, Y]</button>
+                    <button id="vm-next-row" class="vm-btn-secondary" style="flex:1; padding:4px 2px;">⬇️ Fila [X, Y+1]</button>
+                </div>
+                <div class="vm-row" style="margin-bottom:6px; align-items:center;">
+                    <label style="font-size:11px; opacity:0.8; margin-right:6px;">Flujo Auto:</label>
+                    <select id="vm-flow-dir" style="flex:1; padding:3px 4px; border-radius:4px; background:#222; color:#fff; border:1px solid #444; font-size:11px;">
+                        <option value="horizontal">➡️ Horizontal (X+1)</option>
+                        <option value="vertical">⬇️ Vertical (Y+1)</option>
+                    </select>
                 </div>
                 <button id="vm-apply">✨ Aplicar Configuración</button>
                 <button id="vm-skip-op" style="margin-top: 6px;">⏭️ Saltar OP</button>
@@ -502,6 +546,44 @@
         document.getElementById('vm-skip-op').addEventListener('click', () => skipTo('op'));
         document.getElementById('vm-skip-ed').addEventListener('click', () => skipTo('ed'));
         document.getElementById('vm-clear').addEventListener('click', clearConfig);
+
+        document.getElementById('vm-goto-coord').addEventListener('click', () => {
+            const tx = parseInt(document.getElementById('vm-coord-x').value) || 0;
+            const ty = parseInt(document.getElementById('vm-coord-y').value) || 0;
+            if (window.iframeMatrixViewer && typeof window.iframeMatrixViewer.goToPosition === 'function') {
+                window.iframeMatrixViewer.goToPosition(tx, ty);
+                updateStatus(`📍 Navegando a [${tx}, ${ty}]`);
+            } else {
+                updateStatus(`❌ MatrixViewer no disponible`);
+            }
+        });
+
+        document.getElementById('vm-next-frame').addEventListener('click', () => {
+            if (window.autoAdvanceDLC && typeof window.autoAdvanceDLC.triggerAdvance === 'function') {
+                window.autoAdvanceDLC.triggerAdvance('Navegación manual desde panel');
+                updateStatus(`⏭️ Avanzando al siguiente frame`);
+            } else if (window.iframeMatrixViewer && typeof window.iframeMatrixViewer.navigate === 'function') {
+                window.iframeMatrixViewer.navigate(1, 0);
+                updateStatus(`⏭️ Avanzado a siguiente frame`);
+            }
+        });
+
+        document.getElementById('vm-auto-advance').addEventListener('change', (e) => {
+            if (window.autoAdvanceDLC) {
+                window.autoAdvanceDLC.setEnabled(e.target.checked);
+            }
+        });
+
+        // Sincronizar coordenadas en vivo cuando la matriz navegue (manual o auto-advance)
+        document.addEventListener('dlc:matrixNavigated', (e) => {
+            if (e.detail && e.detail.to) {
+                const cx = document.getElementById('vm-coord-x');
+                const cy = document.getElementById('vm-coord-y');
+                if (cx) cx.value = e.detail.to.x;
+                if (cy) cy.value = e.detail.to.y;
+                updateStatus('📍 Frame activo: [' + (e.detail.to.x + 1) + ', ' + (e.detail.to.y + 1) + ']');
+            }
+        });
     }
 
     function updateVideoSelector() {
@@ -537,18 +619,27 @@
         const idx = parseInt(select.value);
         if (isNaN(idx) || !videos[idx]) { updateStatus('❌ Selecciona un video válido'); return; }
         const video = videos[idx];
-        const op = document.getElementById('vm-op').value.trim();
-        const ed = document.getElementById('vm-ed').value.trim();
+        let op = document.getElementById('vm-op').value.trim();
+        let ed = document.getElementById('vm-ed').value.trim();
         const duration = document.getElementById('vm-duration').value || '90';
         const loop = document.getElementById('vm-loop').value.trim();
         const speed = document.getElementById('vm-speed').value.trim();
         const mute = document.getElementById('vm-mute').value.trim();
+        const autoOp = document.getElementById('vm-auto-op').checked;
+        const autoEd = document.getElementById('vm-auto-ed').checked;
+        const autoAdvance = document.getElementById('vm-auto-advance').checked;
+
+        if (autoOp && op && !op.startsWith('!')) op = '!' + op;
+        if (autoEd && ed && !ed.startsWith('!')) ed = '!' + ed;
+        if (window.autoAdvanceDLC) window.autoAdvanceDLC.setEnabled(autoAdvance);
+
         const parts = [`d=${duration}`];
         if (op) parts.push(`op=${op}`);
         if (ed) parts.push(`ed=${ed}`);
         if (loop) parts.push(`loop=${loop}`);
         if (speed) parts.push(`speed=${speed}`);
         if (mute) parts.push(`mute=${mute}`);
+        if (autoAdvance) parts.push(`next=auto`);
         const hashParams = parts.join('&');
         registerVideo({ element: video.element, src: video.src + '#' + hashParams, type: video.type });
         updateStatus('✅ Configuración aplicada');

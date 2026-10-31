@@ -15,8 +15,9 @@ class DLCCoreEngine {
 
         // Escuchar la creación de iframes en la matriz
         document.addEventListener('matrixItemRendered', (e) => {
-            const { element, url } = e.detail;
-            this.processVideoElement(element, url);
+            const { element, url, x, y } = e.detail;
+            const coords = (typeof x === 'number' && typeof y === 'number') ? { x, y } : null;
+            this.processVideoElement(element, url, coords);
         });
 
         // Escanear videos estáticos diferido (esperar a que todos los módulos DLC se registren)
@@ -37,12 +38,13 @@ class DLCCoreEngine {
      * Procesa un elemento de video (iframe o <video>) extrayendo su configuración de hash.
      * Método centralizado usado tanto por el evento matrixItemRendered como por scanStaticVideos.
      */
-    processVideoElement(element, url) {
+    processVideoElement(element, url, coords = null) {
         if (!url || !element) return;
 
         // Evitar procesar el mismo elemento dos veces
         if (element._dlcProcessed) return;
         element._dlcProcessed = true;
+        if (coords) element._dlcCoords = coords;
 
         // Inyectar API de YouTube si es necesario (formatos: youtube.com, yout-ube.com, youtu.be)
         if (element.tagName === 'IFRAME' && (url.includes('youtube.com') || url.includes('yout-ube.com') || url.includes('youtu.be')) && !element.src.includes('enablejsapi=1')) {
@@ -50,35 +52,50 @@ class DLCCoreEngine {
             element.src = element.src.split('#')[0] + sep + 'enablejsapi=1' + (url.includes('#') ? '#' + url.split('#')[1] : '');
         }
 
-        // Extraer hash puro. Ej: #op=[01:30]&loop=[05:00]
+        let config = null;
+
+        // Extraer hash puro si existe. Ej: #op=[01:30]&loop=[05:00]
         if (url.includes('#')) {
             const hashPart = url.split('#')[1];
             if (hashPart) {
                 // Convertimos la cadena en URLSearchParams para su fácil acceso
                 const paramsStr = hashPart.replace(/;/g, '&');
                 const params = new URLSearchParams(paramsStr);
-
-                const config = this.parseConfig(params);
-                if (config) {
-                    const videoId = this.generateVideoId(element);
-
-                    this.videos.set(videoId, {
-                        element,
-                        config,
-                        videoId
-                    });
-
-                    console.log(`[DLC] Video configurado: ${videoId} →`, config);
-
-                    // Despachar evento para informar a los sub-módulos que hay un nuevo video configurado
-                    document.dispatchEvent(new CustomEvent('dlc:videoConfigured', {
-                        detail: { videoId, element, config }
-                    }));
-
-                    this.setupTimeTracker(element, videoId, config);
-                }
+                config = this.parseConfig(params);
             }
         }
+
+        // Si no tiene hash con configuración explícita, dotar de configuración base secuencial
+        if (!config) {
+            config = {
+                duration: this.defaultDuration,
+                op: null,
+                ed: null,
+                loop: null,
+                speed: null,
+                mute: null,
+                chapters: null,
+                next: { auto: true, target: null, type: 'sequential' }
+            };
+        }
+
+        const videoId = this.generateVideoId(element);
+
+        this.videos.set(videoId, {
+            element,
+            config,
+            videoId,
+            coords: coords || element._dlcCoords || null
+        });
+
+        console.log(`[DLC] Video registrado: ${videoId} ${coords ? `[${coords.x},${coords.y}]` : ''} →`, config);
+
+        // Despachar evento para informar a los sub-módulos que hay un nuevo video configurado
+        document.dispatchEvent(new CustomEvent('dlc:videoConfigured', {
+            detail: { videoId, element, config, coords: coords || element._dlcCoords || null }
+        }));
+
+        this.setupTimeTracker(element, videoId, config);
     }
 
     /**
@@ -165,9 +182,11 @@ class DLCCoreEngine {
         const speedTime = params.get('speed');
         const muteTime = params.get('mute');
         const chTime = params.get('ch');
+        const flowParam = params.get('flow') || params.get('dir') || params.get('direction');
+        const nextParam = params.get('next') || params.get('autonext') || params.get('jump') || params.get('target') || params.get('step');
 
         // Si el hash está vacío o no tiene parámetros soportados
-        if (!opTime && !edTime && !loopTime && !speedTime && !muteTime && !chTime) return null;
+        if (!opTime && !edTime && !loopTime && !speedTime && !muteTime && !chTime && !nextParam) return null;
 
         return {
             duration,
@@ -176,8 +195,43 @@ class DLCCoreEngine {
             loop: loopTime ? this.parseTimeStr(loopTime, duration, 'loop') : null,
             speed: speedTime ? this.parseTimeStr(speedTime, duration, 'speed', true) : null,
             mute: muteTime ? this.parseTimeStr(muteTime, duration, 'mute') : null,
-            chapters: chTime ? this.parseChapters(chTime) : null
+            flow: (flowParam === 'vertical' || flowParam === 'v' || flowParam === 'down') ? 'vertical' : 'horizontal',
+            chapters: chTime ? this.parseChapters(chTime) : null,
+            next: nextParam ? this.parseNextParam(nextParam) : { auto: true, target: null, type: 'sequential' }
         };
+    }
+
+    parseNextParam(str) {
+        if (!str || str === 'true' || str === 'auto' || str === '1') {
+            return { auto: true, target: null, type: 'sequential' };
+        }
+        if (str === 'false' || str === '0' || str === 'none') {
+            return { auto: false, target: null, type: 'disabled' };
+        }
+        // Direcciones semánticas de recorrido
+        if (str === 'down' || str === 'v' || str === 'vertical') {
+            return { auto: true, delta: [0, 1], flow: 'vertical', type: 'delta' };
+        }
+        if (str === 'up') {
+            return { auto: true, delta: [0, -1], flow: 'vertical', type: 'delta' };
+        }
+        if (str === 'right' || str === 'h' || str === 'horizontal') {
+            return { auto: true, delta: [1, 0], flow: 'horizontal', type: 'delta' };
+        }
+        if (str === 'left') {
+            return { auto: true, delta: [-1, 0], flow: 'horizontal', type: 'delta' };
+        }
+        // Formato delta relativo: step=[0,+1] o step=0,1 o step=+1,0
+        const deltaMatch = str.match(/^(?:step=)?([+-]?\d+)[,\s]+([+-]?\d+)$/i);
+        if (deltaMatch && (str.includes('+') || str.includes('-') || str.includes('step='))) {
+            return { auto: true, delta: [parseInt(deltaMatch[1]), parseInt(deltaMatch[2])], type: 'delta' };
+        }
+        // Formato par de coordenadas absolutas: next=[X,Y] o next=X,Y o [X,Y]
+        const match = str.match(/\[?(\d+)[,\s]+(\d+)\]?/);
+        if (match) {
+            return { auto: true, target: [parseInt(match[1]), parseInt(match[2])], type: 'absolute' };
+        }
+        return { auto: true, target: null, type: 'sequential' };
     }
 
     parseChapters(chStr) {
@@ -334,13 +388,31 @@ class DLCCoreEngine {
                 // Resolver ED relativo si conocemos la duración
                 this.resolveRelativeTimings(videoId, config, element);
                 document.dispatchEvent(new CustomEvent('dlc:timeUpdate', {
-                    detail: { videoId, element, config, currentTime }
+                    detail: { videoId, element, config, currentTime, coords: element._dlcCoords || null }
                 }));
+
+                // Comprobación de finalización si duración es conocida
+                const duration = this.knownDurations.get(videoId);
+                if (duration && duration > 5 && currentTime >= duration - 0.5) {
+                    if (!element._dlcEndedDispatched) {
+                        element._dlcEndedDispatched = true;
+                        document.dispatchEvent(new CustomEvent('dlc:videoEnded', {
+                            detail: { videoId, element, config, coords: element._dlcCoords || null }
+                        }));
+                    }
+                } else if (currentTime < 5) {
+                    element._dlcEndedDispatched = false;
+                }
             }
         };
 
         if (element.tagName === 'VIDEO') {
             element.addEventListener('timeupdate', pollTime);
+            element.addEventListener('ended', () => {
+                document.dispatchEvent(new CustomEvent('dlc:videoEnded', {
+                    detail: { videoId, element, config, coords: element._dlcCoords || null }
+                }));
+            });
             element.addEventListener('loadedmetadata', () => {
                 this.knownDurations.set(videoId, element.duration);
                 this.resolveRelativeTimings(videoId, config, element);
@@ -388,6 +460,20 @@ class DLCCoreEngine {
                         this.resolveRelativeTimings(videoId, config, element);
                     }
                 }
+                // YouTube estado 0 = ENDED
+                if (data.info.playerState === 0 || data.info.playerState === '0') {
+                    document.dispatchEvent(new CustomEvent('dlc:videoEnded', {
+                        detail: { videoId, element, config, coords: element._dlcCoords || null }
+                    }));
+                }
+                return;
+            }
+
+            // YouTube onStateChange (0 = ended)
+            if (data.event === 'onStateChange' && (data.data === 0 || data.data === '0' || data.info === 0)) {
+                document.dispatchEvent(new CustomEvent('dlc:videoEnded', {
+                    detail: { videoId, element, config, coords: element._dlcCoords || null }
+                }));
                 return;
             }
 
@@ -399,6 +485,10 @@ class DLCCoreEngine {
                 const dur = parseFloat(data.data);
                 this.knownDurations.set(videoId, dur);
                 this.resolveRelativeTimings(videoId, config, element);
+            } else if (data.method === 'onComplete' || data.event === 'complete' || data.event === 'ended') {
+                document.dispatchEvent(new CustomEvent('dlc:videoEnded', {
+                    detail: { videoId, element, config, coords: element._dlcCoords || null }
+                }));
             }
 
             // Otros players que envían objetos directamente
@@ -615,6 +705,54 @@ class DLCCoreEngine {
                     func: muted ? 'mute' : 'unMute',
                     args: []
                 }), '*');
+            }
+        }
+    }
+
+    pauseVideo(element) {
+        if (!element) return;
+        if (element.tagName === 'VIDEO') {
+            try { element.pause(); } catch (e) {}
+        } else if (element.tagName === 'IFRAME') {
+            const src = element.src || '';
+            if (src.includes('youtube.com') || src.includes('yout-ube.com') || src.includes('youtu.be')) {
+                element.contentWindow.postMessage(JSON.stringify({
+                    event: 'command',
+                    func: 'pauseVideo',
+                    args: []
+                }), '*');
+            } else if (src.includes('ok.ru') || src.includes('mail.ru')) {
+                element.contentWindow.postMessage(JSON.stringify({
+                    method: 'pause'
+                }), '*');
+            } else if (src.includes('vimeo.com')) {
+                element.contentWindow.postMessage({ method: 'pause' }, '*');
+            } else {
+                try { element.contentWindow.postMessage({ method: 'pause' }, '*'); } catch (e) {}
+            }
+        }
+    }
+
+    playVideo(element) {
+        if (!element) return;
+        if (element.tagName === 'VIDEO') {
+            try { element.play(); } catch (e) {}
+        } else if (element.tagName === 'IFRAME') {
+            const src = element.src || '';
+            if (src.includes('youtube.com') || src.includes('yout-ube.com') || src.includes('youtu.be')) {
+                element.contentWindow.postMessage(JSON.stringify({
+                    event: 'command',
+                    func: 'playVideo',
+                    args: []
+                }), '*');
+            } else if (src.includes('ok.ru') || src.includes('mail.ru')) {
+                element.contentWindow.postMessage(JSON.stringify({
+                    method: 'play'
+                }), '*');
+            } else if (src.includes('vimeo.com')) {
+                element.contentWindow.postMessage({ method: 'play' }, '*');
+            } else {
+                try { element.contentWindow.postMessage({ method: 'play' }, '*'); } catch (e) {}
             }
         }
     }

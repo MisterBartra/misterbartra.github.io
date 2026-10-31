@@ -8,6 +8,7 @@ Sistema modular para añadir funcionalidades a los iframes de video mediante **p
 |--------|---------|---------|
 | **Core Engine** | `src/dlc/core-engine.js` | Parser de hash + tracker de tiempo |
 | **Skip Buttons** | `src/dlc/skip-buttons.js` | Botones flotantes Skip OP/ED |
+| **Auto-Advance** | `src/dlc/auto-advance.js` | Auto-avance de frame (X+1, Y) en ED y auto-skip OP al aterrizar |
 | **Auto-Loader** | `violentmonkey-dlc-loader.user.js` | Carga remota vía ViolentMonkey |
 
 ---
@@ -53,6 +54,12 @@ El sistema soporta **8 formatos distintos** divididos en 3 categorías:
 | **Silencio** | `mute=[05:00]` | Silencia durante el rango |
 | **Bucle** | `loop=[01:30-01:35]` | Repite el rango indefinidamente |
 | **Capítulos** | `ch=Intro(00:00),OP(01:31)` | Define capítulos |
+| **Auto-Next** | `autonext=true` o `autonext=1` | Activa salto sucesivo natural `(X+1, Y)` o siguiente fila `(0, Y+1)` al terminar/ED |
+| **Next Coords** | `next=[X,Y]`, `jump=[X,Y]` o `target=[X,Y]` | Especifica el par de coordenadas absolutas de destino (ej. `next=[2,0]`) |
+| **Delta Step** | `step=[+1,0]` o `step=[0,+1]` | Desplazamiento relativo delta en la matriz 2D (dx, dy) |
+| **Disable Next** | `next=none` o `autonext=false` | Desactiva el auto-avance únicamente para esa celda |
+| **Flujo Vertical** | `flow=vertical`, `flow=v` o `next=down` | Recorrido vertical por columnas hacia abajo (Y+1) |
+| **Dirección Paso** | `step=[0,+1]` (abajo), `step=[0,-1]` (arriba) | Desplazamiento delta vertical explícito en la matriz |
 
 ---
 
@@ -174,4 +181,17 @@ El archivo `violentmonkey-dlc-loader.user.js` permite inyectar los módulos DLC 
 │  2. Escucha dlc:timeUpdate → muestra/oculta según rango    │
 │  3. Click → dlcCoreEngine.seekVideo(element, end)          │
 │  4. Auto-ocultamiento tras 5s + chevron invocador          │
+└──────────────────────────┬─────────────────────────────────┘
+                           │
+                           ▼
+┌────────────────────────────────────────────────────────────┐
+│               auto-advance.js (DLC Module)                 │
+│                                                            │
+│  1. Escucha dlc:timeUpdate / dlc:videoEnded                │
+│  2. Detecta activación de ED o fin de reproducción         │
+│  3. Orquesta transición de matriz:                         │
+│     window.iframeMatrixViewer.goToPosition(nextX, nextY)   │
+│  4. En nuevo frame: inicia video y salta OP (auto-skip)    │
+│     usando urlRowsIframe / hash params (default 90s)       │
 └────────────────────────────────────────────────────────────┘
+```
