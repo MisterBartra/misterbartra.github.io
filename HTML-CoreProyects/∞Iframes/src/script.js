@@ -26,6 +26,16 @@ class IframeMatrixViewer {
 		this.nestedMatrices = new Map(); // Para almacenar información sobre matrices anidadas detectadas
 		this.loadingTimeouts = {}; // Para almacenar timeouts de carga
 		this.hierarchyPath = []; // Para almacenar la ruta jerárquica
+
+		// Aplicar inmediatamente color base a variables CSS y fondo si se definió en window
+		if (this.baseColor) {
+			document.documentElement.style.setProperty('--margin-base-color', this.baseColor);
+			document.documentElement.style.setProperty('--edge-hover-bg', this.baseColor);
+			if (document.body) {
+				document.body.style.backgroundColor = this.baseColor;
+			}
+		}
+
 		// Inicializar la aplicación
 		this.init();
 	}
@@ -1437,20 +1447,16 @@ class IframeMatrixViewer {
 
 	expandEdge(detector, edge) {
 		detector.classList.add('expanded');
+		const inset = this.calculateInset(this.currentPosition.depth);
 
-		// Magnitudes de viewport reducidas y esbeltas:
-		// Par vertical: altura en vh (window.verticalEdgeSize || '5.5vh'), ancho 100vw
-		// Par horizontal: anchura en vw (window.horizontalEdgeSize || '4.5vw'), alto 100vh
-		const vHeight = window.verticalEdgeSize || '5.5vh';
-		const hWidth = window.horizontalEdgeSize || '4.5vw';
-
+		// Confinar la hitbox estrictamente al área del inset para no desbordar sobre el contenido
 		if (edge === 'top' || edge === 'bottom') {
-			detector.style.height = vHeight;
+			detector.style.height = inset;
 		} else {
-			detector.style.width = hWidth;
+			detector.style.width = inset;
 		}
 
-		// Centrar suavemente en el eje transversal del borde
+		// Centrar suavemente el botón en el eje transversal del borde
 		const btn = detector.querySelector('.edge-nav-button');
 		if (btn) {
 			if (edge === 'top' || edge === 'bottom') {
@@ -1793,21 +1799,21 @@ class IframeMatrixViewer {
 		}
 	}
 
-	// Modificar la función applyIframeColor para aplicar el color exacto del body del iframe al iframe-cell
+	// Modificar la función applyIframeColor para aplicar el color base del sitio a los márgenes e inset
 	applyIframeColor(x, y, color) {
+		// El color del margen/inset prioriza el color base definido en window (ej. window.marginColor = "#333333")
+		const marginColor = this.baseColor || (this.darkMode && (color === '#fff' || color === 'rgb(255, 255, 255)' || color === 'white') ? '#1a1a1a' : color);
+
 		// Aplicar el color al wrapper del iframe
 		const wrapper = document.querySelector(`.iframe-cell[data-x="${x}"][data-y="${y}"] .iframe-wrapper`);
 		if (wrapper) {
 			wrapper.style.backgroundColor = color;
 
-			// Aplicar el mismo color exacto como fondo al iframe-cell
+			// Aplicar el color base a la celda y al borde del inset para que nunca quede blanco indeseado
 			const cell = document.querySelector(`.iframe-cell[data-x="${x}"][data-y="${y}"]`);
 			if (cell) {
-				// Aplicar el color exacto sin modificar la opacidad
-				cell.style.backgroundColor = color;
-
-				// Crear un borde sutil con el mismo color
-				cell.style.boxShadow = `inset 0 0 0 ${this.calculateInset(this.currentPosition.depth)} ${color}`;
+				cell.style.backgroundColor = marginColor;
+				cell.style.boxShadow = `inset 0 0 0 ${this.calculateInset(this.currentPosition.depth)} ${marginColor}`;
 			}
 		}
 	}
@@ -2248,6 +2254,12 @@ class IframeMatrixViewer {
 					iframeCell.dataset.y = y;
 					iframeCell.style.gridColumn = x + 1;
 					iframeCell.style.gridRow = y + 1;
+
+					// Pintar inmediatamente la celda y el inset con el color base configurado en window
+					if (this.baseColor) {
+						iframeCell.style.backgroundColor = this.baseColor;
+						iframeCell.style.boxShadow = `inset 0 0 0 ${inset} ${this.baseColor}`;
+					}
 
 					// Crear el wrapper para el iframe con inset dinámico basado en la profundidad
 					const iframeWrapper = document.createElement('div');

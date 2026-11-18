@@ -29,7 +29,7 @@ body {
 	padding: 0;
 	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 	overflow: hidden;
-	background-color: hsl(var(--background));
+	background-color: var(--margin-base-color, hsl(var(--background)));
 	color: hsl(var(--foreground));
 	height: 100%;
 	width: 100%;
@@ -60,8 +60,7 @@ body {
 	width: 100vw;
 	height: 100vh;
 	overflow: hidden;
-	background-color: transparent;
-	/* Inicialmente transparente */
+	background-color: var(--margin-base-color, transparent);
 }
 
 /* Wrapper para cada iframe con inset */
@@ -194,12 +193,12 @@ iframe {
 	transform: translate(0, 0) scale(1.08);
 }
 
-/* Detectores de esquina y bordes (hitboxes delgadas y esbeltas) */
+/* Detectores de esquina y bordes (transparentes, confinados al margen sin desborde) */
 .edge-detector {
 	position: fixed;
 	z-index: 997;
-	background-color: transparent;
-	transition: background-color 0.25s ease, top 0.25s ease, left 0.25s ease, right 0.25s ease, bottom 0.25s ease, width 0.25s cubic-bezier(0.22, 1, 0.36, 1), height 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+	background-color: transparent !important;
+	background: transparent !important;
 	display: flex;
 	align-items: center;
 	justify-content: center;
@@ -207,27 +206,29 @@ iframe {
 	cursor: default; /* Solo el botón circular interior es clickeable */
 }
 
-/* Estado activo: hitbox expandida con color base configurable */
+/* Estado activo: sin fondos ni desenfoques artificiales que desborden */
 .edge-detector.expanded {
 	pointer-events: auto;
-	background-color: var(--edge-hover-bg, rgba(51, 51, 51, 0.7));
-	backdrop-filter: blur(4px);
+	background-color: transparent !important;
+	background: transparent !important;
+	backdrop-filter: none !important;
+	-webkit-backdrop-filter: none !important;
 }
 
 .edge-nav-button {
 	position: absolute;
-	width: 42px;
-	height: 42px;
+	width: 38px;
+	height: 38px;
 	border-radius: 50%;
-	background: rgba(15, 15, 19, 0.92);
+	background: rgba(18, 18, 22, 0.95);
 	backdrop-filter: blur(8px);
-	border: 1px solid rgba(255, 255, 255, 0.25);
+	border: 1px solid rgba(255, 255, 255, 0.28);
 	color: white;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	cursor: pointer;
-	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6);
 	opacity: 0;
 	transform: translate(-50%, -50%) scale(0.5);
 	pointer-events: none;
@@ -236,18 +237,19 @@ iframe {
 }
 
 .edge-nav-button svg {
-	width: 22px;
-	height: 22px;
+	width: 20px;
+	height: 20px;
 	fill: currentColor;
 	transition: transform 0.2s ease;
 }
 
 .edge-nav-button:hover {
-	background: rgba(255, 255, 255, 0.15);
-	border-color: rgba(255, 255, 255, 0.5);
+	background: rgba(255, 255, 255, 0.2);
+	border-color: rgba(255, 255, 255, 0.6);
 	transform: translate(-50%, -50%) scale(1.12) !important;
 }
 
+.edge-detector:hover .edge-nav-button,
 .edge-detector.expanded:hover .edge-nav-button {
 	opacity: 1;
 	pointer-events: auto;
