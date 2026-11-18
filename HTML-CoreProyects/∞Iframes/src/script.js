@@ -1348,8 +1348,11 @@ class IframeMatrixViewer {
 			});
 
 			// mouseleave: colapsar y programar reset
-			detector.addEventListener('mouseleave', () => {
+			detector.addEventListener('mouseleave', (e) => {
 				if (this.isLoading || this.animationInProgress) return;
+				// Con histeresis activa, si el cursor aún está en la zona de borde, no colapsar prematuramente
+				if (this.isMouseWithinEdgeZone(e, edge)) return;
+
 				this.activeEdges[edge] = false;
 				if (this.edgeStates[edge]) {
 					this.edgeStates[edge].active = false;
@@ -1467,14 +1470,17 @@ class IframeMatrixViewer {
 
 	expandEdge(detector, edge) {
 		detector.classList.add('expanded');
-		const inset = this.calculateInset(this.currentPosition.depth);
+		const reducedInset = this.calculateReducedInset(this.currentPosition.depth);
 
-		// Confinar la hitbox estrictamente al área del inset para no desbordar sobre el contenido
+		// Confinar la hitbox reducida al área del margen comprimido (efecto punto fuente)
 		if (edge === 'top' || edge === 'bottom') {
-			detector.style.height = inset;
+			detector.style.height = reducedInset;
 		} else {
-			detector.style.width = inset;
+			detector.style.width = reducedInset;
 		}
+
+		// Reducir reactivamente el margen del iframe-wrapper de la celda activa hacia el borde
+		this.applyWrapperInsetForEdge(edge, reducedInset);
 
 		// Centrar suavemente el botón en el eje transversal del borde
 		const btn = detector.querySelector('.edge-nav-button');
@@ -1487,14 +1493,20 @@ class IframeMatrixViewer {
 				btn.style.right = '';
 			}
 		}
+
+		// Activar histeresis de seguimiento para evitar parpadeos
+		this.setupEdgeHysteresis(detector, edge);
 	}
 
 	collapseEdge(detector, edge) {
+		// Limpiar histeresis
+		this.clearEdgeHysteresis(edge);
+
 		// Resetear posición y transformación del botón suavemente
 		const btn = detector.querySelector('.edge-nav-button');
 		if (btn) {
 			btn.style.opacity = '0';
-			btn.style.transform = 'translate(-50%, -50%) scale(0.5)';
+			btn.style.transform = 'translate(-50%, -50%) scale(0.3)';
 			btn.style.transition = 'opacity 0.25s ease, transform 0.25s ease';
 		}
 
@@ -1504,14 +1516,17 @@ class IframeMatrixViewer {
 			this.edgeStates[edge].timeout = null;
 		}
 
-		// Colapsar inmediatamente el grosor de la hitbox para evitar bloqueos y falsos hovers sobre el contenido
+		// Restaurar grosor de reposo del detector y del wrapper
 		detector.classList.remove('expanded');
-		const inset = this.calculateInset(this.currentPosition.depth);
+		const normalInset = this.calculateInset(this.currentPosition.depth);
 		if (edge === 'top' || edge === 'bottom') {
-			detector.style.height = inset;
+			detector.style.height = normalInset;
 		} else {
-			detector.style.width = inset;
+			detector.style.width = normalInset;
 		}
+
+		// Restaurar margen normal del wrapper
+		this.applyWrapperInsetForEdge(edge, normalInset);
 
 		// Regenerar estado para interacción limpia
 		if (this.edgeStates[edge]) {
@@ -1519,6 +1534,61 @@ class IframeMatrixViewer {
 			this.edgeStates[edge].timeout = null;
 			this.edgeStates[edge].shifted = false;
 			this.edgeStates[edge].entering = false;
+		}
+	}
+
+	// Ajusta dinámicamente el margen del iframe activo para el efecto de punto fuente
+	applyWrapperInsetForEdge(edge, insetValue) {
+		const cell = document.querySelector(`.iframe-cell[data-x="${this.currentPosition.x}"][data-y="${this.currentPosition.y}"]`);
+		if (!cell) return;
+		const wrapper = cell.querySelector('.iframe-wrapper');
+		if (!wrapper) return;
+
+		if (edge === 'top' && !this.isSingleRowMatrix) {
+			wrapper.style.top = insetValue;
+		} else if (edge === 'bottom' && !this.isSingleRowMatrix) {
+			wrapper.style.bottom = insetValue;
+		} else if (edge === 'left' && !this.isSingleColumnRow) {
+			wrapper.style.left = insetValue;
+		} else if (edge === 'right' && !this.isSingleColumnRow) {
+			wrapper.style.right = insetValue;
+		}
+	}
+
+	// Comprueba si el cursor se encuentra dentro de la zona de seguridad del borde
+	isMouseWithinEdgeZone(e, edge) {
+		const threshold = 32; // px de zona de seguridad desde el extremo de la pantalla
+		if (!e || typeof e.clientX !== 'number') return false;
+		if (edge === 'top') return e.clientY >= 0 && e.clientY <= threshold;
+		if (edge === 'bottom') return (window.innerHeight - e.clientY) >= 0 && (window.innerHeight - e.clientY) <= threshold;
+		if (edge === 'left') return e.clientX >= 0 && e.clientX <= threshold;
+		if (edge === 'right') return (window.innerWidth - e.clientX) >= 0 && (window.innerWidth - e.clientX) <= threshold;
+		return false;
+	}
+
+	// Configura la histeresis para evitar parpadeos cuando el edge se contrae
+	setupEdgeHysteresis(detector, edge) {
+		this.clearEdgeHysteresis(edge);
+
+		const checkExit = (e) => {
+			if (this.isLoading || this.animationInProgress) return;
+			if (!this.activeEdges[edge]) return;
+
+			if (!this.isMouseWithinEdgeZone(e, edge)) {
+				this.activeEdges[edge] = false;
+				this.collapseEdge(detector, edge);
+			}
+		};
+
+		this.edgeStates[edge] = this.edgeStates[edge] || {};
+		this.edgeStates[edge].hysteresisHandler = checkExit;
+		document.addEventListener('mousemove', checkExit, { passive: true });
+	}
+
+	clearEdgeHysteresis(edge) {
+		if (this.edgeStates[edge] && this.edgeStates[edge].hysteresisHandler) {
+			document.removeEventListener('mousemove', this.edgeStates[edge].hysteresisHandler);
+			this.edgeStates[edge].hysteresisHandler = null;
 		}
 	}
 
@@ -1983,6 +2053,15 @@ class IframeMatrixViewer {
 		}
 		// Inset esbelto de escritorio (~20px a 24px en 1080p): base ligera de 1vh + 0.5vw + incremento sutil por nivel
 		return `calc(1vh + 0.5vw + ${depth * 0.25}vh)`;
+	}
+
+	// Inset reducido reactivo cuando se activa el botón/círculo ("Punto Fuente")
+	calculateReducedInset(depth) {
+		if (window.reducedInsetSize) {
+			return window.reducedInsetSize;
+		}
+		// Reducción al ~50% del inset base para comprimir el margen hacia el borde de la pantalla
+		return `calc(0.5vh + 0.25vw + ${depth * 0.12}vh)`;
 	}
 
 	// Método para renderizar los detectores de bordes (instanciación inteligente)
