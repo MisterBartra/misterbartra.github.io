@@ -1329,11 +1329,11 @@ class IframeMatrixViewer {
 				if (btn) {
 					const rect = detector.getBoundingClientRect();
 					if (edge === 'top' || edge === 'bottom') {
-						const entryX = e.clientX ? Math.max(16, Math.min(rect.width - 16, e.clientX - rect.left)) : (rect.width / 2);
+						const entryX = e.clientX ? Math.max(22, Math.min(rect.width - 22, e.clientX - rect.left)) : (rect.width / 2);
 						btn.style.left = `${entryX}px`;
 						btn.style.top = '50%';
 					} else {
-						const entryY = e.clientY ? Math.max(16, Math.min(rect.height - 16, e.clientY - rect.top)) : (rect.height / 2);
+						const entryY = e.clientY ? Math.max(22, Math.min(rect.height - 22, e.clientY - rect.top)) : (rect.height / 2);
 						btn.style.top = `${entryY}px`;
 						btn.style.left = '50%';
 					}
@@ -1397,13 +1397,13 @@ class IframeMatrixViewer {
 
 				if (edge === 'top' || edge === 'bottom') {
 					// Par vertical: el círculo se desplaza en X siguiendo el cursor sin salirse de la barra
-					const targetX = Math.max(16, Math.min(rect.width - 16, e.clientX - rect.left));
+					const targetX = Math.max(22, Math.min(rect.width - 22, e.clientX - rect.left));
 					btn.style.left = `${targetX}px`;
 					btn.style.top = '50%';
 					btn.style.bottom = '';
 				} else {
 					// Par horizontal: el círculo se desplaza en Y siguiendo el cursor sin salirse de la barra
-					const targetY = Math.max(16, Math.min(rect.height - 16, e.clientY - rect.top));
+					const targetY = Math.max(22, Math.min(rect.height - 22, e.clientY - rect.top));
 					btn.style.top = `${targetY}px`;
 					btn.style.left = '50%';
 					btn.style.right = '';
