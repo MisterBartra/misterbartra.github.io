@@ -663,9 +663,17 @@
                 // Agregar un video manualmente
                 window.videoSkipButtons.addVideo(elementoVideo, 'op=[01:30]&ed=-90');
 
-                // Transformar URL de YouTube programáticamente
+                // Transformar URL de YouTube programáticamente (watch o youtu.be)
                 const url = iframeMatrixViewer.transformYoutubeUrl('https://youtu.be/abc123');
                 // → "https://www.yout-ube.com/watch?v=abc123"
+
+                // Si la URL es de tipo /embed/ (se preserva como embed compatible):
+                const embedUrl = iframeMatrixViewer.transformYoutubeUrl('https://www.youtube.com/embed/abc123');
+                // → "https://www.yout-ube.com/embed/abc123"
+
+                // O forzar formato /embed/ para cualquier link (watch, youtu.be, shorts):
+                const forcedEmbed = iframeMatrixViewer.transformYoutubeUrl('https://youtu.be/abc123', 'embed');
+                // → "https://www.yout-ube.com/embed/abc123"
 
                 // Actualizar configuración de un video
                 window.videoSkipButtons.updateVideoConfig('video-id', {

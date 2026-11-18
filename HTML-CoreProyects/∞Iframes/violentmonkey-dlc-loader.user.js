@@ -1,10 +1,39 @@
 // ==UserScript==
 // @name         ∞Iframes DLC — Video Skip Buttons Loader
 // @namespace    https://misterbartra.github.io
-// @version      1.1.0
+// @version      1.2.0
 // @description  Carga e instancia el sistema DLC (skip-buttons, auto-skip, loop, modifiers, chapters) en cualquier página con videos embebidos fuera del dominio local. Conecta señales para saltar OP/ED, aplicar loop, velocidad, mute y capítulos. Soporte multi-proveedor y matrices 2D anidables.
 // @author       MisterBartra
 // @match        *://*/*
+// @exclude      *://*.adtrafficquality.google/*
+// @exclude      *://adtrafficquality.google/*
+// @exclude      *://*.ns1p.net/*
+// @exclude      *://cs.ns1p.net/*
+// @exclude      *://*.doubleclick.net/*
+// @exclude      *://*.googleads.g.doubleclick.net/*
+// @exclude      *://*.googleadservices.com/*
+// @exclude      *://*.googlesyndication.com/*
+// @exclude      *://tpc.googlesyndication.com/*
+// @exclude      *://pagead2.googlesyndication.com/*
+// @exclude      *://*.hubspot.com/*
+// @exclude      *://*.licdn.com/*
+// @exclude      *://google.com/*
+// @exclude      *://www.google.com/*
+// @exclude      *://*.google.com/recaptcha/*
+// @exclude      *://*.google.com/pagead/*
+// @exclude      *://*.google.com/ads/*
+// @exclude      *://*.adnxs.com/*
+// @exclude      *://*.criteo.com/*
+// @exclude      *://*.amazon-adsystem.com/*
+// @exclude      *://*.scorecardresearch.com/*
+// @exclude      *://*.taboola.com/*
+// @exclude      *://*.outbrain.com/*
+// @exclude      *://*.popads.net/*
+// @exclude      *://*.popcash.net/*
+// @exclude      *://*.adroll.com/*
+// @exclude      *://*.propellerads.com/*
+// @exclude      *://*.adsterra.com/*
+// @exclude      *://*.mgid.com/*
 // @grant        GM_xmlhttpRequest
 // @grant        GM_addStyle
 // @grant        GM_setValue
@@ -18,6 +47,36 @@
 
 (function () {
     'use strict';
+
+    // =========================================================================
+    // EXCLUSIONES Y PROTECCIÓN DE SUBMARCOS (AD & TELEMETRY TRACKERS)
+    // =========================================================================
+
+    const AD_PATTERNS = [
+        'adtrafficquality.google', 'cs.ns1p.net', 'ns1p.net',
+        'doubleclick.net', 'googleads', 'googlesyndication.com',
+        'googleadservices.com', 'googletagservices.com', 'adservice.google.',
+        'hubspot.com', 'licdn.com', 'google.com/recaptcha', 'google.com/pagead',
+        'google.com/ads', 'ad.mail.ru', 'admanhtml', 'rbadman', 'adnxs.com',
+        'taboola.com', 'outbrain.com', 'criteo.com', 'amazon-adsystem.com',
+        'scorecardresearch.com', 'adsystem.', 'adserver.', 'popads', 'popcash',
+        'propellerads', 'adsrvr', 'adsterra', 'mgid.com', 'adroll.com'
+    ];
+
+    function isAdUrl(url) {
+        if (!url || typeof url !== 'string') return false;
+        const lower = url.toLowerCase();
+        if (AD_PATTERNS.some(p => lower.includes(p))) return true;
+        if (window !== window.top && (lower.startsWith('https://google.com') || lower.startsWith('https://www.google.com') || lower.includes('google.com/recaptcha') || lower.includes('google.com/pagead') || lower.includes('google.com/ads'))) {
+            return true;
+        }
+        return false;
+    }
+
+    // Abortar de inmediato si se inyecta en un submarco de anuncios o telemetría
+    if (window !== window.top && isAdUrl(window.location.href)) {
+        return;
+    }
 
     // =========================================================================
     // CONFIGURACIÓN
@@ -112,9 +171,10 @@
             }
         });
 
-        // 2. Iframes de cualquier proveedor de video soportado
+        // 2. Iframes de cualquier proveedor de video soportado (filtrando anuncios y telemetría)
         document.querySelectorAll('iframe').forEach(iframe => {
             const src = iframe.src || '';
+            if (isAdUrl(src)) return;
             if (!iframe.dataset.dlcDetected && isVideoEmbed(src)) {
                 videos.push({ element: iframe, type: 'iframe', src });
             }
@@ -125,11 +185,15 @@
 
     function isYouTubeEmbed(src) {
         return src.includes('youtube.com/embed/') ||
+            src.includes('yout-ube.com/embed/') ||
             src.includes('youtube-nocookie.com/embed/') ||
+            src.includes('youtube.com/watch') ||
+            src.includes('yout-ube.com/watch') ||
             src.includes('youtu.be/');
     }
 
     function isVideoEmbed(src) {
+        if (!src || typeof src !== 'string' || isAdUrl(src)) return false;
         return isYouTubeEmbed(src) ||
             src.includes('ok.ru/videoembed/') ||
             src.includes('vk.com/video_ext.php') ||
@@ -141,14 +205,35 @@
             src.includes('streamtape.com/e/') ||
             src.includes('mp4upload.com/embed/') ||
             src.includes('video.sibnet') ||
-            src.includes('sendvid.com/embed/');
+            src.includes('sendvid.com/embed/') ||
+            src.includes('zilla-networks.com/play/') ||
+            src.includes('streamwish.') ||
+            src.includes('wishembed.') ||
+            src.includes('voe.sx/e/') ||
+            src.includes('fastream.to/') ||
+            src.includes('pixeldrain.com/u/') ||
+            src.includes('mega.nz/embed') ||
+            src.includes('byselapuix.com') ||
+            src.includes('animeav1.uns.bio') ||
+            src.includes('filemoon.') ||
+            src.includes('dood.') ||
+            src.includes('doodstream.') ||
+            src.includes('ds2play.') ||
+            src.includes('vidmoly.') ||
+            src.includes('yourupload.com/embed/') ||
+            src.includes('mixdrop.') ||
+            src.includes('waaw.to') ||
+            src.includes('netu.tv');
     }
 
     function getUrlKey(url) {
-        const match = url.match(/\/(?:videoembed|embed|video|e)\/(\w+)/);
+        const vMatch = url.match(/[?&]v=([a-zA-Z0-9_-]{11})/);
+        if (vMatch) return vMatch[1];
+        const match = url.match(/\/(?:videoembed|embed|video|shorts|play|e|v|w|u)\/([a-zA-Z0-9_-]+)/);
         if (match) return match[1];
-        const parts = url.split('/');
-        return parts[parts.length - 1] || url.slice(-12);
+        const clean = url.split('#')[0].split('?')[0];
+        const parts = clean.split('/');
+        return parts[parts.length - 1] || clean.slice(-12);
     }
 
     function getProviderName(src) {
@@ -164,6 +249,20 @@
         if (src.includes('mp4upload.com/embed/')) return 'MP4Upload';
         if (src.includes('video.sibnet')) return 'Sibnet';
         if (src.includes('sendvid.com/embed/')) return 'SendVid';
+        if (src.includes('zilla-networks.com')) return 'Zilla Networks';
+        if (src.includes('streamwish') || src.includes('wishembed')) return 'Streamwish';
+        if (src.includes('voe.sx')) return 'Voe';
+        if (src.includes('fastream.to')) return 'Fastream';
+        if (src.includes('pixeldrain.com')) return 'Pixeldrain';
+        if (src.includes('mega.nz')) return 'Mega';
+        if (src.includes('byselapuix.com')) return 'Byselapuix';
+        if (src.includes('animeav1.uns.bio')) return 'AnimeAV1';
+        if (src.includes('filemoon')) return 'Filemoon';
+        if (src.includes('dood') || src.includes('ds2play')) return 'Doodstream';
+        if (src.includes('vidmoly')) return 'Vidmoly';
+        if (src.includes('yourupload.com')) return 'YourUpload';
+        if (src.includes('mixdrop')) return 'Mixdrop';
+        if (src.includes('waaw.to') || src.includes('netu.tv') || src.includes('hqq.tv')) return 'Netu/Waaw';
         return 'Embed';
     }
 
@@ -247,7 +346,7 @@
             try {
                 const data = JSON.parse(event.data);
                 if (data.event === 'infoDelivery' && data.info && data.info.currentTime !== undefined) {
-                    const iframes = document.querySelectorAll('iframe[src*="youtube.com/embed/"]');
+                    const iframes = document.querySelectorAll('iframe[src*="youtube.com/embed/"], iframe[src*="yout-ube.com/embed/"], iframe[src*="youtube-nocookie.com/embed/"], iframe[src*="yout-ube.com/watch"], iframe[src*="youtube.com/watch"]');
                     iframes.forEach(iframe => {
                         if (iframe.contentWindow === event.source) {
                             iframe.dataset.ytCurrentTime = data.info.currentTime;
@@ -272,7 +371,7 @@
         });
 
         setInterval(() => {
-            document.querySelectorAll('iframe[src*="youtube.com/embed/"]').forEach(iframe => {
+            document.querySelectorAll('iframe[src*="youtube.com/embed/"], iframe[src*="yout-ube.com/embed/"], iframe[src*="youtube-nocookie.com/embed/"], iframe[src*="yout-ube.com/watch"], iframe[src*="youtube.com/watch"]').forEach(iframe => {
                 if (iframe.dataset.dlcDetected && iframe.contentWindow) {
                     try {
                         iframe.contentWindow.postMessage(JSON.stringify({ event: 'listening' }), '*');
@@ -286,22 +385,8 @@
     }
 
     // =========================================================================
-    // BLOQUEADOR DE ADS
+    // BLOQUEADOR DE ADS Y TELEMETRÍA (INTERCEPTOR DOM, FETCH Y XHR)
     // =========================================================================
-
-    const AD_PATTERNS = [
-        'ad.mail.ru', 'admanhtml', 'rbadman', 'doubleclick.net',
-        'googlesyndication.com', 'googleadservices.com', 'googletagservices.com',
-        'adservice.google.', 'adnxs.com', 'taboola.com', 'outbrain.com',
-        'criteo.com', 'adsystem.', 'adserver.', 'ads.', 'ad.', '/ads/', '/ad/',
-        'banner.', 'popads', 'popcash', 'propellerads', 'adsrvr', 'adsterra', 'mgid.com'
-    ];
-
-    function isAdUrl(url) {
-        if (!url || typeof url !== 'string') return false;
-        const lower = url.toLowerCase();
-        return AD_PATTERNS.some(p => lower.includes(p));
-    }
 
     function blockAdElement(node) {
         if (node.nodeType !== 1) return;
@@ -343,6 +428,7 @@
     // =========================================================================
 
     function injectUI() {
+        if (window !== window.top) return; // Solo inyectar panel flotante en la ventana principal
         GM_addStyle(`
             #vm-dlc-panel {
                 position: fixed; bottom: 20px; right: 20px; width: 300px;

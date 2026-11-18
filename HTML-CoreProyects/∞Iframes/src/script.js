@@ -171,11 +171,11 @@ class IframeMatrixViewer {
 			// Dividir el hash por | para obtener cada nivel
 			const positions = this.parentHash.split('|');
 
-			// Procesar cada posición y añadirla a la ruta jerárquica
+			// Procesar cada posición y añadirla a la ruta jerárquica (soporta 1D y 2D)
 			for (let i = 0; i < positions.length; i++) {
-				const [x, y] = positions[i].split(',').map(Number);
-				if (!isNaN(x) && !isNaN(y)) {
-					this.hierarchyPath.push({ x, y, depth: i });
+				const pos = this.parseCoordinateSegment(positions[i]);
+				if (!isNaN(pos.x) && !isNaN(pos.y)) {
+					this.hierarchyPath.push({ x: pos.x, y: pos.y, depth: i });
 				}
 			}
 		}
@@ -376,12 +376,86 @@ class IframeMatrixViewer {
 	}
 
 
+	// Determina la naturaleza dimensional de la matriz actual:
+	// 'column' = Vector vertical (Nx1), 'row' = Vector horizontal (1xN), '1x1' = celda única, '2D' = Matriz bidimensional (NxM)
+	getVectorType(matrix) {
+		const currentMatrix = matrix || (this.matrixStack && this.matrixStack.length > 0
+			? this.matrixStack[this.currentPosition.depth - this.initialDepth] || this.matrix
+			: this.matrix);
+
+		if (!currentMatrix || !Array.isArray(currentMatrix) || currentMatrix.length === 0) {
+			return '2D';
+		}
+
+		const isSingleRow = currentMatrix.length === 1;
+		const isSingleCol = currentMatrix.every(row => Array.isArray(row) && row.length <= 1);
+
+		if (isSingleRow && isSingleCol) return '1x1';
+		if (isSingleRow) return 'row';       // 1xN (Vector Horizontal)
+		if (isSingleCol) return 'column';    // Nx1 (Vector Vertical)
+		return '2D';                         // NxM (Matriz Bidimensional)
+	}
+
+	// Formatea la coordenada para el hash según la dimensionalidad de la matriz:
+	// En 1D vertical (#Y), en 1D horizontal (#X), en 2D (#X,Y)
+	formatCoordinateHash(x, y) {
+		const type = this.getVectorType();
+		if (type === 'column') return `${y}`;
+		if (type === 'row') return `${x}`;
+		if (type === '1x1') return '0';
+		return `${x},${y}`;
+	}
+
+	// Parsea un segmento de coordenadas admitiendo tanto formato 1D escalar ('5') como 2D ('0,5')
+	parseCoordinateSegment(seg) {
+		if (!seg || typeof seg !== 'string') return { x: 0, y: 0 };
+		const cleanSeg = seg.trim();
+
+		// Caso 1: Coordenada bidimensional explícita 'X,Y' (ej. '0,5' o '3,4')
+		if (cleanSeg.includes(',')) {
+			const [rawX, rawY] = cleanSeg.split(',').map(Number);
+			const x = isNaN(rawX) ? 0 : rawX;
+			const y = isNaN(rawY) ? 0 : rawY;
+			return { x, y };
+		}
+
+		// Caso 2: Coordenada unidimensional escalar (ej. '5')
+		const val = Number(cleanSeg);
+		if (isNaN(val)) return { x: 0, y: 0 };
+
+		const type = this.getVectorType();
+		if (type === 'column') {
+			// En vector vertical (Nx1), el escalar representa la fila Y
+			return { x: 0, y: val };
+		} else if (type === 'row') {
+			// En vector horizontal (1xN), el escalar representa la columna X
+			return { x: val, y: 0 };
+		} else {
+			// Matriz 2D o ambigua con hash escalar: asignar a Y si hay múltiples filas, o a X si hay 1 fila
+			const matrix = this.matrixStack && this.matrixStack.length > 0
+				? this.matrixStack[this.currentPosition.depth - this.initialDepth] || this.matrix
+				: this.matrix;
+			if (matrix && matrix.length > 1) {
+				return { x: 0, y: val };
+			}
+			return { x: val, y: 0 };
+		}
+	}
+
 	parseUrlHash() {
 		const hash = window.location.hash.substring(1);
 		if (hash) {
 			const lastPos = hash.split('|').pop();
-			const [x, y] = lastPos.split(',').map(Number);
-			return { x, y };
+			return this.parseCoordinateSegment(lastPos);
+		} else if (window.initialPosition) {
+			const initX = Number(window.initialPosition.x ?? window.initialPosition[0] ?? 0);
+			const initY = Number(window.initialPosition.y ?? window.initialPosition[1] ?? 0);
+			return { x: isNaN(initX) ? 0 : initX, y: isNaN(initY) ? 0 : initY };
+		} else if (window.startIndex !== undefined) {
+			const base = typeof window.startIndex === 'number' ? window.startIndex : 0;
+			const initX = Number(window.startIndex.x ?? base);
+			const initY = Number(window.startIndex.y ?? base);
+			return { x: isNaN(initX) ? 0 : initX, y: isNaN(initY) ? 0 : initY };
 		} else {
 			return { x: 0, y: 0 };
 		}
@@ -407,9 +481,9 @@ class IframeMatrixViewer {
 	}
 
 
-	// Método actualizado para el hash jerárquico invertido
+	// Método actualizado para el hash jerárquico (soporta formato 1D escalar o 2D)
 	updateUrlHash() {
-		const newHash = `${this.currentPosition.x},${this.currentPosition.y}`;
+		const newHash = this.formatCoordinateHash(this.currentPosition.x, this.currentPosition.y);
 		window.location.hash = newHash;
 	}
 
@@ -491,8 +565,8 @@ class IframeMatrixViewer {
 		url.searchParams.set("urlRowsIframe", jsonSubarray);
 		url.searchParams.set("initialDepth", (this.currentPosition.depth + 1).toString());
 
-		// Agregar acumulación de parentHash
-		const targetHash = `${position.x},${position.y}`;
+		// Agregar acumulación de parentHash (formato 1D o 2D)
+		const targetHash = this.formatCoordinateHash(position.x, position.y);
 		const fullParentHash = this.parentHash
 			? `${this.parentHash}|${targetHash}`
 			: targetHash;
@@ -893,7 +967,7 @@ class IframeMatrixViewer {
 				const pos = this.hierarchyPath[i];
 				if (pos) {
 					if (newHash) newHash += '|';
-					newHash += `${pos.x},${pos.y}`;
+					newHash += this.formatCoordinateHash(pos.x, pos.y);
 				}
 			}
 
@@ -2589,7 +2663,23 @@ class IframeMatrixViewer {
 	 * Conserva parámetros DLC del hash (#op=...&ed=...&d=...).
 	 * Solo transforma URLs que contengan "youtube" o "youtu.be".
 	 */
-	transformYoutubeUrl(url) {
+	/**
+	 * Transforma URLs de YouTube al formato compatible yout-ube.com (con guión) para evitar
+	 * restricciones de reproducción en iframes embebidos (X-Frame-Options / embedding disabled).
+	 *
+	 * Soporta de forma biunívoca y ajusta:
+	 *   - /embed/ : https://www.youtube.com/embed/ID → https://www.yout-ube.com/embed/ID
+	 *   - nocookie: https://www.youtube-nocookie.com/embed/ID → https://www.yout-ube.com/embed/ID
+	 *   - watch   : https://www.youtube.com/watch?v=ID → https://www.yout-ube.com/watch?v=ID
+	 *   - youtu.be: https://youtu.be/ID → https://www.yout-ube.com/watch?v=ID (o /embed/ con targetFormat='embed')
+	 *   - shorts  : https://www.youtube.com/shorts/ID → https://www.yout-ube.com/embed/ID
+	 *
+	 * Parámetro targetFormat:
+	 *   - 'auto'  (default): Preserva /embed/ si ya lo tenía o si es shorts/live; si es watch o youtu.be mantiene watch.
+	 *   - 'embed' : Normaliza cualquier link de YouTube forzando la ruta /embed/ID.
+	 *   - 'watch' : Normaliza forzando la ruta /watch?v=ID.
+	 */
+	transformYoutubeUrl(url, targetFormat = 'auto') {
 		if (typeof url !== 'string') return url;
 
 		// Separar hash DLC del resto de la URL (preservar parámetros DLC)
@@ -2597,32 +2687,61 @@ class IframeMatrixViewer {
 		const hash = hashIndex !== -1 ? url.substring(hashIndex) : '';
 		let cleanUrl = hashIndex !== -1 ? url.substring(0, hashIndex) : url;
 
-		let transformed = cleanUrl;
-		let changed = false;
+		let videoId = null;
+		let queryParams = '';
 
-		// Transformación 1: youtu.be/VIDEO_ID → www.yout-ube.com/watch?v=VIDEO_ID
-		const shortMatch = cleanUrl.match(/^(https?:\/\/)(?:www\.)?youtu\.be\/(.+)$/);
+		// 1. Enlace corto youtu.be/ID
+		const shortMatch = cleanUrl.match(/^(https?:\/\/)?(?:www\.)?youtu\.be\/([a-zA-Z0-9_-]{11})(.*)?$/);
 		if (shortMatch) {
-			const protocol = shortMatch[1];
-			const videoPart = shortMatch[2];
-			// Separar parámetros de query si existen (ej: ?t=30)
-			const queryIndex = videoPart.indexOf('?');
-			const videoId = queryIndex !== -1 ? videoPart.substring(0, queryIndex) : videoPart;
-			const query = queryIndex !== -1 ? videoPart.substring(queryIndex) : '';
-			transformed = `${protocol}www.yout-ube.com/watch?v=${videoId}${query}`;
-			changed = true;
-		}
-		// Transformación 2: youtube.com → yout-ube.com (cualquier path: /watch, /embed, etc.)
-		else if (cleanUrl.includes('youtube.com')) {
-			transformed = cleanUrl.replace(/youtube\.com/g, 'yout-ube.com');
-			changed = true;
+			videoId = shortMatch[2];
+			queryParams = shortMatch[3] || '';
 		}
 
-		if (changed) {
-			console.log(`[URL Transform] ${cleanUrl} → ${transformed}`);
+		// 2. Enlace watch: watch?v=ID
+		if (!videoId) {
+			const watchMatch = cleanUrl.match(/[?&]v=([a-zA-Z0-9_-]{11})/);
+			if (watchMatch) {
+				videoId = watchMatch[1];
+			}
 		}
 
-		// Reconstruir URL con hash DLC preservado
+		// 3. Enlaces embebidos o especiales: /embed/ID, /shorts/ID, /live/ID, /v/ID
+		if (!videoId) {
+			const embedMatch = cleanUrl.match(/\/(?:embed|shorts|live|v)\/([a-zA-Z0-9_-]{11})/);
+			if (embedMatch) {
+				videoId = embedMatch[1];
+			}
+		}
+
+		// Si no se extrajo un ID de 11 caracteres pero contiene dominio de YouTube
+		if (!videoId) {
+			if (cleanUrl.includes('youtube.com') || cleanUrl.includes('youtube-nocookie.com')) {
+				const transformedFallback = cleanUrl.replace(/youtube(?:-nocookie)?\.com/g, 'yout-ube.com');
+				console.log(`[URL Transform Fallback] ${cleanUrl} → ${transformedFallback}`);
+				return transformedFallback + hash;
+			}
+			return url;
+		}
+
+		// Determinar si el enlace original era /embed/ o formato nativo de reproducción embebida
+		const isOriginalEmbed = cleanUrl.includes('/embed/') || cleanUrl.includes('/shorts/') || cleanUrl.includes('/live/');
+		const useEmbed = targetFormat === 'embed' || (targetFormat === 'auto' && isOriginalEmbed);
+
+		let transformed = '';
+		if (useEmbed) {
+			transformed = `https://www.yout-ube.com/embed/${videoId}`;
+		} else {
+			transformed = `https://www.yout-ube.com/watch?v=${videoId}`;
+		}
+
+		// Preservar query params adicionales si existen (ej. ?t=30 o lista)
+		if (queryParams && !queryParams.startsWith('?v=')) {
+			const sep = transformed.includes('?') ? '&' : '?';
+			const cleanQuery = queryParams.startsWith('?') ? queryParams.substring(1) : queryParams;
+			transformed += sep + cleanQuery;
+		}
+
+		console.log(`[URL Transform] ${cleanUrl} → ${transformed}`);
 		return transformed + hash;
 	}
 
@@ -2692,11 +2811,26 @@ class IframeMatrixViewer {
 		this.scanForNestedMatrices();
 	}
 
+	// Verificar si un iframe corresponde a anuncios, rastreadores o telemetría que deben ignorarse
+	isIgnoredIframe(iframe) {
+		const src = (iframe.src || iframe.getAttribute('src') || '').toLowerCase();
+		if (!src) return false;
+		const ignored = [
+			'adtrafficquality.google', 'ns1p.net', 'cs.ns1p.net', 'doubleclick.net',
+			'googleads', 'googlesyndication.com', 'googleadservices.com',
+			'hubspot.com', 'licdn.com', 'adnxs.com', 'criteo.com',
+			'amazon-adsystem.com', 'scorecardresearch.com', 'taboola.com',
+			'outbrain.com', 'popads', 'popcash', 'adroll.com'
+		];
+		return ignored.some(pattern => src.includes(pattern));
+	}
+
 	// Escanear iframes en busca de matrices anidadas
 	scanForNestedMatrices() {
-		// Obtener todos los iframes visibles
+		// Obtener todos los iframes visibles (descartando anuncios y telemetría)
 		const iframes = Array.from(document.querySelectorAll('iframe'))
 			.filter(iframe => {
+				if (this.isIgnoredIframe(iframe)) return false;
 				const rect = iframe.getBoundingClientRect();
 				return (
 					rect.width > 0 &&

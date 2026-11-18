@@ -257,6 +257,23 @@ window.__vmVideos        // Array de videos detectados
 
 ---
 
+## 🛡️ Filtro de Submarcos y Exclusiones de Publicidad (v1.2.0)
+
+Para evitar que ViolentMonkey inyecte el script en marcos publicitarios, rastreadores o de telemetría (y que aparezcan listados como submarcos activos en el menú de la extensión), se han incorporado directivas `@exclude` en la cabecera y filtros de descarte en tiempo de ejecución:
+
+### 🚫 Submarcos Excluidos / Ignorados
+- **Google Ads & Verificación**: `adtrafficquality.google`, `googleads.g.doubleclick.net`, `googlesyndication.com`, `googleadservices.com`, `google.com/recaptcha`, `google.com/pagead`, `google.com` (subframes).
+- **Telemetría & Redes**: `cs.ns1p.net` / `ns1p.net`, `hubspot.com`, `licdn.com` (LinkedIn pixel).
+- **Publicidad general**: `doubleclick.net`, `adnxs.com`, `criteo.com`, `amazon-adsystem.com`, `scorecardresearch.com`, `taboola.com`, `outbrain.com`, `popads.net`, `popcash.net`, `adroll.com`, `propellerads.com`, `adsterra.com`, `mgid.com`.
+
+### 📺 Proveedores de Video y Anime Reconocidos
+El detector de videos reconoce de manera nativa reproductores de streaming y anime comunes:
+- **YouTube**: `/embed/`, `/watch?v=`, `youtu.be/`, `youtube-nocookie.com`, `yout-ube.com`
+- **Anime Hosts**: `player.zilla-networks.com`, `streamwish.to` / `wishembed.pro`, `voe.sx`, `fastream.to`, `pixeldrain.com`, `mega.nz`, `byselapuix.com`, `animeav1.uns.bio`, `filemoon`, `doodstream`, `vidmoly`, `yourupload`, `mixdrop`, `netu.tv` / `waaw.to`
+- **Plataformas generales**: `ok.ru`, `vk.com`, `vimeo.com`, `dailymotion.com`, `twitch.tv`, `streamable.com`, `streamtape.com`, `mp4upload.com`, `video.sibnet`, `sendvid.com`
+
+---
+
 ## ❓ Solución de Problemas
 
 | Problema | Solución |

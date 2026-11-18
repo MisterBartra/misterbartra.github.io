@@ -99,6 +99,22 @@ class DLCCoreEngine {
     }
 
     /**
+     * Comprueba si una URL corresponde a un anuncio o rastreador
+     */
+    isIgnoredFrame(url) {
+        if (!url || typeof url !== 'string') return false;
+        const lower = url.toLowerCase();
+        const ignored = [
+            'adtrafficquality.google', 'ns1p.net', 'cs.ns1p.net', 'doubleclick.net',
+            'googleads', 'googlesyndication.com', 'googleadservices.com',
+            'hubspot.com', 'licdn.com', 'adnxs.com', 'criteo.com',
+            'amazon-adsystem.com', 'scorecardresearch.com', 'taboola.com',
+            'outbrain.com', 'popads', 'popcash', 'adroll.com'
+        ];
+        return ignored.some(pattern => lower.includes(pattern));
+    }
+
+    /**
      * Escanea el DOM en busca de videos estáticos con parámetros DLC:
      * - <iframe src="...#op=...&ed=..."> → extrae hash del atributo src
      * - <video data-video-params="op=...&ed=..."> → usa el atributo data
@@ -106,10 +122,11 @@ class DLCCoreEngine {
     scanStaticVideos() {
         console.log('[DLC] Escaneando videos estáticos en el DOM...');
 
-        // 1. Buscar iframes con hash en su src
+        // 1. Buscar iframes con hash en su src (filtrando anuncios)
         const iframes = document.querySelectorAll('iframe[src*="#"]');
         iframes.forEach(iframe => {
             const src = iframe.src || '';
+            if (this.isIgnoredFrame(src)) return;
             if (src.includes('#')) {
                 this.processVideoElement(iframe, src);
             }
@@ -139,7 +156,7 @@ class DLCCoreEngine {
                     if (node.nodeType !== 1) continue; // Solo elementos
 
                     // Si es un iframe con hash
-                    if (node.tagName === 'IFRAME' && node.src && node.src.includes('#')) {
+                    if (node.tagName === 'IFRAME' && node.src && node.src.includes('#') && !this.isIgnoredFrame(node.src)) {
                         this.processVideoElement(node, node.src);
                     }
 
