@@ -194,31 +194,34 @@ iframe {
 	transform: translate(0, 0) scale(1.08);
 }
 
-/* Detectores de esquina y bordes */
+/* Detectores de esquina y bordes (hitboxes delgadas y esbeltas) */
 .edge-detector {
 	position: fixed;
 	z-index: 997;
 	background-color: transparent;
-	transition: background-color 0.3s ease, top 0.3s ease, left 0.3s ease, right 0.3s ease, bottom 0.3s ease, width 0.3s cubic-bezier(0.22, 1, 0.36, 1), height 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+	transition: background-color 0.25s ease, top 0.25s ease, left 0.25s ease, right 0.25s ease, bottom 0.25s ease, width 0.25s cubic-bezier(0.22, 1, 0.36, 1), height 0.25s cubic-bezier(0.22, 1, 0.36, 1);
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	pointer-events: auto;
+	cursor: default; /* Solo el botón circular interior es clickeable */
 }
 
-/* Estado activo: hitbox expandida */
+/* Estado activo: hitbox expandida con color base configurable */
 .edge-detector.expanded {
 	pointer-events: auto;
+	background-color: var(--edge-hover-bg, rgba(51, 51, 51, 0.7));
+	backdrop-filter: blur(4px);
 }
 
 .edge-nav-button {
 	position: absolute;
-	width: 48px;
-	height: 48px;
+	width: 42px;
+	height: 42px;
 	border-radius: 50%;
-	background: rgba(15, 15, 19, 0.9);
+	background: rgba(15, 15, 19, 0.92);
 	backdrop-filter: blur(8px);
-	border: 1px solid rgba(255, 255, 255, 0.2);
+	border: 1px solid rgba(255, 255, 255, 0.25);
 	color: white;
 	display: flex;
 	align-items: center;
@@ -226,24 +229,23 @@ iframe {
 	cursor: pointer;
 	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
 	opacity: 0;
-	/* Centrar con translate para que hover funcione correctamente */
 	transform: translate(-50%, -50%) scale(0.5);
 	pointer-events: none;
-	/* Usar el easing curious propuesto easeOutBack */
-	transition: opacity 0.3s ease, transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+	/* Transición suave hacia el cursor y entrada elástica */
+	transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), left 0.12s cubic-bezier(0.25, 1, 0.5, 1), top 0.12s cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 .edge-nav-button svg {
-	width: 24px;
-	height: 24px;
+	width: 22px;
+	height: 22px;
 	fill: currentColor;
 	transition: transform 0.2s ease;
 }
 
 .edge-nav-button:hover {
-	background: rgba(255, 255, 255, 0.1);
-	border-color: rgba(255, 255, 255, 0.4);
-	transform: translate(-50%, -50%) scale(1.1) !important;
+	background: rgba(255, 255, 255, 0.15);
+	border-color: rgba(255, 255, 255, 0.5);
+	transform: translate(-50%, -50%) scale(1.12) !important;
 }
 
 .edge-detector.expanded:hover .edge-nav-button {

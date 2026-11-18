@@ -20,7 +20,8 @@ class IframeMatrixViewer {
 		this.hideTimeouts = {}; // Para almacenar los timeouts de ocultación de botones
 		this.loadingStates = []; // Para rastrear el estado de carga de cada iframe
 		this.iframeOpacities = []; // Para controlar la opacidad de cada iframe
-		this.defaultBackgroundColor = "#000"; // Color por defecto para cuando no se puede detectar
+		this.baseColor = window.baseColor || window.marginColor || window.edgeColor || window.backgroundColor || null;
+		this.defaultBackgroundColor = this.baseColor || "#000"; // Color por defecto para cuando no se puede detectar
 		this.parentHash = String(""); // Para almacenar el hash del padre
 		this.nestedMatrices = new Map(); // Para almacenar información sobre matrices anidadas detectadas
 		this.loadingTimeouts = {}; // Para almacenar timeouts de carga
@@ -61,6 +62,13 @@ class IframeMatrixViewer {
 
 			// Mostrar notificación de bienvenida
 			this.showNotification(`Bienvenido a ∞Iframes Matrix Viewer (Nivel ${this.currentPosition.depth})`);
+
+			// Aplicar color base configurado en window a las variables de márgenes y bordes
+			if (this.baseColor) {
+				document.documentElement.style.setProperty('--margin-base-color', this.baseColor);
+				document.documentElement.style.setProperty('--edge-hover-bg', this.baseColor);
+				document.body.style.backgroundColor = this.baseColor;
+			}
 
 			// Establecer el título del documento
 			document.title = this.title;
@@ -1268,11 +1276,11 @@ class IframeMatrixViewer {
 		document.querySelectorAll('.edge-detector').forEach(detector => {
 			const edge = detector.dataset.edge;
 
-			// mouseenter: activar el borde + animar botón desde fuera de la pantalla
-			detector.addEventListener('mouseenter', () => {
+			// mouseenter: activar el borde + transicionar botón suavemente hacia la entrada del cursor
+			detector.addEventListener('mouseenter', (e) => {
 				if (this.isLoading || this.animationInProgress) return;
 
-				// Limpiar timeout anterior si existe (evitar conflictos de hover múltiple)
+				// Limpiar timeout anterior si existe
 				if (this.edgeStates[edge] && this.edgeStates[edge].timeout) {
 					clearTimeout(this.edgeStates[edge].timeout);
 					this.edgeStates[edge].timeout = null;
@@ -1282,43 +1290,28 @@ class IframeMatrixViewer {
 				this.edgeStates[edge] = this.edgeStates[edge] || {};
 				this.edgeStates[edge].active = true;
 				this.edgeStates[edge].shifted = false;
-				this.edgeStates[edge].entering = true; // Bloquear arco durante la entrada
 
-				// Expandir la hitbox siempre
+				// Expandir la hitbox reducida (5.5vh / 4.5vw)
 				this.expandEdge(detector, edge);
 
-				// Animar botón desde fuera de la pantalla hacia el borde
+				// Posicionar el botón de forma suave directamente hacia las coordenadas de entrada
 				const btn = detector.querySelector('.edge-nav-button');
 				if (btn) {
-					// Determinar dirección de entrada según el borde
-					let enterTransform = '';
-					if (edge === 'top') enterTransform = 'translate(-50%, -180%)';
-					else if (edge === 'bottom') enterTransform = 'translate(-50%, 180%)';
-					else if (edge === 'left') enterTransform = 'translate(-180%, -50%)';
-					else if (edge === 'right') enterTransform = 'translate(180%, -50%)';
+					const rect = detector.getBoundingClientRect();
+					if (edge === 'top' || edge === 'bottom') {
+						const entryX = e.clientX ? Math.max(25, Math.min(rect.width - 25, e.clientX - rect.left)) : (rect.width / 2);
+						btn.style.left = `${entryX}px`;
+						btn.style.top = '50%';
+					} else {
+						const entryY = e.clientY ? Math.max(25, Math.min(rect.height - 25, e.clientY - rect.top)) : (rect.height / 2);
+						btn.style.top = `${entryY}px`;
+						btn.style.left = '50%';
+					}
 
-					// Estado inicial: fuera de la pantalla, invisible
-					btn.style.transition = 'none';
-					btn.style.transform = enterTransform;
-					btn.style.opacity = '0';
-
-					// Forzar reflow para que el estado inicial se aplique
-					btn.offsetHeight;
-
-					// Animar hacia posición final en el borde
-					requestAnimationFrame(() => {
-						btn.style.transition = 'transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s ease';
-						btn.style.transform = 'translate(-50%, -50%)';
-						btn.style.opacity = '1';
-					});
-
-					// Después de la animación de entrada, activar el arco de seguimiento
-					if (this.edgeStates[edge].enterTimer) clearTimeout(this.edgeStates[edge].enterTimer);
-					this.edgeStates[edge].enterTimer = setTimeout(() => {
-						if (this.edgeStates[edge] && this.activeEdges[edge]) {
-							this.edgeStates[edge].entering = false;
-						}
-					}, 350);
+					// Transición suave de entrada sin saltos bruscos
+					btn.style.transition = 'opacity 0.25s ease, transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), left 0.12s cubic-bezier(0.25, 1, 0.5, 1), top 0.12s cubic-bezier(0.25, 1, 0.5, 1)';
+					btn.style.opacity = '1';
+					btn.style.transform = 'translate(-50%, -50%) scale(1)';
 				}
 
 				this.showEdgeButtons(edge);
@@ -1330,12 +1323,10 @@ class IframeMatrixViewer {
 				this.activeEdges[edge] = false;
 				if (this.edgeStates[edge]) {
 					this.edgeStates[edge].active = false;
-					// Cancelar timer de entrada pendiente si el mouse sale antes
 					if (this.edgeStates[edge].enterTimer) {
 						clearTimeout(this.edgeStates[edge].enterTimer);
 						this.edgeStates[edge].enterTimer = null;
 					}
-					this.edgeStates[edge].entering = false;
 				}
 
 				this.collapseEdge(detector, edge);
@@ -1349,62 +1340,40 @@ class IframeMatrixViewer {
 				}
 			});
 
-			// mousemove: arco elástico (sin Shift) o seguimiento directo (con Shift)
+			// mousemove: transición fluida y amortiguada del círculo hacia el cursor (inercia magnética suave)
 			detector.addEventListener('mousemove', (e) => {
 				if (this.isLoading || this.animationInProgress) return;
 				if (!this.activeEdges[edge]) return;
-
-				// Bloquear seguimiento durante la animación de entrada
-				if (this.edgeStates[edge] && this.edgeStates[edge].entering) return;
 
 				const btn = detector.querySelector('.edge-nav-button');
 				if (!btn) return;
 
 				const rect = detector.getBoundingClientRect();
 
-				// Con Shift: el botón se desvincula del arco y sigue al mouse directamente
+				// Con Shift: seguimiento libre en dos dimensiones
 				if (this.ctrlPressed) {
 					if (this.edgeStates[edge]) this.edgeStates[edge].shifted = true;
-					btn.style.transition = 'opacity 0.3s ease';
+					btn.style.transition = 'left 0.08s ease-out, top 0.08s ease-out, opacity 0.2s ease';
 					btn.style.left = `${e.clientX - rect.left}px`;
 					btn.style.top = `${e.clientY - rect.top}px`;
 					return;
 				}
 
-				// Sin Shift: arco elíptico (posición en la mitad correspondiente al borde)
-				btn.style.transition = '';
-				let progress = 0;
-				let archDepth = 0;
-				const { innerWidth, innerHeight } = window;
+				// Sin Shift: deslizamiento amortiguado y sedoso a lo largo de la barra
+				btn.style.transition = 'left 0.12s cubic-bezier(0.25, 1, 0.5, 1), top 0.12s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.2s ease, transform 0.2s ease';
 
 				if (edge === 'top' || edge === 'bottom') {
-					progress = (e.clientX - rect.left) / rect.width;
-					// Magnitud contraria: en esquinas el botón se aleja del borde, en el centro se acerca
-					const archFactor = 1 - Math.sin(progress * Math.PI);
-					archDepth = archFactor * (innerHeight * 0.25);
-
-					btn.style.left = `${e.clientX - rect.left}px`;
-					if (edge === 'top') {
-						btn.style.top = `${archDepth}px`;
-						btn.style.bottom = '';
-					} else {
-						btn.style.bottom = `${archDepth}px`;
-						btn.style.top = '';
-					}
+					// Par vertical: el círculo se desplaza en X siguiendo el cursor sin salirse de la barra
+					const targetX = Math.max(25, Math.min(rect.width - 25, e.clientX - rect.left));
+					btn.style.left = `${targetX}px`;
+					btn.style.top = '50%';
+					btn.style.bottom = '';
 				} else {
-					progress = (e.clientY - rect.top) / rect.height;
-					// Magnitud contraria: en esquinas el botón se aleja del borde, en el centro se acerca
-					const archFactor = 1 - Math.sin(progress * Math.PI);
-					archDepth = archFactor * (innerWidth * 0.25);
-
-					btn.style.top = `${e.clientY - rect.top}px`;
-					if (edge === 'left') {
-						btn.style.left = `${archDepth}px`;
-						btn.style.right = '';
-					} else {
-						btn.style.right = `${archDepth}px`;
-						btn.style.left = '';
-					}
+					// Par horizontal: el círculo se desplaza en Y siguiendo el cursor sin salirse de la barra
+					const targetY = Math.max(25, Math.min(rect.height - 25, e.clientY - rect.top));
+					btn.style.top = `${targetY}px`;
+					btn.style.left = '50%';
+					btn.style.right = '';
 				}
 			});
 
@@ -1469,22 +1438,27 @@ class IframeMatrixViewer {
 	expandEdge(detector, edge) {
 		detector.classList.add('expanded');
 
-		// Expandir el grosor de la hitbox para capturar mejor el movimiento
+		// Magnitudes de viewport reducidas y esbeltas:
+		// Par vertical: altura en vh (window.verticalEdgeSize || '5.5vh'), ancho 100vw
+		// Par horizontal: anchura en vw (window.horizontalEdgeSize || '4.5vw'), alto 100vh
+		const vHeight = window.verticalEdgeSize || '5.5vh';
+		const hWidth = window.horizontalEdgeSize || '4.5vw';
+
 		if (edge === 'top' || edge === 'bottom') {
-			detector.style.height = '15vh';
+			detector.style.height = vHeight;
 		} else {
-			detector.style.width = '15vw';
+			detector.style.width = hWidth;
 		}
 
-		// Centrar el botón inicialmente
+		// Centrar suavemente en el eje transversal del borde
 		const btn = detector.querySelector('.edge-nav-button');
 		if (btn) {
 			if (edge === 'top' || edge === 'bottom') {
-				btn.style.left = '50%';
-				btn.style[edge] = '0px';
-			} else {
 				btn.style.top = '50%';
-				btn.style[edge] = '0px';
+				btn.style.bottom = '';
+			} else {
+				btn.style.left = '50%';
+				btn.style.right = '';
 			}
 		}
 	}
@@ -1493,21 +1467,9 @@ class IframeMatrixViewer {
 		// Resetear posición y transformación del botón suavemente
 		const btn = detector.querySelector('.edge-nav-button');
 		if (btn) {
-			// Dejar que el CSS anime la opacidad a 0 y la escala a 0.5 suavemente
-			btn.style.opacity = '';
-			btn.style.transform = '';
-			btn.style.transition = '';
-			setTimeout(() => {
-				if (!this.activeEdges[edge]) {
-					if (edge === 'top' || edge === 'bottom') {
-						btn.style.left = '50%';
-						btn.style[edge] = '0px';
-					} else {
-						btn.style.top = '50%';
-						btn.style[edge] = '0px';
-					}
-				}
-			}, 300);
+			btn.style.opacity = '0';
+			btn.style.transform = 'translate(-50%, -50%) scale(0.5)';
+			btn.style.transition = 'opacity 0.25s ease, transform 0.25s ease';
 		}
 
 		// Limpiar timeout pendiente si lo hubiera
