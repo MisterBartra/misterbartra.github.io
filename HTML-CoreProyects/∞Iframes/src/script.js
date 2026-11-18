@@ -1329,11 +1329,11 @@ class IframeMatrixViewer {
 				if (btn) {
 					const rect = detector.getBoundingClientRect();
 					if (edge === 'top' || edge === 'bottom') {
-						const entryX = e.clientX ? Math.max(25, Math.min(rect.width - 25, e.clientX - rect.left)) : (rect.width / 2);
+						const entryX = e.clientX ? Math.max(16, Math.min(rect.width - 16, e.clientX - rect.left)) : (rect.width / 2);
 						btn.style.left = `${entryX}px`;
 						btn.style.top = '50%';
 					} else {
-						const entryY = e.clientY ? Math.max(25, Math.min(rect.height - 25, e.clientY - rect.top)) : (rect.height / 2);
+						const entryY = e.clientY ? Math.max(16, Math.min(rect.height - 16, e.clientY - rect.top)) : (rect.height / 2);
 						btn.style.top = `${entryY}px`;
 						btn.style.left = '50%';
 					}
@@ -1394,13 +1394,13 @@ class IframeMatrixViewer {
 
 				if (edge === 'top' || edge === 'bottom') {
 					// Par vertical: el círculo se desplaza en X siguiendo el cursor sin salirse de la barra
-					const targetX = Math.max(25, Math.min(rect.width - 25, e.clientX - rect.left));
+					const targetX = Math.max(16, Math.min(rect.width - 16, e.clientX - rect.left));
 					btn.style.left = `${targetX}px`;
 					btn.style.top = '50%';
 					btn.style.bottom = '';
 				} else {
 					// Par horizontal: el círculo se desplaza en Y siguiendo el cursor sin salirse de la barra
-					const targetY = Math.max(25, Math.min(rect.height - 25, e.clientY - rect.top));
+					const targetY = Math.max(16, Math.min(rect.height - 16, e.clientY - rect.top));
 					btn.style.top = `${targetY}px`;
 					btn.style.left = '50%';
 					btn.style.right = '';
@@ -1975,10 +1975,14 @@ class IframeMatrixViewer {
 		return false;
 	}
 
-	// Método para calcular el inset basado en la profundidad
+	// Método para calcular el inset basado en la profundidad (optimizado y esbelto para desktop)
 	calculateInset(depth) {
-		// Inset responsivo: base de 2vh + incremento por nivel
-		return `calc(2vh + 1vw + ${depth * 0.5}vh)`;
+		// Soporte para personalización vía window (ej. window.insetSize = "22px")
+		if (window.insetSize || window.marginSize) {
+			return window.insetSize || window.marginSize;
+		}
+		// Inset esbelto de escritorio (~20px a 24px en 1080p): base ligera de 1vh + 0.5vw + incremento sutil por nivel
+		return `calc(1vh + 0.5vw + ${depth * 0.25}vh)`;
 	}
 
 	// Método para renderizar los detectores de bordes (instanciación inteligente)
