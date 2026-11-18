@@ -1,3 +1,20 @@
+// Directorio base autodetectado del script para cargar módulos complementarios de forma robusta
+const SCRIPT_DIR = (() => {
+	if (typeof document !== 'undefined') {
+		if (document.currentScript && document.currentScript.src) {
+			return document.currentScript.src.substring(0, document.currentScript.src.lastIndexOf('/') + 1);
+		}
+		const scripts = document.getElementsByTagName('script');
+		for (let i = scripts.length - 1; i >= 0; i--) {
+			const src = scripts[i].src;
+			if (src && src.includes('script.js')) {
+				return src.substring(0, src.lastIndexOf('/') + 1);
+			}
+		}
+	}
+	return './src/';
+})();
+
 // Clase principal para gestionar la aplicación:
 class IframeMatrixViewer {
 	constructor(rootElement) {
@@ -59,6 +76,9 @@ class IframeMatrixViewer {
 
 			// Renderizar la interfaz
 			this.render();
+
+			// Cargar e inicializar la Cruceta Táctil Móvil de forma desacoplada
+			await this.loadMobileCruceta();
 
 			// Configurar eventos
 			//this.setupEventListeners();
@@ -1759,7 +1779,7 @@ class IframeMatrixViewer {
 				return;
 			}
 			const script = document.createElement('script');
-			script.src = './src/interactive-governance.js';
+			script.src = SCRIPT_DIR + 'interactive-governance.js';
 			script.onload = () => {
 				this.governance = new window.InteractiveGovernance();
 				resolve();
@@ -1767,6 +1787,40 @@ class IframeMatrixViewer {
 			script.onerror = () => {
 				console.warn('No se pudo cargar interactive-governance.js');
 				resolve(); // Resolvemos igual para no bloquear la app
+			};
+			document.head.appendChild(script);
+		});
+	}
+
+	loadMobileCruceta() {
+		return new Promise((resolve) => {
+			if (typeof window.MobileCrucetaController !== 'undefined') {
+				this.mobileCruceta = new window.MobileCrucetaController(this);
+				resolve();
+				return;
+			}
+
+			// Cargar hoja de estilos táctiles de mobile-cruceta
+			const existingLink = document.querySelector('link[href*="mobile-cruceta.css"]');
+			if (!existingLink) {
+				const link = document.createElement('link');
+				link.rel = 'stylesheet';
+				link.href = SCRIPT_DIR + 'mobile-cruceta.css';
+				document.head.appendChild(link);
+			}
+
+			// Cargar módulo dinámico de mobile-cruceta
+			const script = document.createElement('script');
+			script.src = SCRIPT_DIR + 'mobile-cruceta.js';
+			script.onload = () => {
+				if (typeof window.MobileCrucetaController !== 'undefined') {
+					this.mobileCruceta = new window.MobileCrucetaController(this);
+				}
+				resolve();
+			};
+			script.onerror = () => {
+				console.warn('No se pudo cargar mobile-cruceta.js');
+				resolve();
 			};
 			document.head.appendChild(script);
 		});
