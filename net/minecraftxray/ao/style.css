@@ -1,0 +1,17 @@
+html {
+    background-color: #F8F8F8;
+    font-family: Arial, Helvetica, sans-serif;
+    scroll-behavior: smooth;
+}
+#header,#menubar { text-align: center; }
+#menubar { margin-top: 1em; }
+#menubar ul { margin: 0; padding: 0; display: inline-block; list-style-type: none; }
+#menubar li { float: left; }
+#menubar li a { display: block; padding: 8px 16px; background-color: #DDD; text-decoration: none; letter-spacing: 1px; color:#000; }
+#menubar li a:hover { text-decoration: underline; }
+#main { margin: 0 auto 2em auto; width: 800px; line-height: 1.5; }
+#featurelist > li { margin-top: .75em; }
+table { width: 100%; }
+#coordstable { border: 1px solid; }
+tr:nth-child(even) { background-color: #E5E5E5; }
+td { padding: 2px 4px; }

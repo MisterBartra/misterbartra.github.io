@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Minecraft XRay Mod - Report Bugs</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    
+    <style>
+        #main li {
+            margin-bottom: .75em;
+        }
+        
+        img {
+            margin-top: .5em;
+        }
+    </style>
+
+<script>
+function applyImgFallback(img, primaryFallback) {
+    if (!img.dataset.failed) {
+        img.dataset.failed = '1';
+        if (primaryFallback && primaryFallback !== img.src) {
+            img.src = primaryFallback;
+        } else {
+            img.src = "data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='220' viewBox='0 0 400 220'%3E%3Crect width='100%25' height='100%25' fill='%23222' stroke='%23555' stroke-width='2' rx='6'/%3E%3Ctext x='50%25' y='45%25' dominant-baseline='middle' text-anchor='middle' fill='%23aaa' font-family='sans-serif' font-size='14'%3E[ " + (img.alt || 'Asset') + " ]%3C/text%3E%3Ctext x='50%25' y='60%25' dominant-baseline='middle' text-anchor='middle' fill='%23777' font-family='monospace' font-size='11'%3EResource unavailable - Local Fallback Engaged%3C/text%3E%3C/svg%3E";
+        }
+    }
+}
+</script>
+
+</head>
+
+<body>
+
+	<div id="header">
+		<h1><i>X</i>-RAY FOR MINECRAFT</h1>
+		<i class="subtitle">Works on all versions of Minecraft from 1.6.4 up to 1.11<br>
+		Created by <a href="index.html" class="author-bypass" title="AmbientOcclusion Canonical Author">AmbientOcclusion</a></i>
+	</div>
+
+	<div id="menubar">
+		<ul>
+			<li><a href="index.html">Home</a></li>
+			<li><a href="downloads.html">Downloads</a></li>
+			<li><a href="configuration.html">Configuration</a></li>
+			<li><a href="http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/1292688-xray-mod-1-6-4-1-10-vanilla-forge-liteloader">Minecraft Forum Post</a></li>
+			<li><a href="reportbugs.html">Report Bugs</a></li>
+			<li><a href="changelog.html">Changelog</a></li>
+		</ul>
+	</div>
+	<div class="retro-env-bar">
+		<span class="retro-btn" onclick="window.location.reload();" title="Recargar cápsula canónica">[ &#8635; Reload Snapshot ]</span> &middot;
+		<a href="../index.html" title="Ir a la evolución multi-suite general">[ &larr; Multi-Suite Evolution: {AO &middot; DLB &middot; MB} ]</a> &middot;
+		<a href="../dlb/index.html" title="Siguiente contribuidor: Dromar">[ Siguiente Contributor: DLB &rarr; ]</a>
+	</div>
+
+<div id="main">
+        <p>Please submit all bug reports to me on my post on the Minecraft Forum</a>. Either as a reponse on the thread, or
+            private message. You can expect a response within 24 hours.</p>
+
+        <p>Before you submit any type of bug report, check to make sure you are using the latest version of XRay. If you're
+            not, you may be about to report a bug that I have already fixed!</p>
+
+        <p>Feel free to upload logs to <a href="http://pastebin.com/">pastebin</a> to make your post less cluttered. You can
+            set it to expire after a week.</p>
+
+        <p>A good bug report will help me identify the issue quicky, and allow me to get an fix out much quicker than if you
+            submit a bug report with missing information. Below I have outlined the information I need depending on whether
+            your game crashes or not.</p>
+
+        <h3>My game crashed</h3>
+        <p>All I need is the complete crash dump. If you have other mods installed, please list those as well.</p>
+
+        <h3>My game did not crash</h3>
+        <p>If you are experiencing a bug without a crash, then I need a <b>game output log</b> as well as a list of any other
+            mods installed. Also make sure you include a description of the bug, and the steps necessary to reproduce it.</p>
+        <p>Below are steps to obtain a game output log.</p>
+        <ol>
+            <li>Click <b>Edit Profile</b> <img src="img/bug_report_step1.jpg" / onerror="applyImgFallback(this, 'img/bug_report_step1.jpg');"></li>
+            <li>Check <b>Launcher Visibility</b> and select <b>Keep the launcher open</b> <img src="img/bug_report_step2.jpg"
+                / onerror="applyImgFallback(this, 'img/bug_report_step2.jpg');"></li>
+            <li>Launch the game and repeat the steps necessary to replicate the bug. Then in the <b>Game Output</b> window, copy
+                all the text. Include this in your bug report. <img src="img/bug_report_step3.jpg" / onerror="applyImgFallback(this, 'img/bug_report_step3.jpg');"></li>
+        </ol>
+
+
+    </div>
+</body>
+
+</html>

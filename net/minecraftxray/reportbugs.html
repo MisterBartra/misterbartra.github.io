@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Minecraft XRay Mod &middot; Report Bugs Guide</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<script src="js/xray-fallback.js"></script>
+	<script src="js/xray-core.js"></script>
+</head>
+<body>
+
+	<div id="header">
+		<h1><i>X</i>-RAY FOR MINECRAFT</h1>
+		<i class="subtitle">Works on all versions of Minecraft from 1.6.4 up to 1.21.6+<br>
+		Created by <a href="ao/index.html" class="author-bypass" title="Ver suite canónica de AmbientOcclusion">AmbientOcclusion</a> &middot; 
+		Extended by <a href="dlb/index.html" class="author-bypass" title="Ver suite de infraestructura de Dromar">DromarLeBanisseur</a> &middot; 
+		Modernized by <a href="mb/index.html" class="author-bypass" title="Ver suite moderna de MisterBartra">MisterBartra</a></i>
+	</div>
+
+	<div id="menubar">
+		<ul>
+			<li><a href="index.html">Home</a></li>
+			<li><a href="downloads.html">Downloads</a></li>
+			<li><a href="configuration.html">Configuration</a></li>
+			<li><a href="changelog.html">Changelog</a></li>
+			<li><a href="reportbugs.html" class="active">Report Bugs</a></li>
+			<li><a href="faq.html">FAQ</a></li>
+			<li><a href="ao/index.html"><span class="era-badge era-ao">AO Canon</span></a></li>
+			<li><a href="dlb/index.html"><span class="era-badge era-dlb">DLB Suite</span></a></li>
+			<li><a href="mb/index.html"><span class="era-badge era-mb">MB Suite</span></a></li>
+		</ul>
+	</div>
+
+	<div class="retro-env-bar">
+		<span class="retro-btn" onclick="window.location.reload();" title="Recargar vista actual">[ &#8635; Reload View ]</span> &middot;
+		<a href="ao/index.html" title="Ir a Era 1: AmbientOcclusion">[ &larr; Era 1: AO ]</a> &middot;
+		<a href="dlb/index.html" title="Ir a Era 2: DromarLeBanisseur">[ Era 2: DLB ]</a> &middot;
+		<a href="mb/index.html" title="Ir a Era 3: MisterBartra">[ Era 3: MB &rarr; ]</a> &middot;
+		<span>[ Snapshot Verified &middot; Multi-Suite Active ]</span>
+	</div>
+
+	<div id="main">
+		<div class="bypass-nav">
+			<strong>Reporte de Errores y Soporte:</strong> Sigue estos pasos para identificar y reportar problemas de manera efectiva seg&uacute;n la suite utilizada.
+		</div>
+
+		<h2>Gu&iacute;a Paso a Paso para Reportar Fallos (Can&oacute;nica AO)</h2>
+		<p>Antes de reportar un fallo, es fundamental obtener el informe de error generado por el juego:</p>
+
+		<div style="margin: 1.5em 0;">
+			<h3>Paso 1: Localizar el Reporte de Crash</h3>
+			<p>Abre la carpeta de Minecraft (<code>.minecraft</code>) y busca el subdirectorio <code>crash-reports</code>.</p>
+			<p><a href="ao/img/bug_report_step1.jpg"><img src="ao/img/bug_report_step1.jpg" data-raw-archive="https://web.archive.org/web/20190818165617im_/http://minecraftxray.net/img/bug_report_step1.jpg" alt="Paso 1: Carpeta crash-reports" style="max-width:100%; border:1px solid #CCC;" onerror="applyImgFallback(this, 'ao/img/bug_report_step1.jpg');" /></a></p>
+		</div>
+
+		<div style="margin: 1.5em 0;">
+			<h3>Paso 2: Abrir el Informe M&aacute;s Reciente</h3>
+			<p>Localiza el archivo de texto generado con la fecha y hora exacta del error y &aacute;brelo con un editor de texto.</p>
+			<p><a href="ao/img/bug_report_step2.jpg"><img src="ao/img/bug_report_step2.jpg" data-raw-archive="https://web.archive.org/web/20190818165617im_/http://minecraftxray.net/img/bug_report_step2.jpg" alt="Paso 2: Archivo de reporte" style="max-width:100%; border:1px solid #CCC;" onerror="applyImgFallback(this, 'ao/img/bug_report_step2.jpg');" /></a></p>
+		</div>
+
+		<div style="margin: 1.5em 0;">
+			<h3>Paso 3: Identificar el Rastro de la Excepci&oacute;n (Stacktrace)</h3>
+			<p>Copia el bloque completo de la traza de ejecuci&oacute;n para adjuntarlo a tu reporte de fallo.</p>
+			<p><a href="ao/img/bug_report_step3.jpg"><img src="ao/img/bug_report_step3.jpg" data-raw-archive="https://web.archive.org/web/20190818165617im_/http://minecraftxray.net/img/bug_report_step3.jpg" alt="Paso 3: Stacktrace del fallo" style="max-width:100%; border:1px solid #CCC;" onerror="applyImgFallback(this, 'ao/img/bug_report_step3.jpg');" /></a></p>
+		</div>
+
+		<h2>Canales de Reporte seg&uacute;n la Suite</h2>
+		<table class="ao-table">
+			<tr>
+				<th>Suite</th>
+				<th>Versiones</th>
+				<th>Canal Recomendado</th>
+				<th>Informaci&oacute;n Requerida</th>
+			</tr>
+			<tr>
+				<td><span class="era-badge era-mb">MB Suite</span></td>
+				<td>1.21.6+</td>
+				<td><a href="https://github.com/misterbartra/AO-DLB/issues" target="_blank">GitHub Issues (MisterBartra)</a></td>
+				<td>Crash report, versi&oacute;n de Java, mods instalados y archivo <code>xray.json</code>.</td>
+			</tr>
+			<tr>
+				<td><span class="era-badge era-dlb">DLB Suite</span></td>
+				<td>1.12.2 &ndash; 1.20.x</td>
+				<td><a href="https://github.com/DromarLeBanisseur/AO-DLB/issues" target="_blank">GitHub Issues (Dromar)</a></td>
+				<td>Log de LaunchWrapper y par&aacute;metros de arranque del lanzador.</td>
+			</tr>
+			<tr>
+				<td><span class="era-badge era-ao">AO Canon</span></td>
+				<td>1.6.4 &ndash; 1.11.x</td>
+				<td>C&aacute;psula hist&oacute;rica preservada</td>
+				<td>La suite original de AmbientOcclusion es de solo lectura y preservaci&oacute;n hist&oacute;rica.</td>
+			</tr>
+		</table>
+
+	</div>
+</body>
+</html>

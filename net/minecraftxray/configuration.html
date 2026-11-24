@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Minecraft XRay Mod &middot; Configuration & Missing Blocks Guide</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<script src="js/xray-fallback.js"></script>
+	<script src="js/xray-core.js"></script>
+</head>
+<body>
+
+	<div id="header">
+		<h1><i>X</i>-RAY FOR MINECRAFT</h1>
+		<i class="subtitle">Works on all versions of Minecraft from 1.6.4 up to 1.21.6+<br>
+		Created by <a href="ao/index.html" class="author-bypass" title="Ver suite canónica de AmbientOcclusion">AmbientOcclusion</a> &middot; 
+		Extended by <a href="dlb/index.html" class="author-bypass" title="Ver suite de infraestructura de Dromar">DromarLeBanisseur</a> &middot; 
+		Modernized by <a href="mb/index.html" class="author-bypass" title="Ver suite moderna de MisterBartra">MisterBartra</a></i>
+	</div>
+
+	<div id="menubar">
+		<ul>
+			<li><a href="index.html">Home</a></li>
+			<li><a href="downloads.html">Downloads</a></li>
+			<li><a href="configuration.html" class="active">Configuration</a></li>
+			<li><a href="changelog.html">Changelog</a></li>
+			<li><a href="reportbugs.html">Report Bugs</a></li>
+			<li><a href="faq.html">FAQ</a></li>
+			<li><a href="ao/index.html"><span class="era-badge era-ao">AO Canon</span></a></li>
+			<li><a href="dlb/index.html"><span class="era-badge era-dlb">DLB Suite</span></a></li>
+			<li><a href="mb/index.html"><span class="era-badge era-mb">MB Suite</span></a></li>
+		</ul>
+	</div>
+
+	<div class="retro-env-bar">
+		<span class="retro-btn" onclick="window.location.reload();" title="Recargar vista actual">[ &#8635; Reload View ]</span> &middot;
+		<a href="ao/index.html" title="Ir a Era 1: AmbientOcclusion">[ &larr; Era 1: AO ]</a> &middot;
+		<a href="dlb/index.html" title="Ir a Era 2: DromarLeBanisseur">[ Era 2: DLB ]</a> &middot;
+		<a href="mb/index.html" title="Ir a Era 3: MisterBartra">[ Era 3: MB &rarr; ]</a> &middot;
+		<span>[ Snapshot Verified &middot; Multi-Suite Active ]</span>
+	</div>
+
+	<div id="main">
+		<div class="bypass-nav">
+			<strong>Gu&iacute;a de Configuraci&oacute;n Multi-Suite:</strong> Opciones para la pantalla de coordenadas, resoluci&oacute;n de bloques no reconocidos y persistencia de perfiles.
+		</div>
+
+		<!-- ANCLA CRITICA: MISSING BLOCKS (Requerida por XRaySwing.java) -->
+		<a name="missingblocks"></a>
+		<div id="missingblocks" class="timeline-section timeline-ao">
+			<h2 style="margin-top:0;">Missing Blocks Guide (Bloques No Reconocidos)</h2>
+			<p>Al abrir la interfaz de configuraci&oacute;n de X-Ray (tecla predeterminada: <kbd>J</kbd>), el mod valida la lista de identificadores contra los registros del cliente.</p>
+			<p>Si un bloque configurado en un perfil no existe en el juego o proviene de un mod que no se encuentra instalado en la sesi&oacute;n actual, se mostrar&aacute; una notificaci&oacute;n de advertencia y dicho bloque no se renderizar&aacute; para evitar errores de renderizado.</p>
+			<h3>Resoluci&oacute;n seg&uacute;n la Suite:</h3>
+			<ul>
+				<li><strong>Suite Can&oacute;nica AO:</strong> Requiere editar manualmente el archivo <code>xray.properties</code> o a&ntilde;adir el ID num&eacute;rico / alfanum&eacute;rico correspondiente desde la GUI de Swing.</li>
+				<li><strong>Suite Moderna MB (1.21.6+):</strong> Incluye <strong>resoluci&oacute;n autom&aacute;tica de registros</strong> mediante <code>BuiltInRegistries.BLOCK</code>. Si se renombra un bloque o se introduce un tag (por ejemplo <code>#minecraft:ores</code> o <code>@create:casings</code>), el motor resuelve din&aacute;micamente todas las variantes en tiempo de ejecuci&oacute;n sin requerir IDs est&aacute;ticos.</li>
+			</ul>
+		</div>
+
+		<!-- ANCLA CRITICA: COORDS TABLE -->
+		<a name="coordstable-section"></a>
+		<h2>Opciones de la Pantalla de Coordenadas (HUD)</h2>
+		<p>En la parte inferior de la interfaz gr&aacute;fica (<kbd>J</kbd>) existe un campo de texto editable donde puedes personalizar el formato del visualizador de coordenadas (<kbd>F</kbd>).
+		A continuaci&oacute;n se listan las variables de sustituci&oacute;n admitidas:</p>
+
+		<table id="coordstable">
+			<tr>
+				<th>Variable</th>
+				<th>Descripci&oacute;n</th>
+				<th>Ejemplo de Salida</th>
+			</tr>
+			<tr><td><code>{X}, {Y}, {Z}</code></td><td>Coordenadas enteras del jugador.</td><td>128, 64, -256</td></tr>
+			<tr><td><code>{X1}, {Y1}, {Z1}</code></td><td>Coordenadas con 1 decimal de precisi&oacute;n.</td><td>128.4, 64.0, -256.7</td></tr>
+			<tr><td><code>{X2}, {Y2}, {Z2}</code></td><td>Coordenadas con 2 decimales de precisi&oacute;n.</td><td>128.42, 64.00, -256.71</td></tr>
+			<tr><td><code>{ChunkX}, {ChunkY}, {ChunkZ}</code></td><td>Coordenadas del chunk en el que te encuentras.</td><td>8, 4, -16</td></tr>
+			<tr><td><code>{ChunkPosX}, {ChunkPosY}, {ChunkPosZ}</code></td><td>Posici&oacute;n relativa (0&ndash;15) dentro del chunk.</td><td>0, 0, 15</td></tr>
+			<tr><td><code>{FPS}</code></td><td>Cuadros por segundo actuales.</td><td>144 fps</td></tr>
+			<tr><td><code>{Biome}</code></td><td>Nombre del bioma actual.</td><td>Plains, Deep Dark</td></tr>
+			<tr><td><code>{BlockLight}, {SkyLight}</code></td><td>Nivel de luz de bloque y luz del cielo.</td><td>0, 15</td></tr>
+			<tr><td><code>{LookingAt}</code></td><td>Coordenadas del bloque al que est&aacute;s apuntando.</td><td>130, 63, -255</td></tr>
+			<tr><td><code>{Compass}</code></td><td>Direcci&oacute;n cardinal hacia la que miras.</td><td>North, South-East</td></tr>
+			<tr><td><code>{RenderedEntities}, {TotalEntities}</code></td><td>Entidades renderizadas y totales en memoria.</td><td>12 / 85</td></tr>
+			<tr><td><code>{Clock}, {24Clock}</code></td><td>Hora actual del juego en formato 12h o 24h.</td><td>14:30</td></tr>
+			<tr><td><code>{Fly}</code></td><td>Estado del modo de vuelo y multiplicador de velocidad.</td><td>Fly: ON (2.0x)</td></tr>
+		</table>
+		<p><em>Tip de formato:</em> Puedes utilizar c&oacute;digos de color usando el signo de d&oacute;lar (<code>$</code>) en lugar de la secci&oacute;n (<code>&sect;</code>). Por ejemplo: <code>$aX: {X} $bY: {Y} $cZ: {Z}</code>.</p>
+
+		<h2>Formatos de Persistencia y Archivos de Configuraci&oacute;n</h2>
+		<table class="ao-table">
+			<tr>
+				<th>Formato</th>
+				<th>Ubicaci&oacute;n</th>
+				<th>Suite</th>
+				<th>Estructura</th>
+			</tr>
+			<tr>
+				<td><code>xray.json</code></td>
+				<td><code>.minecraft/config/xray.json</code></td>
+				<td><span class="era-badge era-mb">MB Suite</span></td>
+				<td>JSON jer&aacute;rquico con perfiles din&aacute;micos, tags, descriptores y configuraci&oacute;n de shaders.</td>
+			</tr>
+			<tr>
+				<td><code>xray.properties</code></td>
+				<td><code>.minecraft/xray.properties</code></td>
+				<td><span class="era-badge era-ao">AO Canon</span> &middot; <span class="era-badge era-dlb">DLB</span></td>
+				<td>Clave-valor tradicional (<code>key_xray=45</code>, <code>blocks=1,14,15,56</code>).</td>
+			</tr>
+			<tr>
+				<td>Par&aacute;metros CLI</td>
+				<td>Argumentos de JVM</td>
+				<td><span class="era-badge era-dlb">DLB Suite</span></td>
+				<td><code>--tweakClass net.minecraftxray.dlb.XRayTweaker</code> con aislamiento en tiempo de arranque.</td>
+			</tr>
+		</table>
+		<p><a href="ao/configuration.html"><strong>Consultar la gu&iacute;a de configuraci&oacute;n original de AmbientOcclusion &rarr;</strong></a></p>
+
+	</div>
+</body>
+</html>

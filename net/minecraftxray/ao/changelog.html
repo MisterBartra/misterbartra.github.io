@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Minecraft XRay Mod - Changelog</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link rel="stylesheet" type="text/css" href="style.css">
+
+
+<script>
+function applyImgFallback(img, primaryFallback) {
+    if (!img.dataset.failed) {
+        img.dataset.failed = '1';
+        if (primaryFallback && primaryFallback !== img.src) {
+            img.src = primaryFallback;
+        } else {
+            img.src = "data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='220' viewBox='0 0 400 220'%3E%3Crect width='100%25' height='100%25' fill='%23222' stroke='%23555' stroke-width='2' rx='6'/%3E%3Ctext x='50%25' y='45%25' dominant-baseline='middle' text-anchor='middle' fill='%23aaa' font-family='sans-serif' font-size='14'%3E[ " + (img.alt || 'Asset') + " ]%3C/text%3E%3Ctext x='50%25' y='60%25' dominant-baseline='middle' text-anchor='middle' fill='%23777' font-family='monospace' font-size='11'%3EResource unavailable - Local Fallback Engaged%3C/text%3E%3C/svg%3E";
+        }
+    }
+}
+</script>
+
+</head>
+
+<body>
+
+	<div id="header">
+		<h1><i>X</i>-RAY FOR MINECRAFT</h1>
+		<i class="subtitle">Works on all versions of Minecraft from 1.6.4 up to 1.11<br>
+		Created by <a href="index.html" class="author-bypass" title="AmbientOcclusion Canonical Author">AmbientOcclusion</a></i>
+	</div>
+
+	<div id="menubar">
+		<ul>
+			<li><a href="index.html">Home</a></li>
+			<li><a href="downloads.html">Downloads</a></li>
+			<li><a href="configuration.html">Configuration</a></li>
+			<li><a href="http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/1292688-xray-mod-1-6-4-1-10-vanilla-forge-liteloader">Minecraft Forum Post</a></li>
+			<li><a href="reportbugs.html">Report Bugs</a></li>
+			<li><a href="changelog.html">Changelog</a></li>
+		</ul>
+	</div>
+	<div class="retro-env-bar">
+		<span class="retro-btn" onclick="window.location.reload();" title="Recargar cápsula canónica">[ &#8635; Reload Snapshot ]</span> &middot;
+		<a href="../index.html" title="Ir a la evolución multi-suite general">[ &larr; Multi-Suite Evolution: {AO &middot; DLB &middot; MB} ]</a> &middot;
+		<a href="../dlb/index.html" title="Siguiente contribuidor: Dromar">[ Siguiente Contributor: DLB &rarr; ]</a>
+	</div>
+
+<div id="main">
+        <pre>
+v47
+- fixed crash when falling out of the world
+- fixed crash on startup on some technic modpacks
+
+v46
+- fixed some blocks not being detected correctly on 1.11
+
+v45
+- fixed a crash if using an older version of Java
+
+v44
+- added support for 1.11
+
+v43
+- fixed occasional crash on startup
+- fixed compatibility issue with OptiFine
+- fixed compatibility issue with Forge on 1.9.4
+
+v42
+- fixed compatibility issue with Forge and other misc bugs
+
+v41
+- fixed compatibility issue with Forge on 1.10.2
+- fixed keybindings not loading correctly
+
+v40
+- rewrote how block names are detected
+- large overhaul of code
+
+v39
+- crash fix when using Malisis Doors mod on 1.7.10
+
+v38
+- even more crash fixes
+
+v37
+- more crash fixes
+
+v36
+- changes how some blocks are detected to fix crashing
+
+v35
+- fixed compatibility issue in v34 with Forge
+
+v34
+- compatibility fixes with various third party mods
+
+v33
+- removed static install option
+- added native LabyMod compatibility
+- internal changes to fix various bugs
+
+v32
+- changed how blocks are detected
+
+v31
+- added {clock} and {24clock} to all versions
+- added 1.9.3 support for continuity
+- fixed {FPS} on 1.5.2, 1.6.4, and 1.7.2-1.7.10
+- fixed {LookingAt} on 1.5.2 & 1.6.4
+- fixed {Biome}, {SkyLight}, and {BlockLight} on 1.6.4
+- fixed xray not working on 1.8.1
+- fixed a crash on 1.8.2
+
+v30
+- added support for 1.10.1 and 1.10.2
+- extended the simplified fps string to all versions
+
+v29
+- fixed crash on 1.10 when traveling above y-coordinate 256
+- added coordinates options {clock} and {24clock} to 1.10
+- fixed a potential crash on startup
+- 1.10 has a simplified fps string
+
+v28
+- fixed a crash on 1.8.4-1.8.9 when rendering xray
+
+v27
+- added ability to move the coordinates down
+
+v26
+- improved 1.5.2 support
+- fixed 1.5.2 forge support
+
+v25
+- added chests to cavefinder's default blocks
+- added support for 1.5.2
+- improved rendering code
+
+v24
+- fixed keybindings set to NONE being reset to defaults
+- XRay now prepopulates the user interface at startup with some blocks
+- fixed a bug causing all blocks to be rendered
+
+v23
+- removed option to load as javaagent
+- added option to do a static install
+- removed duplicate blocks being added in 1.6.4
+- added option to the user interface to forget all learned blocks
+- fixed 'xray version' not in crash dumps in 1.9
+- fixed cave finder not working correctly
+- added support for 1.10
+
+v22
+- added option to load as javaagent
+- fixed brightness not working on 1.9.2
+
+v21
+- fixed keybindings being set to NONE by default
+- added check/uncheck selected buttons to user interface
+- added option to hide branding
+- added option to use alternative fly method
+
+v20
+- redecorated user interface
+- keybindings are now saved in the xray config
+- minor code improvements
+
+v19
+- fix BlackSlab crash
+
+v18
+- general code improvements
+
+v17
+- many code improvements
+- changed how fly works
+
+v16
+- added support for 1.9.4
+- general updates to the code base
+- refactored installer quite a bit
+- fixed crash on LiteLoader for 1.9
+- fixed blocks list inconsistencies after changing languages
+
+v15
+- fixed various crashes
+- fixed various bugs in the fly code
+- fixed json crash at startup
+
+v14
+- added support for 1.9.1 and 1.9.2
+
+v13
+- fixed crash when loading blocks on 1.7.10
+
+v12
+- added option to use double jump instead of fly key to active fly
+
+v11
+- fixed crash on 1.6.4
+- improved block name mappings on 1.6.4
+
+v10
+- fixed crash on forge on 1.9
+- added right click menu to block list in the user interface with some basic options
+- added coordinates options: {RenderedEntities} and {TotalEntities} to all versions
+
+v9
+- fixed players taking fall damage when flying
+- added fly keybinding back due to popular demand
+
+v8
+- fixed xray not working on 1.8 version
+- added coordinates options: {RenderedEntities} and {TotalEntities} to 1.9 version
+- added check to installer to make sure Minecraft isn't running
+
+v7
+- fixed compatibility problem with OptiFine
+
+v6
+- added back support for all versions of Minecraft
+- minor UI bug fixes
+- minor changes to how blocks are loaded
+
+v5 (beta version)
+- added 1.9 support
+- new version scheme: one number
+- blocks are now preloaded at startup from Minecraft so the block list will be complete
+- uses a new method to determine block names which should be much more accurate
+- minor performance improvements
+- numerous little bug fixes
+
+v4.6.3
+- fixed installer changing the set profile when updating all profiles
+- fixed some blocks being listed incorrectly in 1.8.4-1.8.9
+
+v4.6.2-6
+- added fly back -- now called 'survival fly'
+- fly speed works in creative mode even if fly is not enabled
+
+v4.6.1-5
+- fixed crash when running versions of Java below 8
+
+v4.6
+- fixed {skylight} being incorrect on 1.7 versions
+- fixed crash on startup
+- performance improvements
+- a lot of code refactoring that will make maintenance easier in the long run
+- added search field to the user interface to make navigating the block list easier
+- temporarily removed fly to consider separating into two separate mods and to push this update out faster
+
+v4.5
+- added support for 1.8.9
+
+v4.4
+- fixed keybindings being reset
+- improved installer to better handle more profile types
+
+v4.3
+- changed default user interface button to J
+- fixed crash with Forge on startup
+
+v4.2
+- added user interface
+- large code overhaul to accommodate user interface
+- changed version scheme to major.minor
+- removed coordinates keybinding because it can be toggled on/off on the user interface
+- profiles can be added and removed without the need for Minecraft to be restarted
+- can now enable and disable xray or fly without restarting Minecraft
+
+v4.1.8
+- fixed crash when excluding all blocks
+
+v4.1.7 (2015-08-07)
+- added another Options config
+
+v4.1.6 (2015-08-03)
+- moved update message to the welcome screen
+- cleaned up and improved installer code
+
+v4.1.5 (2015-07-30)
+- added support for 1.8.8
+- you now have to add '-Dxray.debug=true' to the JVM Arguments to show why
+  blocks are being rendered in the game output
+- cleaned up installer code
+- added ATLauncher instances to the installer
+- added Technic modpacks to the installer
+- fixed some compatibility issues with previous configs
+- config directory is now fixed to .minecraft/config/xray - you can still use
+  your old config files, but you have to copy them into this directory.
+- added more details to the update message
+
+v4.1.4 (2015-07-24)
+- added 'update all xray versions' option to installer
+- fixed the Minecraft version not being detected in some 3rd party launchers
+- added Forge and LiteLoader profiles to the installer
+
+v4.1.3 (2015-07-23)
+- code cleanup for official release
+
+v4.1.2 (2015-07-21)
+- changed default block configs for cave finder and redstone
+- fixed cave finder not working at all in 1.6.4
+- code cleanup for release
+
+v4.1.1 (2015-07-19)
+- fixed compatibility issues when using optifines multi-core or smooth rendering
+- fixed NullPointerException in 1.6.4
+
+v4.1 (2015-07-19)
+- more logging for troubleshooting
+- fixed fullbright compatibility issue with optifine
+- removed block dump
+- block configs are now case insensitive
+- block configs use inventory block names now
+- will default to config/xray directory if config/xray4 doesn't exist
+- lots of small changes to the code base
+
+v4.0.12 (2015-07-10)
+- Rewrote the installer so in the future more options can be added to it
+- Cleaned up the code quite a bit
+- Fullbright now disables fog in all versions
+- Changed how disable_fog works to support versions prior to 1.8
+- Added fly speed back in all versions
+- Fixed fall damage being disabled in 1.7.10 even after you disable fly
+
+v4.0.11 (2015-07-05)
+- fixed installer crash if Minecraft doesn't have any profiles
+- improved compatibility with technic
+- fixed a crash in 1.6.4
+
+v4.0.10 (2015-06-30)
+- fixed loading crash
+
+v4.0.9 (2015-06-29)
+- Fixed crash if coords.txt is empty
+- Changed internal ASM engine
+- Lots of small little improvements to the code
+- (experimental feature) Added fly speed back in 1.8.4-7
+
+v4.0.8 (2015-06-27)
+- Fixed compilation bug that rendered the entire mod useless (oops).
+
+v4.0.7 (2015-06-27)
+- Cleaned up and improved installer code so you can install XRay even if Minecraft hasn't been run before
+- Added ability to upgrade existing XRay profiles
+- Added ability to install on top of existing modded profiles, rather than being forced to create a new one
+- (experimental feature) Fullbright now disables fog in 1.8.4-7
+
+v4.0.6 (2015-06-22)
+- Restructured code to allow possibility of simple API in the future
+- Fixed problem on case-sensitive operating systems
+- Fixed crash when falling into void
+
+v4.0.5 (2015-06-13)
+- Jar now includes a mcmod.info file
+- Added fly back (but not fly speed yet)
+- Fixed some unnoticed but serious bugs
+
+v4.0.4 (2015-06-09)
+- Changed default XRay.txt file
+- Changed how the keybindings are injected into the game
+
+v4.0.3 (2015-06-06)
+- Added support for 1.8.7
+- Fixed some issues with the new block configuration files
+
+v4.0.2 (2015-06-04)
+- Fixed compatibility bug with Java 6
+
+v4.0.1 (2015-06-04)
+- Fixed duplicate keybinding bug
+- Improved installer stability
+
+v4.0.0 (2015-06-03)
+- Added {compass} to the coordinates
+- Added support for 1.8.4, 1.8.5, and 1.8.6
+- Made crash dumps more useful
+- Improved stability
+- Changed how fullbright works for better compatibility with 3rd party mods
+- Cleaned up a lot of the codebase
+- Changed block config AGAIN
+- Rewrote a lot of installer code to scale better as more versions of Minecraft come out
+- Temporarily removed fly to push update out faster
+
+v3.0.1 (2015-03-27)
+- Fixed crash when trying to change fly speed when fly isn't on
+- Fixed all sides not being rendered on some blocks added by other mods
+
+v3.0 (2015-03-24)
+- Added support for 1.8.1, 1.8.2, and 1.8.3
+- Major rewrite
+
+v2.16.0 (2015-01-12)
+- XRay will now update the configuration if more blocks are added mid-game
+- Redesigned wildcard matching
+- Rewrote the patching code (like 3 times)
+- Rewrote the installer
+- Merged all versions into a single download
+- Will now display if there is an update in-game
+- Lots of code restructuring
+
+v2.15.2 (12/06/14)
+- Fixed crash when Game Directory was modified.
+
+v2.15.1 (12/06/14)
+- Fixed case issue when overwriting a profile
+- Changed how the installer retrieves the jar file
+
+v2.15.0 (12/06/14)
+- Rewrote most of the GUI and installer code
+- Moved Cave Finder to its own profile file.
+- Improved file parsing
+- Added {X1}, {Y1}, {Z1}
+- Fixed a bug in Coords.txt where it would not recognize the section character.
+- Fixed compatibility bug with FML
+
+v2.14.2 (11/29/14)
+- Fixed a bug where blocks would not be rendered when looking straight down in 1.8 and 1.8.1
+
+v2.14.1 (11/27/14)
+- Excluded netherrack and soul_sand from the default XRay.txt
+- Added {Biome} to Coords.txt
+
+v2.14.0 (11/26/14)
+- Made fullbright stay on if you toggle xray while fullbright is already on
+- Made cave mode not automatically turn fullbright on
+- Cave mode now shows lava and torches
+- Restructured and cleaned up a lot of internal code
+- Added XRay 'profiles'
+- Added ability to exclude blocks in XRay config files
+- Added ability to use a wildcard in XRay config files
+- Added {X2}, {Y2}, and {Z2} options for `Coords.txt`
+- Fixed two small performance bugs
+- Added support for 1.8.1
+
+v2.13.0 (11/13/14)
+- Made fly speed customizable
+- Added ability to use formatting codes in `Coords.txt`
+- Added {FPS}, {LookingAt}, {BlockLight}, and {SkyLight} options for `Coords.txt`
+- Small performance improvements
+
+v2.12.0 (11/11/14)
+- Made the coordinates customizable
+- Fixed bug where XRay was disabling itself on 1.8 when loaded via launchwrapper
+- Reinfrastructured internal code
+
+v2.11.1 (11/10/14)
+- Fixed chunks not being rendered in 1.8
+
+v2.11.0 (9/2/14)
+- Updated for 1.8
+
+v2.10.3 (9/1/14)
+- Fixed bug in 1.6.4 where IDs weren't recognized in the config files.
+- Fixed SecurityException when using LiteLoader linked with Forge.
+- Fixed voidfog bug in 1.7.10
+
+v2.10.2 (8/31/14)
+- Now checks for updates on an interval instead of every launch to conserve some bandwidth.
+- Fixed NullPointerException when patching for forge/liteloader
+- Cleaned up code quite a bit
+
+v2.10.1
+- Fixed profile detection code for some LiteLoader profiles
+- Updater now follows HTTP redirect
+- Code clean up
+- Cleaned up 'tile.name.block' blocks in 1.6.4
+
+v2.10.0
+- Started changelog
+- New version scheme
+- Fixed a bug in 1.6.4 where it would not detect mod blocks
+- Lots of code optimization
+- Improved loading performance
+- Fixed asm bug when installing with optifine
+- Added ability to add additional mods
+</pre>
+    </div>
+</body>
+
+</html>

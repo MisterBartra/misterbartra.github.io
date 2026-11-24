@@ -1,0 +1,197 @@
+html {
+    background-color: #F8F8F8;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #222;
+    scroll-behavior: smooth;
+}
+
+#header, #menubar {
+    text-align: center;
+}
+
+#header h1 {
+    margin-bottom: 0.2em;
+    font-size: 2.2em;
+    letter-spacing: 1px;
+}
+
+#header i.subtitle {
+    display: block;
+    font-style: italic;
+    color: #444;
+    line-height: 1.4;
+}
+
+#menubar {
+    margin-top: 1.2em;
+}
+
+#menubar ul {
+    margin: 0;
+    padding: 0;
+    display: inline-block;
+    list-style-type: none;
+}
+
+#menubar li {
+    float: left;
+}
+
+#menubar li a {
+    display: block;
+    padding: 8px 14px;
+    background-color: #DDD;
+    text-decoration: none;
+    letter-spacing: 1px;
+    color: #111;
+    border-right: 1px solid #CCC;
+}
+
+#menubar li:last-child a {
+    border-right: none;
+}
+
+#menubar li a:hover {
+    text-decoration: underline;
+    background-color: #D0D0D0;
+}
+
+#menubar li a.active {
+    background-color: #C0C0C0;
+    font-weight: bold;
+}
+
+#main {
+    margin: 0 auto 2.5em auto;
+    width: 820px;
+    line-height: 1.55;
+}
+
+#featurelist > li {
+    margin-top: 1em;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table.ao-table {
+    border: 1px solid #CCC;
+    margin: 1.2em 0;
+}
+
+table.ao-table th, table.ao-table td {
+    padding: 6px 10px;
+    border: 1px solid #CCC;
+    text-align: left;
+}
+
+table.ao-table th {
+    background-color: #E5E5E5;
+    font-weight: bold;
+}
+
+table.ao-table tr:nth-child(even) {
+    background-color: #F2F2F2;
+}
+
+#coordstable {
+    border: 1px solid #CCC;
+    margin: 1em 0;
+}
+
+#coordstable tr:nth-child(even) {
+    background-color: #E5E5E5;
+}
+
+#coordstable td, #coordstable th {
+    padding: 4px 8px;
+    border: 1px solid #CCC;
+}
+
+/* Sutiles mejoras lineales multi-suite */
+.era-badge {
+    display: inline-block;
+    padding: 2px 7px;
+    font-size: 0.82em;
+    font-weight: bold;
+    border-radius: 3px;
+    vertical-align: middle;
+}
+.era-ao { background-color: #f2dede; color: #a94442; border: 1px solid #ebccd1; }
+.era-dlb { background-color: #d9edf7; color: #31708f; border: 1px solid #bce8f1; }
+.era-mb { background-color: #dff0d8; color: #3c763d; border: 1px solid #d6e9c6; }
+
+.timeline-section {
+    margin: 2em 0;
+    padding: 1.2em 1.4em;
+    background-color: #FAFAFA;
+    border: 1px solid #DDD;
+    border-top: 3px solid #888;
+}
+.timeline-ao { border-top-color: #a94442; }
+.timeline-dlb { border-top-color: #31708f; }
+.timeline-mb { border-top-color: #3c763d; }
+
+.bypass-nav {
+    background-color: #EEE;
+    border: 1px solid #CCC;
+    padding: 8px 12px;
+    margin: 1.2em 0;
+    font-size: 0.9em;
+}
+.bypass-nav a {
+    font-weight: bold;
+    color: #222;
+}
+.bypass-nav a:hover {
+    color: #000;
+}
+
+kbd {
+    background: #EAEAEA;
+    border: 1px solid #BBB;
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-family: monospace;
+    font-size: 0.9em;
+}
+
+/* Vínculos de Autor en el Título Central (Bypass Directo) */
+.author-bypass {
+    color: #000;
+    text-decoration: underline;
+    font-weight: bold;
+    padding: 1px 4px;
+    border-radius: 2px;
+    transition: background-color 0.1s ease;
+}
+.author-bypass:hover {
+    background-color: #DDD;
+    color: #111;
+}
+
+/* Barra Retro Antaño (Reload / Acciones de Entorno) */
+.retro-env-bar {
+    text-align: center;
+    font-size: 0.82em;
+    color: #666;
+    margin: 8px 0 16px 0;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.retro-env-bar a, .retro-env-bar span.retro-btn {
+    color: #333;
+    text-decoration: none;
+    margin: 0 4px;
+    padding: 1px 5px;
+    background: #EEE;
+    border: 1px solid #CCC;
+    border-radius: 2px;
+    cursor: pointer;
+}
+.retro-env-bar a:hover, .retro-env-bar span.retro-btn:hover {
+    background: #E0E0E0;
+    text-decoration: underline;
+    color: #000;
+}

@@ -9,32 +9,13 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     
-    <link rel="stylesheet" href="css/main.css">
-    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/animations.css">
     
     <style>
         .hero-project {
             padding: 8rem 0 4rem;
             text-align: center;
-        }
-        .arch-diagram {
-            width: 100%;
-            border-radius: 12px;
-            background: var(--bg-accent);
-            padding: 2rem;
-            border: 1px solid var(--glass-border);
-            font-family: var(--font-mono);
-            white-space: pre-wrap;
-            color: var(--text-primary);
-            overflow-x: auto;
-            font-size: 0.85rem;
-            line-height: 1.4;
-        }
-        .feature-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-            margin-top: 3rem;
         }
         .tech-pill {
             display: inline-block;
@@ -45,6 +26,200 @@
             font-size: 0.8rem;
             font-family: var(--font-mono);
             margin: 0.2rem;
+            transition: all 0.2s ease;
+        }
+        .tech-pill:hover {
+            border-color: var(--accent-primary);
+            background: rgba(99, 102, 241, 0.15);
+        }
+
+        /* Interactive Architecture Visualizer */
+        .system-diagram-wrapper {
+            background: #0d0d14;
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 2rem;
+            margin: 1.5rem 0 2rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.45);
+        }
+        .diagram-top-row {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+        .diagram-box {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 1.25rem 1.5rem;
+            position: relative;
+            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .diagram-box:hover {
+            transform: translateY(-3px);
+            border-color: rgba(99, 102, 241, 0.4);
+            box-shadow: 0 10px 25px rgba(99, 102, 241, 0.15);
+        }
+        .diagram-box.primary {
+            border-color: rgba(99, 102, 241, 0.3);
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.08), rgba(139, 92, 246, 0.04));
+        }
+        .diagram-box.secondary {
+            border-color: rgba(236, 72, 153, 0.3);
+            background: linear-gradient(135deg, rgba(236, 72, 153, 0.08), rgba(99, 102, 241, 0.04));
+        }
+        .diagram-box.storage {
+            border-color: rgba(56, 189, 248, 0.3);
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.06), rgba(99, 102, 241, 0.03));
+        }
+        .diagram-title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .diagram-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+            font-family: var(--font-mono);
+            line-height: 1.7;
+        }
+        .diagram-list li::before {
+            content: "▹";
+            color: var(--accent-primary);
+            margin-right: 0.5rem;
+        }
+        .diagram-connector {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            color: var(--accent-primary);
+            padding: 0 0.5rem;
+            text-align: center;
+        }
+        .connector-line {
+            width: 100%;
+            min-width: 120px;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+            position: relative;
+            margin: 0.5rem 0;
+        }
+        .connector-line::before, .connector-line::after {
+            content: '';
+            position: absolute;
+            top: -4px;
+            width: 0;
+            height: 0;
+            border-top: 5px solid transparent;
+            border-bottom: 5px solid transparent;
+        }
+        .connector-line::before {
+            left: -2px;
+            border-right: 7px solid var(--accent-primary);
+        }
+        .connector-line::after {
+            right: -2px;
+            border-left: 7px solid var(--accent-secondary);
+        }
+        .diagram-branch-down {
+            display: flex;
+            justify-content: center;
+            position: relative;
+            margin: -1.5rem 0 1.5rem;
+        }
+        .branch-badge {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            padding: 0.35rem 0.9rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-family: var(--font-mono);
+            color: var(--text-muted);
+        }
+        .diagram-db-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+
+        /* Flow Stepper for RAG Pipeline */
+        .rag-pipeline-stepper {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+        .pipeline-step {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            padding: 1.25rem 1.5rem;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            transition: all 0.25s ease;
+        }
+        .pipeline-step:hover {
+            border-color: var(--accent-primary);
+            background: rgba(99, 102, 241, 0.05);
+            transform: translateX(6px);
+        }
+        .step-index {
+            width: 42px;
+            height: 42px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1rem;
+            font-family: var(--font-mono);
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.35);
+        }
+        .step-content {
+            flex-grow: 1;
+        }
+        .step-title {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+        }
+        .step-desc {
+            font-size: 0.88rem;
+            color: var(--text-secondary);
+            margin: 0;
+        }
+        .step-tag {
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            padding: 0.25rem 0.6rem;
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 6px;
+            color: var(--text-muted);
+            white-space: nowrap;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
         }
         
         .code-block {
@@ -60,18 +235,42 @@
         .code-keyword { color: #89ddff; }
         .code-string { color: #c3e88d; }
         .code-comment { color: #546e7a; }
-        
-        .media-placeholder {
-            width: 100%;
-            height: 400px;
-            background: linear-gradient(45deg, rgba(99, 102, 241, 0.1), rgba(236, 72, 153, 0.1));
-            border: 1px dashed var(--accent-primary);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-muted);
-            margin-top: 2rem;
+
+        @media (max-width: 900px) {
+            .diagram-top-row {
+                grid-template-columns: 1fr;
+            }
+            .diagram-connector {
+                padding: 1rem 0;
+            }
+            .connector-line {
+                width: 2px;
+                min-width: 2px;
+                height: 40px;
+            }
+            .connector-line::before {
+                top: -2px;
+                left: -4px;
+                border-left: 5px solid transparent;
+                border-right: 5px solid transparent;
+                border-bottom: 7px solid var(--accent-primary);
+            }
+            .connector-line::after {
+                bottom: -2px;
+                right: -4px;
+                top: auto;
+                border-left: 5px solid transparent;
+                border-right: 5px solid transparent;
+                border-top: 7px solid var(--accent-secondary);
+            }
+            .diagram-db-grid {
+                grid-template-columns: 1fr;
+            }
+            .pipeline-step {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.75rem;
+            }
         }
     </style>
 </head>
@@ -100,8 +299,8 @@
                     <span class="tech-pill">Redis</span>
                     <span class="tech-pill">PostgreSQL</span>
                     <span class="tech-pill">LanceDB</span>
-                    <span class="tech-pill">ElevenLabs TTS</span>
-                    <span class="tech-pill">AssemblyAI (STT)</span>
+                    <span class="tech-pill">ElevenLabs / Edge-TTS</span>
+                    <span class="tech-pill">AssemblyAI & Groq (STT)</span>
                     <span class="tech-pill">Docker</span>
                     <span class="tech-pill">Live2D Cubism</span>
                 </div>
@@ -110,22 +309,84 @@
 
         <section class="section container" style="padding-top: 0;">
             <div class="glass-panel fade-in fade-in-delayed-1" style="margin-bottom: 4rem;">
-                <h2 style="margin-bottom: 1.5rem; font-size: 2rem;" class="gradient-text">System Architecture</h2>
-                <div class="arch-diagram">┌─────────────────────┐                              ┌─────────────────────┐
-│   Browser / UI      │      HTTP/WS (PORT 3000)     │   Express Server    │
-│  - clientChatHandler│◄────────────────────────────►│  - WebSocket Server │
-│  - Live2D Avatar    │                              │  - REST API         │
-│  - STT/TTS Client   │                              │  - Static Files     │
-└─────────────────────┘                              └──────────┬──────────┘
-                                                                │
-                     ┌──────────────────────────────────────────┼──────────────────────┐
-                     │                                          │                      │
-                     ▼                                          ▼                      ▼
-           ┌─────────────────┐                       ┌─────────────────┐    ┌─────────────────┐
-           │     Redis       │                       │   PostgreSQL    │    │    LanceDB      │
-           │ - Session Cache │                       │ - Chat History  │    │ - Vector Store  │
-           │ - Message Queue │                       │ - Payloads      │    │ - Embeddings    │
-           └─────────────────┘                       └─────────────────┘    └─────────────────┘</div>
+                <h2 style="margin-bottom: 0.75rem; font-size: 2rem;" class="gradient-text">System Architecture</h2>
+                <p style="color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 0.95rem;">
+                    High-level architecture showing real-time client interaction, WebSocket orchestration, and resilient Tri-DB persistence.
+                </p>
+
+                <!-- Modern Responsive Architecture Diagram -->
+                <div class="system-diagram-wrapper">
+                    <div class="diagram-top-row">
+                        <div class="diagram-box primary">
+                            <div class="diagram-title">
+                                <span>💻</span> Client / Browser Layer
+                            </div>
+                            <ul class="diagram-list">
+                                <li>clientChatHandler (WebSocket client)</li>
+                                <li>Live2D Cubism Avatar (Lip-sync iframe)</li>
+                                <li>Audio Stream Processor & STT capture</li>
+                                <li>Typewriter UI Stream Renderer</li>
+                            </ul>
+                        </div>
+
+                        <div class="diagram-connector">
+                            <span>Bi-directional WS</span>
+                            <div class="connector-line"></div>
+                            <span>PORT 3000 / JSON + Binary</span>
+                        </div>
+
+                        <div class="diagram-box secondary">
+                            <div class="diagram-title">
+                                <span>⚡</span> Node.js / Express Server
+                            </div>
+                            <ul class="diagram-list">
+                                <li>wsServer (LWW Abort & State Machine)</li>
+                                <li>Hybrid RAG Orchestration Engine</li>
+                                <li>Audio & Predefined Interims Manager</li>
+                                <li>REST Admin & Static Resource Endpoints</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="diagram-branch-down">
+                        <span class="branch-badge">▼ Persistent Data & Vector Plane (Tri-DB Layer) ▼</span>
+                    </div>
+
+                    <div class="diagram-db-grid">
+                        <div class="diagram-box storage">
+                            <div class="diagram-title">
+                                <span>⚡</span> Redis
+                            </div>
+                            <ul class="diagram-list">
+                                <li>Sub-millisecond Session Cache</li>
+                                <li>Audio & Message Queue Buffers</li>
+                                <li>Transient States & Concurrency Locks</li>
+                            </ul>
+                        </div>
+
+                        <div class="diagram-box storage">
+                            <div class="diagram-title">
+                                <span>🐘</span> PostgreSQL
+                            </div>
+                            <ul class="diagram-list">
+                                <li>Structured Relational History</li>
+                                <li>Client Payloads & Booking Records</li>
+                                <li>Cold Context Restoration on Reconnect</li>
+                            </ul>
+                        </div>
+
+                        <div class="diagram-box storage">
+                            <div class="diagram-title">
+                                <span>🎯</span> LanceDB
+                            </div>
+                            <ul class="diagram-list">
+                                <li>Embedded Native Vector Store</li>
+                                <li>Hybrid FTS + Dense Embeddings</li>
+                                <li>Domain Medical Knowledgebase</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
            
                 <div class="feature-grid">
                     <div>
@@ -143,9 +404,9 @@
                         </p>
                     </div>
                     <div>
-                        <h3 style="margin-bottom: 0.5rem; color: var(--text-primary);">Live2D Avatar Sincronization</h3>
+                        <h3 style="margin-bottom: 0.5rem; color: var(--text-primary);">Live2D Avatar Synchronization</h3>
                         <p style="color: var(--text-secondary); font-size: 0.95rem;">
-                            Integrating a Live2D model (Hiyori) via an iframe with a bidirectional `postMessage` queue. Combines Web Audio API and TTS streaming to achieve real-time lip-sync animations with no noticeable delay.
+                            Integrating a Live2D model (Hiyori) via an iframe with a bidirectional `postMessage` queue. Combines Web Audio API and audio streaming to achieve real-time lip-sync animations with no noticeable delay.
                         </p>
                     </div>
                     <div>
@@ -168,19 +429,10 @@
                     <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.75rem; text-align: center;">AI Chat Assistant with Live2D Avatar — Real-time voice & text interaction</p>
                 </div>
 
-                <!-- Demo Video -->
-                <div style="margin-bottom: 2rem;">
-                    <video controls preload="metadata" poster="assets/img/chatrag-hero.jpg" style="width: 100%; border-radius: 12px; border: 1px solid var(--glass-border); background: var(--bg-accent);">
-                        <source src="assets/video/chatrag-demo.mp4" type="video/mp4">
-                        Your browser does not support the video tag.
-                    </video>
-                    <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.75rem; text-align: center;">Demo: Full E2E interaction — STT → RAG → LLM Streaming → TTS → Lip-Sync</p>
-                </div>
-
                 <!-- RAG Pipeline Diagram -->
                 <div>
                     <img src="assets/img/rag-pipeline-diagram.jpg" alt="RAG Pipeline Architecture - Hybrid retrieval with multi-provider LLM fallback" style="width: 100%; border-radius: 12px; border: 1px solid var(--glass-border);">
-                    <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.75rem; text-align: center;">RAG Pipeline Architecture — Embedding → Vector Search → Multi-Provider LLM → TTS</p>
+                    <p style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.75rem; text-align: center;">RAG Pipeline Architecture — Embedding → Vector Search → Multi-Provider LLM → Predefined Audio & Stream</p>
                 </div>
             </div>
 
@@ -191,21 +443,58 @@
                     The system combines Vector Search and Full-Text Search (FTS) for a Hybrid Retrieval approach. It adapts embeddings on-the-fly depending on the context and dynamically orchestrates chains.
                 </p>
 
-                <div class="code-block">
-<span class="code-comment">// Simplified Pipeline Flow</span>
-Query → Hybrid Retriever → <span class="code-string">Vector + FTS Results</span>
-                                      ↓
-                          Context Assembly
-                                      ↓
-                          LLM Generation <span class="code-comment">(Cerebras/Gemini/OpenAI/Ollama)</span>
-                                      ↓
-                          Response Stream <span class="code-comment">(TTS Chunking)</span>
+                <!-- Interactive Visual Pipeline Stepper -->
+                <div class="rag-pipeline-stepper">
+                    <div class="pipeline-step">
+                        <div class="step-index">01</div>
+                        <div class="step-content">
+                            <div class="step-title">Query Ingestion & Intent Analysis</div>
+                            <p class="step-desc">Accepts text or audio transcription (Groq Whisper), extracts temporal references, and normalizes user language.</p>
+                        </div>
+                        <span class="step-tag">STT / NLU</span>
+                    </div>
+
+                    <div class="pipeline-step">
+                        <div class="step-index">02</div>
+                        <div class="step-content">
+                            <div class="step-title">Hybrid Retrieval (Dense + Sparse)</div>
+                            <p class="step-desc">Queries LanceDB vector embeddings simultaneously with Full-Text Search (FTS) for surgical precision.</p>
+                        </div>
+                        <span class="step-tag">LanceDB Vector Store</span>
+                    </div>
+
+                    <div class="pipeline-step">
+                        <div class="step-index">03</div>
+                        <div class="step-content">
+                            <div class="step-title">Context Assembly & Prompt Conditioning</div>
+                            <p class="step-desc">Combines state memory from PostgreSQL/Redis, injected clinical docs, dual-time context, and system instructions.</p>
+                        </div>
+                        <span class="step-tag">LangChain Chains</span>
+                    </div>
+
+                    <div class="pipeline-step">
+                        <div class="step-index">04</div>
+                        <div class="step-content">
+                            <div class="step-title">Multi-Provider LLM Generation & Fallback</div>
+                            <p class="step-desc">Executes inference with cascading fallback: OpenAI → Groq → Gemini → Cerebras → Local Ollama.</p>
+                        </div>
+                        <span class="step-tag">Resilient LLM Pool</span>
+                    </div>
+
+                    <div class="pipeline-step">
+                        <div class="step-index">05</div>
+                        <div class="step-content">
+                            <div class="step-title">Real-Time Typewriter & Predefined Audio Sync</div>
+                            <p class="step-desc">Streams chunk tokens to the client typewriter while coordinating Live2D avatars and localized pre-rendered audio interims.</p>
+                        </div>
+                        <span class="step-tag">WebSocket Stream + Live2D</span>
+                    </div>
                 </div>
                 
                 <h3 style="margin: 2rem 0 1rem;">Key UX Innovations</h3>
                 <ul style="color: var(--text-secondary); padding-left: 1.5rem; margin-bottom: 2rem;">
-                    <li style="margin-bottom: 0.5rem;"><strong>Audio Streaming Bidirectional:</strong> Reproduces chunks from Edge-TTS while the LLM generates the rest, drastically reducing Time-To-First-Byte (TTFB).</li>
-                    <li style="margin-bottom: 0.5rem;"><strong>Timezone-Awareness (`dateUtils.js`):</strong> Parses temporal references ("today", "tomorrow") relative to the client's local timezone (UTC-5), intelligently handling server midnight rollovers.</li>
+                    <li style="margin-bottom: 0.5rem;"><strong>Predefined Audio Interims & Low-Latency UI:</strong> Emits instant auditory feedback ("Thinking...", "Welcome") in 7 languages while text streams via Typewriter, drastically cutting perceived latency.</li>
+                    <li style="margin-bottom: 0.5rem;"><strong>Dual-Timezone Awareness (`dateUtils.js`):</strong> Intelligently correlates user local time with clinic time in Bogotá (UTC-5), handling server midnight rollovers seamlessly across 7 locales.</li>
                     <li style="margin-bottom: 0.5rem;"><strong>Transient Messages & Debounce:</strong> Shows localized "I couldn't hear you" messages on STT failure without polluting the conversation history, paired with a 500ms microphone debounce to prevent accidental double-clicks.</li>
                 </ul>
             </div>
@@ -216,7 +505,7 @@ Query → Hybrid Retriever → <span class="code-string">Vector + FTS Results</s
 
     <div id="footer-placeholder"></div>
 
-    <script src="js/components.js"></script>
-    <script src="js/app.js"></script>
+    <script src="assets/js/components.js"></script>
+    <script src="assets/js/app.js"></script>
 </body>
 </html>

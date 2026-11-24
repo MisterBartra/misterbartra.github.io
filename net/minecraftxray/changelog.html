@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Minecraft XRay Mod &middot; Consolidated Changelog</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<script src="js/xray-fallback.js"></script>
+	<script src="js/xray-core.js"></script>
+</head>
+<body>
+
+	<div id="header">
+		<h1><i>X</i>-RAY FOR MINECRAFT</h1>
+		<i class="subtitle">Works on all versions of Minecraft from 1.6.4 up to 1.21.6+<br>
+		Created by <a href="ao/index.html" class="author-bypass" title="Ver suite canónica de AmbientOcclusion">AmbientOcclusion</a> &middot; 
+		Extended by <a href="dlb/index.html" class="author-bypass" title="Ver suite de infraestructura de Dromar">DromarLeBanisseur</a> &middot; 
+		Modernized by <a href="mb/index.html" class="author-bypass" title="Ver suite moderna de MisterBartra">MisterBartra</a></i>
+	</div>
+
+	<div id="menubar">
+		<ul>
+			<li><a href="index.html">Home</a></li>
+			<li><a href="downloads.html">Downloads</a></li>
+			<li><a href="configuration.html">Configuration</a></li>
+			<li><a href="changelog.html" class="active">Changelog</a></li>
+			<li><a href="reportbugs.html">Report Bugs</a></li>
+			<li><a href="faq.html">FAQ</a></li>
+			<li><a href="ao/index.html"><span class="era-badge era-ao">AO Canon</span></a></li>
+			<li><a href="dlb/index.html"><span class="era-badge era-dlb">DLB Suite</span></a></li>
+			<li><a href="mb/index.html"><span class="era-badge era-mb">MB Suite</span></a></li>
+		</ul>
+	</div>
+
+	<div class="retro-env-bar">
+		<span class="retro-btn" onclick="window.location.reload();" title="Recargar vista actual">[ &#8635; Reload View ]</span> &middot;
+		<a href="ao/index.html" title="Ir a Era 1: AmbientOcclusion">[ &larr; Era 1: AO ]</a> &middot;
+		<a href="dlb/index.html" title="Ir a Era 2: DromarLeBanisseur">[ Era 2: DLB ]</a> &middot;
+		<a href="mb/index.html" title="Ir a Era 3: MisterBartra">[ Era 3: MB &rarr; ]</a> &middot;
+		<span>[ Snapshot Verified &middot; Multi-Suite Active ]</span>
+	</div>
+
+	<div id="main">
+		<div class="bypass-nav">
+			<strong>L&iacute;nea de Tiempo Consolidada:</strong> Aqu&iacute; se detallan los lanzamientos y modificaciones cronol&oacute;gicas de las suites de <strong>MisterBartra</strong> (MB) y <strong>DromarLeBanisseur</strong> (DLB), junto con los hitos can&oacute;nicos de <strong>AmbientOcclusion</strong> (AO).
+			Para el registro hist&oacute;rico sin modificaciones de AO, visita el <a href="ao/changelog.html">Registro de Cambios Can&oacute;nico Original de AO</a>.
+		</div>
+
+		<!-- RELEASE: MB v76-1216 -->
+		<div class="timeline-section timeline-mb">
+			<h3 style="margin-top:0;"><span class="era-badge era-mb">MB Suite</span> Versi&oacute;n 76-1216 <sub>(Minecraft 1.21.6 &middot; 2026-11-22) &middot; Autor: MisterBartra</sub></h3>
+			<p><strong>Modern GLFW Key Normalization, Persistent Shaders &amp; Fall Momentum Safety</strong></p>
+			<ul>
+				<li><strong>Sanitizaci&oacute;n de teclas GLFW sin vincular:</strong> Mapeo estricto a <code>-1</code> en <code>KeyBinding</code>, eliminando por completo artefactos <code>key.keyboard.0</code> y los recuadros rojos de colisi&oacute;n en la interfaz de Controles de Minecraft.</li>
+				<li><strong>Filtro KeyDown por flanco:</strong> Erradicaci&oacute;n del bucle continuo <code>KeyStay</code> al mantener presionadas las teclas de perfil, neutralizando el re-tickeo masivo que simulaba pulsar repetidamente <kbd>F3 + A</kbd> (recarga forzada de chunks).</li>
+				<li><strong>Fullbright persistente por shader <code>(Lcam;F)F</code>:</strong> Reubicado en la tecla <kbd>R</kbd> (can&oacute;nico: <kbd>L</kbd>). Bypass continuo de <code>DarknessScale</code> (0.0f) y <code>NightVisionFactor</code> (1.0f) activo tanto en el terreno como en el renderizado de entidades a trav&eacute;s de cambios de perfil.</li>
+				<li><strong>Vuelo con doble pulsaci&oacute;n y protecci&oacute;n de aterrizaje:</strong> Absorci&oacute;n de magnitud e intercepci&oacute;n de impacto (<code>fallDistance = 0.0</code>), eliminando da&ntilde;o de ca&iacute;da injustificado al descender o apagar el vuelo.</li>
+				<li><strong>Deduplicaci&oacute;n can&oacute;nica en XRaySwing:</strong> Normalizaci&oacute;n autom&aacute;tica entre claves traducidas (<code>block.minecraft.*</code>) y Resource Locations (<code>minecraft:*</code>).</li>
+				<li><strong>Persistencia bidireccional limpia:</strong> Serializaci&oacute;n nativa en <code>xray.json</code> con migraci&oacute;n transparente e importaci&oacute;n/exportaci&oacute;n hacia el formato <code>xray.properties</code> legado.</li>
+			</ul>
+		</div>
+
+		<!-- RELEASE: MB v75-1215 -->
+		<div class="timeline-section timeline-mb">
+			<h3 style="margin-top:0;"><span class="era-badge era-mb">MB Suite</span> Versi&oacute;n 75-1215 <sub>(Minecraft 1.21.5 &middot; 2026-10-31) &middot; Autor: MisterBartra</sub></h3>
+			<p><strong>Detecci&oacute;n Din&aacute;mica de Bloques del Cliente &amp; Composici&oacute;n z-index</strong></p>
+			<ul>
+				<li><strong>Detecci&oacute;n en tiempo real:</strong> B&uacute;squeda directa en los registros vivos del cliente (<code>BuiltInRegistries.BLOCK</code>) sin depender de listas est&aacute;ticas hardcodeadas.</li>
+				<li><strong>Filtros por descriptores de BlockState:</strong> Soporte para propiedades avanzadas (<code>is:lit</code>, <code>is:waterlogged</code>, <code>is:open</code>, <code>is:closed</code>, <code>is:powered</code>).</li>
+				<li><strong>Inspecci&oacute;n de contenedores y spawners:</strong> Consultas en tiempo real para cofres y generadores (<code>has:items</code>, <code>is:empty</code>, <code>contains:&lt;item&gt;</code>, <code>spawner:&lt;mob&gt;</code>).</li>
+				<li><strong>Proyecci&oacute;n de profundidad z-index:</strong> Sustituci&oacute;n de <code>glDisable(GL_DEPTH_TEST)</code> por ordenamiento multicapa sin desgarro gr&aacute;fico.</li>
+				<li><strong>Sintaxis de selector avanzada:</strong> Soporte para prefijos de mod (<code>@minecraft:</code>, <code>@create:</code>), tags (<code>#ores</code>) y expresiones regulares.</li>
+			</ul>
+		</div>
+
+		<!-- RELEASE: DLB v2.4.1 -->
+		<div class="timeline-section timeline-dlb">
+			<h3 style="margin-top:0;"><span class="era-badge era-dlb">DLB Suite</span> Versi&oacute;n 2.4.1 <sub>(Minecraft 1.16.5 &ndash; 1.20.x &middot; 2026-10-15) &middot; Autor: DromarLeBanisseur</sub></h3>
+			<p><strong>Contenedor LaunchWrapper 2.4.1 Aut&oacute;nomo &amp; Aislamiento de Infraestructura</strong></p>
+			<ul>
+				<li><strong>Integraci&oacute;n de classloader aut&oacute;nomo:</strong> Implementaci&oacute;n de <code>DLBLaunchClassLoader</code> con exclusi&oacute;n de paquetes cr&iacute;ticos del runtime.</li>
+				<li><strong>Desacoplamiento modular del launcher:</strong> Separaci&oacute;n completa entre la orquestaci&oacute;n de arranque (<code>LaunchOrchestrator</code>) y la transformaci&oacute;n de clases.</li>
+				<li><strong>Empaquetado optimizado:</strong> Reducci&oacute;n mediante ProGuard a <strong>27.2 KB</strong> (<code>launchwrapper-2.4.1.jar</code>).</li>
+				<li><strong>Despliegue dual:</strong> Patr&oacute;n de extracci&oacute;n autom&aacute;tica en <code>libraries/net/minecraftxray/dlb/</code> preservando retrocompatibilidad.</li>
+			</ul>
+		</div>
+
+		<!-- RELEASE: DLB v59-1131 -->
+		<div class="timeline-section timeline-dlb">
+			<h3 style="margin-top:0;"><span class="era-badge era-dlb">DLB Suite</span> Versi&oacute;n 59-1131 <sub>(Minecraft 1.13.x &ndash; 1.15.x &middot; 2019-08-18) &middot; Autor: DromarLeBanisseur</sub></h3>
+			<p><strong>Transici&oacute;n de LaunchWrapper &amp; Compatibilidad con Mod-Loaders</strong></p>
+			<ul>
+				<li>Compatibilidad intermedia con nuevas capas de carga del juego tras la remodelaci&oacute;n de Minecraft 1.13.</li>
+				<li>Aislamiento de argumentos CLI para invocaci&oacute;n independiente de <code>XRayTweaker</code>.</li>
+				<li>Preservaci&oacute;n de perfiles de usuario cl&aacute;sicos en entornos con LaunchWrapper externo.</li>
+			</ul>
+		</div>
+
+		<!-- ERA 1 CANONICAL SUMMARY -->
+		<div class="timeline-section timeline-ao">
+			<h3 style="margin-top:0;"><span class="era-badge era-ao">AO Canon</span> Resumen de Lanzamientos Can&oacute;nicos <sub>(1.6.4 &ndash; 1.11.x &middot; Autor: AmbientOcclusion)</sub></h3>
+			<table class="ao-table">
+				<tr>
+					<th>Versi&oacute;n AO</th>
+					<th>Minecraft</th>
+					<th>Fecha</th>
+					<th>Hito Principal</th>
+				</tr>
+				<tr>
+					<td><strong>v2.15.2</strong></td>
+					<td>1.11 / 1.11.2</td>
+					<td>2016-11-06</td>
+					<td>&Uacute;ltima versi&oacute;n oficial de AmbientOcclusion. Soporte para 1.11.2 y emulaci&oacute;n de visi&oacute;n nocturna.</td>
+				</tr>
+				<tr>
+					<td><strong>v2.15.0</strong></td>
+					<td>1.10.x</td>
+					<td>2016-06-11</td>
+					<td>Actualizaci&oacute;n de mappings y filtrado din&aacute;mico de bloques faltantes.</td>
+				</tr>
+				<tr>
+					<td><strong>v2.13.0</strong></td>
+					<td>1.8.x</td>
+					<td>2015-06-16</td>
+					<td>Reescritura del pipeline de transformaci&oacute;n para el nuevo motor de render de 1.8.</td>
+				</tr>
+				<tr>
+					<td><strong>v2.10.0</strong></td>
+					<td>1.7.10</td>
+					<td>2014-06-26</td>
+					<td>Instalador autom&aacute;tico y soporte oficial para perfiles de Forge.</td>
+				</tr>
+				<tr>
+					<td><strong>v2.0.0</strong></td>
+					<td>1.6.4</td>
+					<td>2013-09-20</td>
+					<td>Lanzamiento fundacional de Minecraft X-Ray con interfaz gr&aacute;fica Swing.</td>
+				</tr>
+			</table>
+			<p><a href="ao/changelog.html"><strong>Ver el Registro de Cambios Hist&oacute;rico Completo de AO (15+ versiones) &rarr;</strong></a></p>
+		</div>
+
+		<div id="dynamic-changelog-container" style="display:none;"></div>
+
+	</div>
+</body>
+</html>

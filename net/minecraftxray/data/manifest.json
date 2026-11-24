@@ -1,0 +1,179 @@
+{
+  "project": {
+    "name": "Minecraft X-Ray Mod",
+    "namespace": "net.minecraftxray",
+    "canonicalUrl": "https://misterbartra.github.io/net/minecraftxray/",
+    "license": "Custom / Open Contributor License",
+    "dependencyContract": "mb -> dlb -> ao",
+    "description": "Multi-author, modular redesign of the Minecraft X-Ray suite spanning canonical AmbientOcclusion foundation, Dromar LaunchWrapper infrastructure, and MisterBartra modern mod-loader intelligence."
+  },
+  "suites": {
+    "ao": {
+      "id": "ao",
+      "name": "Suite AO",
+      "fullName": "AmbientOcclusion Canonical Foundation",
+      "author": "AmbientOcclusion",
+      "badgeColor": "#b23b3b",
+      "role": "Game Hooks, Mapping Resolution & Core X-Ray Logic",
+      "layer": 1,
+      "dependsOn": [],
+      "mavenArtifact": "net.minecraftxray.ao:xray:47",
+      "mainClass": "net.minecraft.launchwrapper.Launch",
+      "tweakClass": "net.minecraftxray.ao.loader.XRayTweaker",
+      "javaTarget": "Java 8 (Bytecode 52)",
+      "storageFormat": "xray.properties (ConfigProfile)",
+      "packages": [
+        "net.minecraftxray.ao.core.*",
+        "net.minecraftxray.ao.loader.*",
+        "net.minecraftxray.ao.transformer.*",
+        "net.minecraftxray.ao.installer.*",
+        "net.minecraftxray.ao.mapping.*",
+        "net.minecraftxray.ao.i18n.*"
+      ],
+      "highlights": [
+        "Pure canonical X-Ray foundation and game logic",
+        "Binary mapping resolution via embedded .tsrg.bin tables",
+        "Self-contained GUI installer for vanilla launcher profiles",
+        "Multi-profile ore visualization and cave finder",
+        "Gamma-based fullbright with underwater emulation"
+      ]
+    },
+    "dlb": {
+      "id": "dlb",
+      "name": "Suite DLB",
+      "fullName": "Dromar LaunchWrapper Infrastructure",
+      "author": "DromarLeBanisseur",
+      "badgeColor": "#2a75d3",
+      "role": "Transforming Classloader & Launcher Orchestration",
+      "layer": 2,
+      "dependsOn": ["ao"],
+      "mavenArtifact": "net.minecraftxray.dlb:launchwrapper:2.4.1",
+      "classloader": "net.minecraftxray.dlb.launcher.DLBLaunchClassLoader",
+      "javaTarget": "Java 16 (Bytecode 60)",
+      "storageFormat": "xray.properties (Adapter Bridge)",
+      "packages": [
+        "net.minecraftxray.dlb.launcher.*"
+      ],
+      "highlights": [
+        "Transforming classloader container (DLBLaunchClassLoader)",
+        "Standalone LaunchWrapper 2.4.1 runtime isolation",
+        "ProGuard-optimized distribution packaging (27.2 KB)",
+        "Dual extraction mechanism at installation time",
+        "Modular encapsulation isolating launch orchestration from game bytecode"
+      ]
+    },
+    "mb": {
+      "id": "mb",
+      "name": "Suite MB",
+      "fullName": "MisterBartra Modern Enhanced Intelligence",
+      "author": "MisterBartra",
+      "badgeColor": "#2e9e5b",
+      "role": "Mod-Loader Awareness, Dynamic Block Discovery & Modern Bytecode",
+      "layer": 3,
+      "dependsOn": ["dlb", "ao"],
+      "mavenArtifact": "net.minecraftxray.mb:xray:76-1216",
+      "javaTarget": "Java 21 (Bytecode 65)",
+      "storageFormat": "xray.json (Bidirectional Properties Migration)",
+      "packages": [
+        "net.minecraftxray.mb.bootstrap.*",
+        "net.minecraftxray.mb.gui.*",
+        "net.minecraftxray.mb.modloader.*",
+        "net.minecraftxray.mb.profiles.*",
+        "net.minecraftxray.mb.taxonomy.*",
+        "net.minecraftxray.mb.runtime.*",
+        "net.minecraftxray.mb.search.*"
+      ],
+      "highlights": [
+        "Minecraft 1.21.6+ runtime compatibility with Single-JAR invariant",
+        "GLFW key input sanitization (proper -1 unbound state)",
+        "Edge-triggered KeyDown filtering (removes continuous F3+A re-tick symptom)",
+        "Direct light texture shader hook (Lcam;F)F illuminating terrain and entities persistently",
+        "Survival flight with double-tap activation and no-fall landing impact damage suppression",
+        "Client dynamic block detection and tag inspection without hardcoded IDs",
+        "z-index compositing and emissive layer management preventing depth-mask conflicts",
+        "Unified JEI search syntax with regex, @namespace, and is:placeable filters"
+      ]
+    }
+  },
+  "runtimeModes": [
+    {
+      "mode": 1,
+      "name": "Dromar Classic",
+      "type": "compression / coexistence",
+      "description": "Embeds the DLB LaunchWrapper as a nested entry inside the distribution. The installer extracts it into the libraries tree under net/minecraftxray/dlb/launchwrapper/2.4.1/."
+    },
+    {
+      "mode": 2,
+      "name": "MB Unified Standalone",
+      "type": "single-jar invariant",
+      "description": "LaunchWrapper classes reside directly at the root of the JAR. Operates as a single standalone library entry without secondary JAR extraction."
+    },
+    {
+      "mode": 3,
+      "name": "Host Mod-Loader Coexistence",
+      "type": "forge / fabric / quilt / neoforge",
+      "description": "Host environment provides the classloader; MB detects the host and injects only the AO tweaker and transformers without duplicating classloaders."
+    },
+    {
+      "mode": 4,
+      "name": "MB Standalone Fallback",
+      "type": "launchwrapper-mb",
+      "description": "Lightweight fallback classloader that activates automatically or via MB_FORCE_FALLBACK if modern module boundaries disrupt legacy delegation."
+    }
+  ],
+  "controls": [
+    {
+      "action": "Toggle X-Ray",
+      "defaultKey": "X",
+      "description": "Toggles active ore detection profile with custom block visibility and transparency.",
+      "suites": ["ao", "dlb", "mb"]
+    },
+    {
+      "action": "Cave Finder",
+      "defaultKey": "C",
+      "description": "Inverts face culling to reveal hollow caves, ravines, and underground dungeons.",
+      "suites": ["ao", "dlb", "mb"]
+    },
+    {
+      "action": "Fullbright",
+      "defaultKey": "R",
+      "description": "Bypasses gamma and darkness scale. In MB, hooks directly into (Lcam;F)F light texture shader.",
+      "suites": ["ao", "dlb", "mb"]
+    },
+    {
+      "action": "Open In-Game GUI",
+      "defaultKey": "J",
+      "description": "Opens the Swing configuration dialog to toggle blocks, add custom IDs, and select profiles.",
+      "suites": ["ao", "dlb", "mb"]
+    },
+    {
+      "action": "Survival Flight",
+      "defaultKey": "Configurable (Unbound by default)",
+      "description": "Enables creative-like flight in survival mode. MB adds double-tap hotkey and landing fall damage suppression.",
+      "suites": ["ao", "dlb", "mb"]
+    },
+    {
+      "action": "Fly Speed +/-",
+      "defaultKey": "Configurable",
+      "description": "Increases or decreases horizontal and vertical flight velocity.",
+      "suites": ["ao", "dlb", "mb"]
+    },
+    {
+      "action": "Quick Profile Hotkeys",
+      "defaultKey": "CTRL + X / CTRL + C",
+      "description": "MB Suite ergonomic hotkeys to switch profiles instantly without cycling through GUI.",
+      "suites": ["mb"]
+    }
+  ],
+  "minecraftVersions": [
+    { "version": "1.21.6", "suite": "mb", "status": "Current Release", "downloadJar": "xray-76-1216.jar", "loader": "LaunchWrapper / Forge / Fabric / Vanilla" },
+    { "version": "1.21.5", "suite": "mb", "status": "Supported", "downloadJar": "xray-75-1215.jar", "loader": "Vanilla / Forge" },
+    { "version": "1.20.x", "suite": "mb", "status": "Supported", "downloadJar": "xray-1.20-mb.jar", "loader": "Vanilla / Forge" },
+    { "version": "1.16.5", "suite": "dlb", "status": "Supported", "downloadJar": "xray-1.16.5-dlb.jar", "loader": "Vanilla / Forge" },
+    { "version": "1.12.2", "suite": "dlb", "status": "Supported", "downloadJar": "xray-1.12.2-dlb.jar", "loader": "Forge / Vanilla" },
+    { "version": "1.11.x", "suite": "ao", "status": "Canonical Archive", "downloadJar": "XRay-1.11-v2.15.2.jar", "loader": "Vanilla / LiteLoader" },
+    { "version": "1.8.x",  "suite": "ao", "status": "Canonical Archive", "downloadJar": "XRay-1.8.1-v2.15.2.jar", "loader": "Vanilla / Forge / LiteLoader" },
+    { "version": "1.7.10", "suite": "ao", "status": "Canonical Archive", "downloadJar": "XRay-1.7.10-v2.15.2.jar", "loader": "Forge / LiteLoader / Vanilla" },
+    { "version": "1.6.4",  "suite": "ao", "status": "Canonical Archive", "downloadJar": "XRay-1.6.4-v2.15.2.jar", "loader": "Vanilla / Forge" }
+  ]
+}

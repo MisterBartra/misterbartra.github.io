@@ -1,0 +1,160 @@
+{
+  "description": "Mapeo canónico unificado de recursos gráficos de X-Ray: Escalera de sucesión (ao -> dlb -> mb) con resolución implícita y enlaces dirigidos al portal https://misterbartra.github.io/net/minecraftxray/",
+  "portal_url": "https://misterbartra.github.io/net/minecraftxray/",
+  "succession_ladder": [
+    "ao",
+    "dlb",
+    "mb"
+  ],
+  "inheritance_rule": "Resolución en escalera: si un escalón superior no define un recurso en 'tiers', hereda implícitamente de su predecesor hasta alcanzar la base canónica 'ao'. DLB, como capa de infraestructura, hereda 100% de AO sin duplicación.",
+  "wayback_base": "https://web.archive.org/web/",
+  "assets": [
+    {
+      "id": "xray",
+      "name": "X-Ray Mode Preview",
+      "filename": "xray.jpg",
+      "mime_type": "image/jpeg",
+      "file_size_bytes": 117563,
+      "raw_archive_direct_url": "https://web.archive.org/web/20170606053539im_/http://minecraftxray.net/img/xray.jpg",
+      "archive_browse_url": "https://web.archive.org/web/20170606053539/http://minecraftxray.net/img/xray.jpg",
+      "tiers": {
+        "ao": "ao/img/xray.jpg"
+      },
+      "status": "HTTP 200 Verified"
+    },
+    {
+      "id": "cavefinder",
+      "name": "Cavefinder Mode Preview",
+      "filename": "cavefinder.jpg",
+      "mime_type": "image/jpeg",
+      "file_size_bytes": 123482,
+      "raw_archive_direct_url": "https://web.archive.org/web/20161106152709im_/http://minecraftxray.net/img/cavefinder.jpg",
+      "archive_browse_url": "https://web.archive.org/web/20161106152709/http://minecraftxray.net/img/cavefinder.jpg",
+      "tiers": {
+        "ao": "ao/img/cavefinder.jpg"
+      },
+      "status": "HTTP 200 Verified"
+    },
+    {
+      "id": "coords",
+      "name": "Coordinates HUD Preview",
+      "filename": "coords.jpg",
+      "mime_type": "image/jpeg",
+      "file_size_bytes": 24477,
+      "raw_archive_direct_url": "https://web.archive.org/web/20210714174534im_/http://minecraftxray.net/img/coords.jpg",
+      "archive_browse_url": "https://web.archive.org/web/20210714174534/http://minecraftxray.net/img/coords.jpg",
+      "tiers": {
+        "ao": "ao/img/coords.jpg"
+      },
+      "status": "HTTP 200 Verified"
+    },
+    {
+      "id": "fullbright_gamma",
+      "name": "Fullbright Vanilla Gamma Comparison",
+      "filename": "fullbright_gamma.jpg",
+      "mime_type": "image/jpeg",
+      "file_size_bytes": 4365,
+      "raw_archive_direct_url": "https://web.archive.org/web/20210714174534im_/http://minecraftxray.net/img/fullbright_gamma.jpg",
+      "archive_browse_url": "https://web.archive.org/web/20210714174534/http://minecraftxray.net/img/fullbright_gamma.jpg",
+      "tiers": {
+        "ao": "ao/img/fullbright_gamma.jpg"
+      },
+      "status": "HTTP 200 Verified"
+    },
+    {
+      "id": "fullbright_xray",
+      "name": "Fullbright Mod Shader Comparison",
+      "filename": "fullbright_xray.jpg",
+      "mime_type": "image/jpeg",
+      "file_size_bytes": 11506,
+      "raw_archive_direct_url": "https://web.archive.org/web/20210714174534im_/http://minecraftxray.net/img/fullbright_xray.jpg",
+      "archive_browse_url": "https://web.archive.org/web/20210714174534/http://minecraftxray.net/img/fullbright_xray.jpg",
+      "tiers": {
+        "ao": "ao/img/fullbright_xray.jpg"
+      },
+      "status": "HTTP 200 Verified"
+    },
+    {
+      "id": "bug_report_step1",
+      "name": "Bug Report Guide - Step 1: Open Mod Settings",
+      "filename": "bug_report_step1.jpg",
+      "mime_type": "image/jpeg",
+      "file_size_bytes": 74812,
+      "raw_archive_direct_url": "https://web.archive.org/web/20190818165617im_/http://minecraftxray.net/img/bug_report_step1.jpg",
+      "archive_browse_url": "https://web.archive.org/web/20190818165617/http://minecraftxray.net/img/bug_report_step1.jpg",
+      "tiers": {
+        "ao": "ao/img/bug_report_step1.jpg"
+      },
+      "status": "HTTP 200 Verified"
+    },
+    {
+      "id": "bug_report_step2",
+      "name": "Bug Report Guide - Step 2: Enable Console Logging",
+      "filename": "bug_report_step2.jpg",
+      "mime_type": "image/jpeg",
+      "file_size_bytes": 45878,
+      "raw_archive_direct_url": "https://web.archive.org/web/20190818165617im_/http://minecraftxray.net/img/bug_report_step2.jpg",
+      "archive_browse_url": "https://web.archive.org/web/20190818165617/http://minecraftxray.net/img/bug_report_step2.jpg",
+      "tiers": {
+        "ao": "ao/img/bug_report_step2.jpg"
+      },
+      "status": "HTTP 200 Verified"
+    },
+    {
+      "id": "bug_report_step3",
+      "name": "Bug Report Guide - Step 3: Copy Crash Log Output",
+      "filename": "bug_report_step3.jpg",
+      "mime_type": "image/jpeg",
+      "file_size_bytes": 76992,
+      "raw_archive_direct_url": "https://web.archive.org/web/20190818165617im_/http://minecraftxray.net/img/bug_report_step3.jpg",
+      "archive_browse_url": "https://web.archive.org/web/20190818165617/http://minecraftxray.net/img/bug_report_step3.jpg",
+      "tiers": {
+        "ao": "ao/img/bug_report_step3.jpg"
+      },
+      "status": "HTTP 200 Verified"
+    },
+    {
+      "id": "bg",
+      "name": "Site Background Texture",
+      "filename": "bg.png",
+      "mime_type": "image/png",
+      "file_size_bytes": 245027,
+      "raw_archive_direct_url": "https://web.archive.org/web/20160521163523im_/http://minecraftxray.net/bg.png",
+      "archive_browse_url": "https://web.archive.org/web/20160521163523/http://minecraftxray.net/bg.png",
+      "tiers": {
+        "ao": "ao/img/bg.png"
+      },
+      "status": "Local Preserved (Archive Rate-Limited)"
+    },
+    {
+      "id": "javawindow",
+      "name": "Swing Configuration GUI Window",
+      "filename": "javawindow.png",
+      "mime_type": "image/png",
+      "file_size_bytes": 625661,
+      "raw_archive_direct_url": null,
+      "archive_browse_url": null,
+      "tiers": {
+        "ao": "ao/img/javawindow.png",
+        "mb": "mb/img/javawindow.png"
+      },
+      "notes": "Peldaño AO: GUI v47 retro canónica. Peldaño DLB: hereda de AO. Peldaño MB: GUI v75/v76 moderna con selector dinámico de bloques y perfiles.",
+      "status": "Canonical Base (AO) with Modern MB Evolution"
+    },
+    {
+      "id": "keybindings",
+      "name": "Controls & Keybindings Mapping",
+      "filename": "keybindings.png",
+      "mime_type": "image/png",
+      "file_size_bytes": 28989,
+      "raw_archive_direct_url": null,
+      "archive_browse_url": null,
+      "tiers": {
+        "ao": "ao/img/keybindings.png",
+        "mb": "mb/img/keybindings.png"
+      },
+      "notes": "Peldaño AO: Controles v47 retro. Peldaño DLB: hereda de AO. Peldaño MB: Normalización GLFW -1 sin conflictos de control en Minecraft.",
+      "status": "Canonical Base (AO) with Modern MB Evolution"
+    }
+  ]
+}

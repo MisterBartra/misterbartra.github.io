@@ -1,0 +1,114 @@
+{
+  "releases": [
+    {
+      "version": "76-1216",
+      "suite": "mb",
+      "minecraft": "1.21.6",
+      "date": "2026-11-22",
+      "author": "MisterBartra",
+      "title": "Modern GLFW Key Normalization, Persistent Shaders & Fall Momentum Safety",
+      "changes": [
+        "Sanitización de teclas GLFW sin vincular: mapeo estricto a -1 en KeyBinding, eliminando artefactos key.keyboard.0 y contornos rojos en el menú de Controles.",
+        "Filtro KeyDown por flanco: erradicación del bucle continuo KeyStay en teclas de perfil, neutralizando el re-tickeo masivo que simulaba pulsar repetidamente F3 + A.",
+        "Fullbright persistente por shader (Lcam;F)F: bypass de DarknessScale (0.0f) y NightVisionFactor (1.0f) activo en terreno y entidades a través de cambios de perfil.",
+        "Vuelo con doble pulsación y protección de aterrizaje: absorción de magnitud e intercepción de impacto (fallDistance = 0.0), eliminando daño de caída injustificado.",
+        "Deduplicación canónica en XRaySwing: normalización automática entre claves traducidas (block.minecraft.*) y Resource Locations (minecraft:*).",
+        "Persistencia bidireccional limpia: serialización en xray.json con migración transparente e importación/exportación hacia xray.properties legado."
+      ]
+    },
+    {
+      "version": "75-1215",
+      "suite": "mb",
+      "minecraft": "1.21.5",
+      "date": "2026-10-31",
+      "author": "MisterBartra",
+      "title": "Detección Dinámica de Bloques del Cliente & Composición z-index",
+      "changes": [
+        "Detección directa en los registros vivos del cliente (BuiltInRegistries.BLOCK) sin listas estáticas hardcodeadas.",
+        "Soporte para propiedades y descriptores de BlockState (is:lit, is:waterlogged, is:open, is:closed, is:powered).",
+        "Inspección de inventarios y spawners en tiempo real (has:items, is:empty, contains:<item>, spawner:<mob>).",
+        "Sustitución de glDisable(GL_DEPTH_TEST) por ordenamiento z-index multicapa y proyección de profundidad limpia.",
+        "Sintaxis de búsqueda avanzada en selector: soporte para prefijos de mod (@minecraft:, @create:), tags (#ores) y expresiones regulares."
+      ]
+    },
+    {
+      "version": "2.4.1",
+      "suite": "dlb",
+      "minecraft": "1.16.5 - 1.20.x",
+      "date": "2026-10-15",
+      "author": "DromarLeBanisseur",
+      "title": "Contenedor LaunchWrapper 2.4.1 Autónomo & Aislamiento de Infraestructura",
+      "changes": [
+        "Integración del classloader DLBLaunchClassLoader con exclusión de módulos internos (java.*, javax.*, sun.*, net.minecraft.launchwrapper.*).",
+        "Desacoplamiento de la orquestación de arranque (LaunchOrchestrator) respecto a la transformación de clases del juego.",
+        "Empaquetado optimizado mediante ProGuard, reduciendo la biblioteca de lanzamiento a 27.2 KB (launchwrapper-2.4.1.jar).",
+        "Patrón de instalación con extracción doble en libraries/net/minecraftxray/dlb/ preservando compatibilidad legacy."
+      ]
+    },
+    {
+      "version": "59-1131",
+      "suite": "dlb",
+      "minecraft": "1.13.x - 1.15.x",
+      "date": "2019-08-18",
+      "author": "DromarLeBanisseur",
+      "title": "Transición de LaunchWrapper & Compatibilidad con Mod-Loaders",
+      "changes": [
+        "Compatibilidad intermedia con nuevas capas de carga del juego tras la remodelación 1.13.",
+        "Aislamiento de parámetros CLI para invocación independiente de XRayTweaker.",
+        "Preservación de perfiles clásicos en entornos con LaunchWrapper externo."
+      ]
+    },
+    {
+      "version": "2.15.2",
+      "suite": "ao",
+      "minecraft": "1.11.x",
+      "date": "2016-11-06",
+      "author": "AmbientOcclusion",
+      "title": "Última Versión Canónica de AmbientOcclusion",
+      "changes": [
+        "Compatibilidad oficial con Minecraft 1.11 y 1.11.2.",
+        "Modos XRay y Cavefinder con lista de bloques configurable en interfaz Swing.",
+        "Pantalla de coordenadas HUD con variables configurables ({X}, {Y}, {Z}, {FPS}, {Biome}, {Fly}).",
+        "Fullbright con emulación de visión nocturna subacuática profunda.",
+        "Vuelo en modo supervivencia mediante doble salto con velocidad configurable."
+      ]
+    },
+    {
+      "version": "2.15.0",
+      "suite": "ao",
+      "minecraft": "1.10.x",
+      "date": "2016-06-11",
+      "author": "AmbientOcclusion",
+      "title": "Soporte Oficial para Minecraft 1.10",
+      "changes": [
+        "Actualización de los mappings y hooks de transformación para 1.10.",
+        "Mejoras en el filtrado dinámico de bloques faltantes en tiempo de ejecución."
+      ]
+    },
+    {
+      "version": "2.13.0",
+      "suite": "ao",
+      "minecraft": "1.8.x",
+      "date": "2015-06-16",
+      "author": "AmbientOcclusion",
+      "title": "Lanzamiento Estable para Minecraft 1.8",
+      "changes": [
+        "Adaptación de la pipeline de transformación de clases al nuevo motor de bloques de 1.8.",
+        "Instalador automático para perfiles del lanzador oficial de Mojang."
+      ]
+    },
+    {
+      "version": "2.0.0",
+      "suite": "ao",
+      "minecraft": "1.6.4",
+      "date": "2014-09-30",
+      "author": "AmbientOcclusion",
+      "title": "Lanzamiento Inicial Multi-Plataforma (Forge, LiteLoader, Vanilla)",
+      "changes": [
+        "Arquitectura inicial de X-Ray basada en net.minecraft.launchwrapper.IClassTransformer.",
+        "Interfaz gráfica integrada en Java AWT/Swing.",
+        "Configuración basada en archivo xray.properties."
+      ]
+    }
+  ]
+}

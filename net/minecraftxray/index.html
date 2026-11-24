@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Minecraft XRay Mod &middot; Consolidated Multi-Suite Portal</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<script src="js/xray-fallback.js"></script>
+	<script src="js/xray-core.js"></script>
+</head>
+<body>
+
+	<div id="header">
+		<h1><i>X</i>-RAY FOR MINECRAFT</h1>
+		<i class="subtitle">Works on all versions of Minecraft from 1.6.4 up to 1.21.6+<br>
+		Created by <a href="ao/index.html" class="author-bypass" title="Ver suite canónica de AmbientOcclusion">AmbientOcclusion</a> &middot; 
+		Extended by <a href="dlb/index.html" class="author-bypass" title="Ver suite de infraestructura de Dromar">DromarLeBanisseur</a> &middot; 
+		Modernized by <a href="mb/index.html" class="author-bypass" title="Ver suite moderna de MisterBartra">MisterBartra</a></i>
+	</div>
+
+	<div id="menubar">
+		<ul>
+			<li><a href="index.html" class="active">Home</a></li>
+			<li><a href="downloads.html">Downloads</a></li>
+			<li><a href="configuration.html">Configuration</a></li>
+			<li><a href="changelog.html">Changelog</a></li>
+			<li><a href="reportbugs.html">Report Bugs</a></li>
+			<li><a href="faq.html">FAQ</a></li>
+			<li><a href="ao/index.html"><span class="era-badge era-ao">AO Canon</span></a></li>
+			<li><a href="dlb/index.html"><span class="era-badge era-dlb">DLB Suite</span></a></li>
+			<li><a href="mb/index.html"><span class="era-badge era-mb">MB Suite</span></a></li>
+		</ul>
+	</div>
+
+	<div class="retro-env-bar">
+		<span class="retro-btn" onclick="window.location.reload();" title="Recargar vista actual">[ &#8635; Reload View ]</span> &middot;
+		<a href="ao/index.html" title="Ir a Era 1: AmbientOcclusion">[ &larr; Era 1: AO ]</a> &middot;
+		<a href="dlb/index.html" title="Ir a Era 2: DromarLeBanisseur">[ Era 2: DLB ]</a> &middot;
+		<a href="mb/index.html" title="Ir a Era 3: MisterBartra">[ Era 3: MB &rarr; ]</a> &middot;
+		<span>[ Snapshot Verified &middot; Multi-Suite Active ]</span>
+	</div>
+
+	<div id="main">
+		<div class="bypass-nav">
+			<strong>Portal Central Multi-Suite:</strong> Este sitio unifica de manera lineal y cronol&oacute;gica las tres eras de desarrollo de Minecraft X-Ray:
+			la fundaci&oacute;n can&oacute;nica de <strong>AmbientOcclusion</strong> (1.6.4 &ndash; 1.11.x), la infraestructura LaunchWrapper de <strong>DromarLeBanisseur</strong> (1.12.2 &ndash; 1.20.x) y la modernizaci&oacute;n de <strong>MisterBartra</strong> (1.21.6+).
+		</div>
+
+		<!-- ERA 1: AMBIENTOCCLUSION CANONICAL FOUNDATION -->
+		<div class="timeline-section timeline-ao">
+			<h2 style="margin-top:0;"><span class="era-badge era-ao">ERA 1</span> Fundaci&oacute;n Can&oacute;nica: AmbientOcclusion <sub>(1.6.4 &ndash; 1.11.x)</sub></h2>
+			<p>La base hist&oacute;rica y el n&uacute;cleo de la herramienta creado por <strong>AmbientOcclusion</strong>. Introdujo el sistema de transformaciones en caliente, compatibilidad con LiteLoader y Forge, y la interfaz gr&aacute;fica de usuario en Swing para configuraci&oacute;n din&aacute;mica de bloques en tiempo de juego.</p>
+
+			<h3>Features Can&oacute;nicas</h3>
+			<ul id="featurelist">
+				<li><em>XRay mode</em> <sub>Tecla predeterminada: <kbd>X</kbd></sub>
+					<ul>
+						<li>En la interfaz de usuario se seleccionan cu&aacute;les bloques son renderizados y cu&aacute;les se ocultan.</li>
+						<li>Permite crear m&uacute;ltiples perfiles independientes y asignarles atajos de teclado individuales.</li>
+						<li><a href="ao/img/xray.jpg"><img src="ao/img/xray.jpg" data-raw-archive="https://web.archive.org/web/20170606053539im_/http://minecraftxray.net/img/xray.jpg" alt="XRay mode screenshot" style="max-width:100%; border:1px solid #CCC; margin-top:4px;" onerror="applyImgFallback(this, 'ao/img/xray.jpg');" /></a></li>
+					</ul>
+				</li>
+				<li><em>Cavefinder</em> <sub>Tecla predeterminada: <kbd>C</kbd></sub>
+					<ul>
+						<li>Invierte el renderizado de caras para revelar cavernas subterr&aacute;neas, grietas y mazmorras.</li>
+						<li><a href="ao/img/cavefinder.jpg"><img src="ao/img/cavefinder.jpg" data-raw-archive="https://web.archive.org/web/20161106152709im_/http://minecraftxray.net/img/cavefinder.jpg" alt="Cavefinder screenshot" style="max-width:100%; border:1px solid #CCC; margin-top:4px;" onerror="applyImgFallback(this, 'ao/img/cavefinder.jpg');" /></a></li>
+					</ul>
+				</li>
+				<li><em>Coordinates display</em> <sub>Tecla predeterminada: <kbd>F</kbd></sub>
+					<ul>
+						<li>Muestra informaci&oacute;n &uacute;til en pantalla, como coordenadas XYZ, FPS, bioma actual y direcci&oacute;n cardinal.</li>
+						<li>Completamente personalizable desde la pesta&ntilde;a de configuraci&oacute;n.</li>
+						<li><a href="ao/img/coords.jpg"><img src="ao/img/coords.jpg" data-raw-archive="https://web.archive.org/web/20210714174534im_/http://minecraftxray.net/img/coords.jpg" alt="Coordinates screenshot" style="max-width:100%; border:1px solid #CCC; margin-top:4px;" onerror="applyImgFallback(this, 'ao/img/coords.jpg');" /></a></li>
+					</ul>
+				</li>
+				<li><em>Fullbright</em> <sub>Tecla predeterminada: <kbd>L</kbd> &middot; Reubicada en suite MB a: <kbd>R</kbd></sub>
+					<ul>
+						<li>Permite ver con total claridad en la oscuridad total o bajo el agua sin necesidad de antorchas ni pociones.</li>
+						<li>A diferencia de los ajustes habituales de gamma que generan p&eacute;rdida de contraste y lavado de color, este modo conserva la saturaci&oacute;n aut&eacute;ntica de las texturas.</li>
+						<li>Comparaci&oacute;n visual: Brillo convencional por gamma vs Fullbright optimizado:</li>
+						<li>
+							<a href="ao/img/fullbright_gamma.jpg"><img src="ao/img/fullbright_gamma.jpg" data-raw-archive="https://web.archive.org/web/20210714174534im_/http://minecraftxray.net/img/fullbright_gamma.jpg" alt="Gamma brightness screenshot" style="border:1px solid #CCC; margin-top:4px;" onerror="applyImgFallback(this, 'ao/img/fullbright_gamma.jpg');" /></a>
+							<a href="ao/img/fullbright_xray.jpg"><img src="ao/img/fullbright_xray.jpg" data-raw-archive="https://web.archive.org/web/20210714174534im_/http://minecraftxray.net/img/fullbright_xray.jpg" alt="Fullbright screenshot" style="border:1px solid #CCC; margin-top:4px; margin-left:6px;" onerror="applyImgFallback(this, 'ao/img/fullbright_xray.jpg');" /></a>
+						</li>
+					</ul>
+				</li>
+				<li><em>Fly mode</em> <sub>Activaci&oacute;n can&oacute;nica: Doble espacio</sub>
+					<ul>
+						<li>Permite volar libremente en mundos de supervivencia sin necesidad de permisos de operador ni modos creativos.</li>
+						<li>Velocidad de vuelo ajustable desde el archivo de configuraci&oacute;n o la GUI.</li>
+					</ul>
+				</li>
+			</ul>
+			<p><em>Nota sobre el comportamiento original de teclas:</em> En el cliente can&oacute;nico de AO, mantener pulsada la tecla de perfil provocaba un env&iacute;o constante de se&ntilde;al continua (<code>KeyStay</code>), lo que provocaba un re-tickeo masivo e ininterrumpido similar a presionar reiteradamente <kbd>F3 + A</kbd> para forzar la recarga de chunks. Este comportamiento hist&oacute;rico fue posteriormente perfeccionado en la suite MB.</p>
+			<p style="text-align:right;"><a href="ao/index.html"><strong>Explorar C&aacute;psula Can&oacute;nica AO &rarr;</strong></a></p>
+		</div>
+
+		<!-- ERA 2: DROMARLEBANISSEUR INFRASTRUCTURE SUITE -->
+		<div class="timeline-section timeline-dlb">
+			<h2 style="margin-top:0;"><span class="era-badge era-dlb">ERA 2</span> Suite de Infraestructura: DromarLeBanisseur <sub>(1.12.2 &ndash; 1.20.x)</sub></h2>
+			<p>Desarrollada por <strong>DromarLeBanisseur</strong> para garantizar la transici&oacute;n estructural del mod ante los profundos cambios en la arquitectura de lanzamiento de Minecraft tras la versi&oacute;n 1.12.2. A&iacute;sla la transformaci&oacute;n bytecode mediante un contenedor aut&oacute;nomo de LaunchWrapper.</p>
+
+			<h3>Innovaciones de la Suite DLB</h3>
+			<ul>
+				<li><strong>Contenedor LaunchWrapper 2.4.1 Aut&oacute;nomo:</strong> Integraci&oacute;n del cargador <code>DLBLaunchClassLoader</code> con exclusi&oacute;n limpia de bibliotecas del sistema y mod-loaders externos.</li>
+				<li><strong>Desacoplamiento del Lanzador:</strong> Separaci&oacute;n estricta entre la orquestaci&oacute;n de arranque (<code>LaunchOrchestrator</code>) y la aplicaci&oacute;n de parches a las clases del juego.</li>
+				<li><strong>Optimizaci&oacute;n ProGuard:</strong> Reducci&oacute;n extrema del empaquetado del cargador a tan solo <strong>27.2 KB</strong> (<code>launchwrapper-2.4.1.jar</code>), maximizando la velocidad de inicio.</li>
+				<li><strong>Despliegue de Doble Ruta:</strong> Instalaci&oacute;n estandarizada en <code>libraries/net/minecraftxray/dlb/</code> compatible tanto con el lanzador vanilla como con gestores avanzados.</li>
+			</ul>
+			<p style="text-align:right;"><a href="dlb/index.html"><strong>Explorar Suite de Infraestructura DLB &rarr;</strong></a></p>
+		</div>
+
+		<!-- ERA 3: MISTERBARTRA MODERN SUITE -->
+		<div class="timeline-section timeline-mb">
+			<h2 style="margin-top:0;"><span class="era-badge era-mb">ERA 3</span> Suite Moderna: MisterBartra <sub>(1.21.6+)</sub></h2>
+			<p>Evoluci&oacute;n moderna dise&ntilde;ada y optimizada por <strong>MisterBartra</strong> para Minecraft 1.21.6+. Resuelve las fricciones hist&oacute;ricas del cliente, moderniza el pipeline gr&aacute;fico a shaders directos y refina la ergonom&iacute;a de control.</p>
+
+			<h3>Mejoras Clave de la Suite MB</h3>
+			<ul>
+				<li><strong>Normalizaci&oacute;n Estricta de Teclas GLFW:</strong> Mapeo de teclas sin asignar a <code>-1</code> en <code>KeyBinding</code>, eliminando de ra&iacute;z los artefactos <code>key.keyboard.0</code> y los molestos recuadros rojos de colisi&oacute;n en la interfaz de Controles.</li>
+				<li><strong>Filtro de Entrada KeyDown por Flanco:</strong> Erradicaci&oacute;n del ciclo continuo <code>KeyStay</code> al mantener presionada la tecla de perfil. La activaci&oacute;n se procesa exclusivamente en el flanco de bajada (un &uacute;nico KeyDown), neutralizando el re-tickeo masivo que simulaba pulsar repetidamente <kbd>F3 + A</kbd>.</li>
+				<li><strong>Fullbright Persistente por Shader <code>(Lcam;F)F</code>:</strong> Reubicado en la tecla <kbd>R</kbd>. Hook directo sobre el shader de iluminaci&oacute;n con anulaci&oacute;n de <code>DarknessScale</code> (0.0f) y fijaci&oacute;n de <code>NightVisionFactor</code> (1.0f). Se mantiene activo tanto en el terreno como en el renderizado de entidades a trav&eacute;s de cualquier cambio de perfil.</li>
+				<li><strong>Vuelo Ergon&oacute;mico con Absorci&oacute;n de Inercia:</strong> Activaci&oacute;n por doble pulsaci&oacute;n de tecla asignada e intercepci&oacute;n de impacto en el aterrizaje (<code>fallDistance = 0.0</code>), eliminando da&ntilde;os de ca&iacute;da injustificados al desactivar el vuelo.</li>
+				<li><strong>Detecci&oacute;n Din&aacute;mica en Registros Vivos:</strong> Resoluci&oacute;n autom&aacute;tica de bloques mediante <code>BuiltInRegistries.BLOCK</code> sin tablas hardcodeadas, con soporte para etiquetas de mods (<code>#ores</code>, <code>@create:</code>) y propiedades de <code>BlockState</code>.</li>
+				<li><strong>Persistencia H&iacute;brida Bidireccional:</strong> Serializaci&oacute;n limpia en formato JSON moderno (<code>xray.json</code>) con migraci&oacute;n autom&aacute;tica y soporte de importaci&oacute;n/exportaci&oacute;n con <code>xray.properties</code> hist&oacute;rico.</li>
+			</ul>
+
+			<h3>Evidencia Visual de la Suite Moderna MB</h3>
+			<p>Capturas reales de la suite MB en ejecuci&oacute;n sobre Minecraft 1.21.6+:</p>
+			<div style="margin: 10px 0; display:flex; gap:12px; flex-wrap:wrap;">
+				<div style="flex:1; min-width:320px;">
+					<a href="mb/img/javawindow.png"><img src="mb/img/javawindow.png" alt="GUI Swing Moderna MB" style="max-width:100%; border:1px solid #CCC;" onerror="applyImgFallback(this, 'ao/img/javawindow.png');" /></a>
+					<p style="font-size:0.85em; color:#555;"><em>Panel Swing moderno con resoluci&oacute;n en vivo de bloques y persistencia JSON.</em></p>
+				</div>
+				<div style="flex:1; min-width:320px;">
+					<a href="mb/img/keybindings.png"><img src="mb/img/keybindings.png" alt="Controles GLFW Sanitizados MB" style="max-width:100%; border:1px solid #CCC;" onerror="applyImgFallback(this, 'ao/img/keybindings.png');" /></a>
+					<p style="font-size:0.85em; color:#555;"><em>Men&uacute; de Controles: mapeo estricto a -1 en GLFW, sin conflictos en rojo.</em></p>
+				</div>
+			</div>
+
+			<p style="text-align:right;"><a href="mb/index.html"><strong>Explorar Suite Moderna MB &rarr;</strong></a></p>
+		</div>
+
+		<h2>Matriz Comparativa de Controles entre Suites</h2>
+		<table class="ao-table">
+			<tr>
+				<th>Funci&oacute;n</th>
+				<th>Era 1: AO Can&oacute;nico</th>
+				<th>Era 2: DLB Suite</th>
+				<th>Era 3: MB Suite (Moderna)</th>
+				<th>Comportamiento / Diferencial</th>
+			</tr>
+			<tr>
+				<td><strong>X-Ray</strong></td>
+				<td><kbd>X</kbd></td>
+				<td><kbd>X</kbd></td>
+				<td><kbd>X</kbd></td>
+				<td>MB previene el re-tickeo masivo con filtro KeyDown por flanco.</td>
+			</tr>
+			<tr>
+				<td><strong>Cavefinder</strong></td>
+				<td><kbd>C</kbd></td>
+				<td><kbd>C</kbd></td>
+				<td><kbd>C</kbd></td>
+				<td>Inversi&oacute;n de culling y ordenamiento de profundidad multicapa.</td>
+			</tr>
+			<tr>
+				<td><strong>Fullbright</strong></td>
+				<td><kbd>L</kbd></td>
+				<td><kbd>L</kbd></td>
+				<td><kbd>R</kbd></td>
+				<td>AO: Gamma cl&aacute;sico &rarr; MB: Hook persistente a shader en terreno y entidades.</td>
+			</tr>
+			<tr>
+				<td><strong>Coordinates HUD</strong></td>
+				<td><kbd>F</kbd></td>
+				<td><kbd>F</kbd></td>
+				<td><kbd>F</kbd></td>
+				<td>Variables configurables ({X}, {Y}, {Z}, {FPS}, {Biome}, {Fly}).</td>
+			</tr>
+			<tr>
+				<td><strong>X-Ray GUI / Config</strong></td>
+				<td><kbd>J</kbd></td>
+				<td><kbd>J</kbd></td>
+				<td><kbd>J</kbd></td>
+				<td>Panel Swing con b&uacute;squeda r&aacute;pida y resoluci&oacute;n din&aacute;mica de registros.</td>
+			</tr>
+			<tr>
+				<td><strong>Vuelo (Fly)</strong></td>
+				<td>Doble Espacio</td>
+				<td>Doble Espacio</td>
+				<td>Doble pulsaci&oacute;n / Configurable</td>
+				<td>MB incluye absorci&oacute;n de inercia y eliminaci&oacute;n de da&ntilde;o de ca&iacute;da.</td>
+			</tr>
+			<tr>
+				<td><strong>Teclas sin asignar</strong></td>
+				<td>C&oacute;digo 0 (key.keyboard.0)</td>
+				<td>C&oacute;digo 0</td>
+				<td><kbd>-1</kbd> (Sanitizado GLFW)</td>
+				<td>Elimina conflictos visuales y marcos rojos en Controles de Minecraft.</td>
+			</tr>
+		</table>
+
+	</div>
+</body>
+</html>

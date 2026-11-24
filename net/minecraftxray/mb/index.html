@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Minecraft XRay Mod &middot; Suite MB</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<link rel="stylesheet" type="text/css" href="../style.css">
+	<script src="../js/xray-fallback.js"></script>
+	<script src="../js/xray-core.js"></script>
+</head>
+<body>
+	<div id="header">
+		<h1><i>X</i>-RAY FOR MINECRAFT</h1>
+		<i class="subtitle">Works on modern Minecraft 1.21.6+ with persistent shaders &amp; GLFW normalization<br>
+		Engineered &amp; Modernized by <a href="index.html" class="author-bypass" title="MisterBartra Modern Suite">MisterBartra</a> &middot; <a href="../index.html" class="author-bypass" style="opacity:0.75;" title="Volver al portal multi-suite central">[ Multi-Suite Portal &rarr; ]</a></i>
+	</div>
+
+	<div id="menubar">
+		<ul>
+			<li><a href="../index.html">&larr; Multi-Suite Home</a></li>
+			<li><a href="../downloads.html">Downloads</a></li>
+			<li><a href="../configuration.html">Configuration</a></li>
+			<li><a href="../ao/index.html"><span class="era-badge era-ao">AO Canon</span></a></li>
+			<li><a href="../dlb/index.html"><span class="era-badge era-dlb">DLB Suite</span></a></li>
+			<li><a href="index.html" class="active"><span class="era-badge era-mb">MB Suite</span></a></li>
+		</ul>
+	</div>
+	<div class="retro-env-bar">
+		<span class="retro-btn" onclick="window.location.reload();" title="Recargar vista de MB">[ &#8635; Reload View ]</span> &middot;
+		<a href="../dlb/index.html" title="Contribuidor previo: Dromar">[ &larr; Previo: DLB Suite ]</a> &middot;
+		<a href="../ao/index.html" title="Fundaci&oacute;n can&oacute;nica: AO">[ Fundaci&oacute;n: AO Canon ]</a> &middot;
+		<span>[ Modern 1.21.6 Runtime &middot; Fall Protection Active ]</span>
+	</div>
+
+	<div id="main">
+		<div class="timeline-section timeline-mb">
+			<h2 style="margin-top:0;"><span class="era-badge era-mb">ERA 3</span> Suite Moderna: MisterBartra</h2>
+			<p>La suite <strong>MB</strong> representa la culminaci&oacute;n moderna del proyecto Minecraft X-Ray para versiones 1.21.6+, concebida y desarrollada por <strong>MisterBartra</strong>.</p>
+
+			<h3>Innovaciones Exclusivas de la Suite MB</h3>
+			<ul>
+				<li><strong>Mitigaci&oacute;n del Ticking Masivo F3 + A:</strong> El cliente original de AO continuaba emitiendo se&ntilde;ales en estado <code>KeyStay</code> al mantener la tecla de perfil, forzando re-tickeos continuos similares a recargar chunks reiteradamente. La suite MB introduce un <strong>filtro KeyDown por flanco</strong> que procesa exclusivamente un &uacute;nico evento por pulsaci&oacute;n.</li>
+				<li><strong>Fullbright Persistente por Shader <code>(Lcam;F)F</code> en Tecla <kbd>R</kbd>:</strong> Iluminaci&oacute;n impecable en terreno y entidades sin alterar el balance de color de las texturas y con persistencia &iacute;ntegra a trav&eacute;s de perfiles.</li>
+				<li><strong>Sanitizaci&oacute;n de Teclas GLFW a <kbd>-1</kbd>:</strong> Elimina las colisiones <code>key.keyboard.0</code> y los marcos de error rojos en los Controles de Minecraft.</li>
+				<li><strong>Protecci&oacute;n contra Da&ntilde;o de Ca&iacute;da:</strong> Vuelo ergon&oacute;mico con doble pulsaci&oacute;n e intercepci&oacute;n de ca&iacute;da al suelo (<code>fallDistance = 0.0</code>).</li>
+				<li><strong>Detecci&oacute;n en Registros Vivos:</strong> Soporte nativo para <code>BuiltInRegistries.BLOCK</code> y consultas en tiempo real de inventarios y spawners.</li>
+				<li><strong>Persistencia JSON Bidireccional:</strong> Serializaci&oacute;n estructurada en <code>xray.json</code> con compatibilidad con el hist&oacute;rico <code>xray.properties</code>.</li>
+			</ul>
+
+			<h3>Evidencia Visual de la Suite MB (Minecraft 1.21.6+)</h3>
+			<p>Demostraci&oacute;n real del entorno moderno de la suite MB:</p>
+			<div style="margin: 1.2em 0;">
+				<p><strong>1. Interfaz Swing Moderna con B&uacute;squeda Din&aacute;mica de Bloques:</strong></p>
+				<a href="img/javawindow.png"><img src="img/javawindow.png" alt="MB JavaWindow GUI" style="max-width:100%; border:1px solid #CCC;" onerror="applyImgFallback(this, '../ao/img/javawindow.png');" /></a>
+			</div>
+			<div style="margin: 1.2em 0;">
+				<p><strong>2. Controles de Minecraft Sanitizados con Est&aacute;ndar GLFW (-1):</strong></p>
+				<a href="img/keybindings.png"><img src="img/keybindings.png" alt="MB Keybindings GLFW" style="max-width:100%; border:1px solid #CCC;" onerror="applyImgFallback(this, '../ao/img/keybindings.png');" /></a>
+			</div>
+
+			<h3>Acceso a Descargas y Changelog</h3>
+			<p><a href="../downloads.html" class="retro-btn">[ Descargar Versi&oacute;n 76-1216 ]</a> &middot; <a href="../changelog.html" class="retro-btn">[ Ver Registro de Cambios ]</a></p>
+		</div>
+	</div>
+</body>
+</html>

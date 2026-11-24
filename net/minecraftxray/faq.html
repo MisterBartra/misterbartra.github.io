@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Minecraft XRay Mod &middot; Frequently Asked Questions</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<script src="js/xray-fallback.js"></script>
+	<script src="js/xray-core.js"></script>
+</head>
+<body>
+
+	<div id="header">
+		<h1><i>X</i>-RAY FOR MINECRAFT</h1>
+		<i class="subtitle">Works on all versions of Minecraft from 1.6.4 up to 1.21.6+<br>
+		Created by <a href="ao/index.html" class="author-bypass" title="Ver suite canónica de AmbientOcclusion">AmbientOcclusion</a> &middot; 
+		Extended by <a href="dlb/index.html" class="author-bypass" title="Ver suite de infraestructura de Dromar">DromarLeBanisseur</a> &middot; 
+		Modernized by <a href="mb/index.html" class="author-bypass" title="Ver suite moderna de MisterBartra">MisterBartra</a></i>
+	</div>
+
+	<div id="menubar">
+		<ul>
+			<li><a href="index.html">Home</a></li>
+			<li><a href="downloads.html">Downloads</a></li>
+			<li><a href="configuration.html">Configuration</a></li>
+			<li><a href="changelog.html">Changelog</a></li>
+			<li><a href="reportbugs.html">Report Bugs</a></li>
+			<li><a href="faq.html" class="active">FAQ</a></li>
+			<li><a href="ao/index.html"><span class="era-badge era-ao">AO Canon</span></a></li>
+			<li><a href="dlb/index.html"><span class="era-badge era-dlb">DLB Suite</span></a></li>
+			<li><a href="mb/index.html"><span class="era-badge era-mb">MB Suite</span></a></li>
+		</ul>
+	</div>
+
+	<div class="retro-env-bar">
+		<span class="retro-btn" onclick="window.location.reload();" title="Recargar vista actual">[ &#8635; Reload View ]</span> &middot;
+		<a href="ao/index.html" title="Ir a Era 1: AmbientOcclusion">[ &larr; Era 1: AO ]</a> &middot;
+		<a href="dlb/index.html" title="Ir a Era 2: DromarLeBanisseur">[ Era 2: DLB ]</a> &middot;
+		<a href="mb/index.html" title="Ir a Era 3: MisterBartra">[ Era 3: MB &rarr; ]</a> &middot;
+		<span>[ Snapshot Verified &middot; Multi-Suite Active ]</span>
+	</div>
+
+	<div id="main">
+		<div class="bypass-nav">
+			<strong>Preguntas Frecuentes (FAQ):</strong> Respuestas a inquietudes habituales sobre las tres suites de Minecraft X-Ray.
+		</div>
+
+		<h3>&iquest;Por qu&eacute; en la versi&oacute;n can&oacute;nica de AO ocurr&iacute;a una recarga masiva estilo <kbd>F3 + A</kbd> al mantener pulsada la tecla de perfil, y c&oacute;mo lo soluciona la suite MB?</h3>
+		<p>En el dise&ntilde;o can&oacute;nico de AmbientOcclusion, el despachador de eventos de teclado procesaba continuamente el estado presionado (<code>KeyStay</code>) en cada frame del juego. Al mantener oprimida la tecla de un perfil, el mod ejecutaba una y otra vez la l&oacute;gica de actualizaci&oacute;n del perfil y forzaba el refresco del renderizado, provocando un "ticking" masivo sin protecci&oacute;n que saturaba la CPU e imitaba el efecto de pulsar reiteradamente <kbd>F3 + A</kbd> (recarga de chunks del mundo).</p>
+		<p>En la <strong>Suite Moderna MB</strong>, este comportamiento se mitig&oacute; mediante un <strong>filtro de flanco KeyDown</strong>: la activaci&oacute;n del perfil solo responde al evento inicial de presi&oacute;n (flanco de bajada), ignorando por completo la retenci&oacute;n continuada de la tecla. De esta manera, el jugador puede mantener pulsada la tecla sin experimentar ninguna p&eacute;rdida de rendimiento ni re-tickeos involuntarios.</p>
+
+		<h3>&iquest;C&oacute;mo se aplica la iluminaci&oacute;n de Fullbright con la tecla <kbd>R</kbd> sobre los dem&aacute;s perfiles?</h3>
+		<p>Hist&oacute;ricamente en AO, el Fullbright se asociaba a la tecla <kbd>L</kbd> y operaba modificando la variable de gamma global de Minecraft. En la Suite MB, se reubic&oacute; en la tecla <kbd>R</kbd> e implementa un <strong>hook directo a nivel de shader <code>(Lcam;F)F</code></strong>. Esto anula <code>DarknessScale</code> (fij&aacute;ndolo en 0.0f) y fuerza <code>NightVisionFactor</code> (fij&aacute;ndolo en 1.0f). Como resultado, la iluminaci&oacute;n clara persiste activada sobre el terreno y sobre todas las entidades de forma homog&eacute;nea, independientemente de qu&eacute; perfiles de X-Ray o Cavefinder se activen o alternen.</p>
+
+		<h3>&iquest;Por qu&eacute; en la suite MB ya no aparecen teclas en rojo o <code>key.keyboard.0</code> en el men&uacute; de Controles?</h3>
+		<p>Minecraft moderno y las bibliotecas GLFW utilizan <code>-1</code> para representar una tecla sin asignar (<code>GLFW_KEY_UNKNOWN</code>). Las versiones hist&oacute;ricas utilizaban <code>0</code>, lo que el men&uacute; moderno de Mojang interpretaba como una colisi&oacute;n v&aacute;lida con el c&oacute;digo 0, resaltando los campos en rojo con el texto <code>key.keyboard.0</code>. La suite MB normaliza autom&aacute;ticamente cualquier tecla vac&iacute;a a <code>-1</code>, respetando el est&aacute;ndar estricto de GLFW.</p>
+
+		<h3>&iquest;C&oacute;mo evita la suite MB el da&ntilde;o por ca&iacute;da en el modo de Vuelo?</h3>
+		<p>En las suites anteriores, desactivar el modo de vuelo a gran altura transfer&iacute;a la aceleraci&oacute;n acumulada de gravedad al jugador, resultando frecuentemente en muerte por ca&iacute;da instant&aacute;nea al tocar el suelo. La suite MB intercepta el vector de ca&iacute;da reseteando autom&aacute;ticamente <code>fallDistance = 0.0</code> y neutralizando el momentum vertical al detectar contacto con una superficie s&oacute;lida.</p>
+
+		<h3>&iquest;Puedo ser sancionado por usar este mod en servidores multijugador?</h3>
+		<p>S&iacute;. Este mod est&aacute; dise&ntilde;ado para el cliente y revela bloques y cavernas que normalmente est&aacute;n ocultos. Su uso est&aacute; estrictamente prohibido en la mayor&iacute;a de servidores p&uacute;blicos de supervivencia y puede acarrear sanciones autom&aacute;ticas por plugins anti-xray. Se recomienda utilizarlo exclusivamente en mundos de un jugador o en servidores privados con consentimiento de los participantes.</p>
+
+		<p><a href="ao/faq.html"><strong>Consultar las preguntas frecuentes originales de AO &rarr;</strong></a></p>
+
+	</div>
+</body>
+</html>

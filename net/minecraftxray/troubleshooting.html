@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Minecraft XRay Mod &middot; Troubleshooting Guide</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<script src="js/xray-fallback.js"></script>
+	<script src="js/xray-core.js"></script>
+</head>
+<body>
+
+	<div id="header">
+		<h1><i>X</i>-RAY FOR MINECRAFT</h1>
+		<i class="subtitle">Works on all versions of Minecraft from 1.6.4 up to 1.21.6+<br>
+		Created by <a href="ao/index.html" class="author-bypass" title="Ver suite canónica de AmbientOcclusion">AmbientOcclusion</a> &middot; 
+		Extended by <a href="dlb/index.html" class="author-bypass" title="Ver suite de infraestructura de Dromar">DromarLeBanisseur</a> &middot; 
+		Modernized by <a href="mb/index.html" class="author-bypass" title="Ver suite moderna de MisterBartra">MisterBartra</a></i>
+	</div>
+
+	<div id="menubar">
+		<ul>
+			<li><a href="index.html">Home</a></li>
+			<li><a href="downloads.html">Downloads</a></li>
+			<li><a href="configuration.html">Configuration</a></li>
+			<li><a href="changelog.html">Changelog</a></li>
+			<li><a href="reportbugs.html">Report Bugs</a></li>
+			<li><a href="faq.html">FAQ</a></li>
+			<li><a href="ao/index.html"><span class="era-badge era-ao">AO Canon</span></a></li>
+			<li><a href="dlb/index.html"><span class="era-badge era-dlb">DLB Suite</span></a></li>
+			<li><a href="mb/index.html"><span class="era-badge era-mb">MB Suite</span></a></li>
+		</ul>
+	</div>
+
+	<div class="retro-env-bar">
+		<span class="retro-btn" onclick="window.location.reload();" title="Recargar vista actual">[ &#8635; Reload View ]</span> &middot;
+		<a href="ao/index.html" title="Ir a Era 1: AmbientOcclusion">[ &larr; Era 1: AO ]</a> &middot;
+		<a href="dlb/index.html" title="Ir a Era 2: DromarLeBanisseur">[ Era 2: DLB ]</a> &middot;
+		<a href="mb/index.html" title="Ir a Era 3: MisterBartra">[ Era 3: MB &rarr; ]</a> &middot;
+		<span>[ Snapshot Verified &middot; Multi-Suite Active ]</span>
+	</div>
+
+	<div id="main">
+		<div class="bypass-nav">
+			<strong>Resoluci&oacute;n de Problemas T&eacute;cnicos:</strong> Soluciones r&aacute;pidas para los incidentes m&aacute;s frecuentes.
+		</div>
+
+		<h2>1. Pantalla en Negro o Fallo de Shaders</h2>
+		<p><strong>Causa:</strong> Incompatibilidad entre modificadores externos de shaders (Iris, OptiFine) y el pipeline de renderizado.</p>
+		<p><strong>Soluci&oacute;n:</strong> En la suite MB, el Fullbright opera mediante el descriptor <code>(Lcam;F)F</code>. Aseg&uacute;rate de no forzar un pipeline de post-procesado incompatible o prueba desactivando temporalmente paquetes de shaders personalizados.</p>
+
+		<h2>2. Advertencia de "Missing Blocks" al Abrir la GUI</h2>
+		<p><strong>Causa:</strong> Un perfil guardado hace referencia a bloques que ya no est&aacute;n presentes en la instalaci&oacute;n actual de Minecraft.</p>
+		<p><strong>Soluci&oacute;n:</strong> Consulta nuestra <a href="configuration.html#missingblocks">Gu&iacute;a de Missing Blocks</a> para verificar la lista de bloques permitidos o actualiza a la suite MB para aprovechar la resoluci&oacute;n din&aacute;mica por registros del cliente.</p>
+
+		<h2>3. Teclas Marcadas en Rojo o "key.keyboard.0" en Men&uacute; de Controles</h2>
+		<p><strong>Causa:</strong> Ocurre al utilizar versiones legadas en clientes modernos de Minecraft que emplean la especificaci&oacute;n GLFW.</p>
+		<p><strong>Soluci&oacute;n:</strong> Actualiza a la suite MB versi&oacute;n <code>76-1216</code> o superior, donde todas las teclas vac&iacute;as son autom&aacute;ticamente sanitizadas al c&oacute;digo estricto <code>-1</code>.</p>
+
+		<h2>4. El Vuelo Causa Da&ntilde;o al Caer</h2>
+		<p><strong>Causa:</strong> En el c&oacute;digo can&oacute;nico de AO, desactivar el vuelo en el aire acumula aceleraci&oacute;n de gravedad.</p>
+		<p><strong>Soluci&oacute;n:</strong> La suite MB incluye intercepci&oacute;n autom&aacute;tica de ca&iacute;da y reseteo de <code>fallDistance = 0.0</code> al tocar el suelo.</p>
+
+	</div>
+</body>
+</html>
