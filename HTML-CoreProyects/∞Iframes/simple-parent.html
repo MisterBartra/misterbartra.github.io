@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sitio Web Padre - Controlador Reactivo Simple</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            background-color: #000;
+            font-family: system-ui, -apple-system, sans-serif;
+            position: relative;
+        }
+
+        /* 1. Iframe a vista completa: sin bordes, sin margen, sin inset */
+        #matrixFrame {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+        }
+
+        /* 2. Barra de botones inferiores del sitio padre */
+        .bottom-bar {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 16px;
+            background: rgba(18, 18, 20, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 9999px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            user-select: none;
+        }
+
+        .btn-ctrl {
+            background: #27272a;
+            color: #fafafa;
+            border: 1px solid #3f3f46;
+            padding: 8px 18px;
+            border-radius: 9999px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-ctrl:hover {
+            background: #3b82f6;
+            border-color: #60a5fa;
+            color: #fff;
+            transform: scale(1.04);
+        }
+
+        .btn-ctrl:active {
+            transform: scale(0.96);
+        }
+
+        .status-tag {
+            color: #a1a1aa;
+            font-size: 14px;
+            font-weight: 500;
+            padding: 0 8px;
+            min-width: 110px;
+            text-align: center;
+        }
+
+        .status-tag strong {
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Vista completa del Iframe hijo (modo mimetizado: sin bordes, sin inset, sin botones internos) -->
+    <iframe 
+        id="matrixFrame" 
+        src="./IframeMatrix.html?embedded=true" 
+        allow="fullscreen; autoplay; encrypted-media">
+    </iframe>
+
+    <!-- Controles inferiores exclusivos del sitio web padre -->
+    <div class="bottom-bar">
+        <button class="btn-ctrl" id="prevBtn" title="Anterior (Flecha Izquierda)">
+            ◀ Anterior
+        </button>
+
+        <div class="status-tag">
+            <span id="posIndicator">Capítulo <strong>1</strong></span>
+        </div>
+
+        <button class="btn-ctrl" id="nextBtn" title="Siguiente (Flecha Derecha)">
+            Siguiente ▶
+        </button>
+    </div>
+
+    <script>
+        const iframe = document.getElementById('matrixFrame');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const posIndicator = document.getElementById('posIndicator');
+
+        // ══════════════════════════════════════════════════════════════
+        // Señales Padre -> Hijo (Desencadenar navegación lateral)
+        // ══════════════════════════════════════════════════════════════
+        function navigateChild(direction) {
+            if (!iframe.contentWindow) return;
+            iframe.contentWindow.postMessage({
+                type: 'NAVIGATE_COMMAND',
+                direction: direction // 'left' o 'right'
+            }, '*');
+        }
+
+        prevBtn.addEventListener('click', () => navigateChild('left'));
+        nextBtn.addEventListener('click', () => navigateChild('right'));
+
+        // Atajos de teclado en el sitio padre (Flechas Izquierda / Derecha)
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') navigateChild('left');
+            if (e.key === 'ArrowRight') navigateChild('right');
+        });
+
+        // ══════════════════════════════════════════════════════════════
+        // Señales Hijo -> Padre (Recibir actualización reactiva)
+        // ══════════════════════════════════════════════════════════════
+        window.addEventListener('message', (event) => {
+            if (event.data?.type === 'MATRIX_NAVIGATION_EVENT') {
+                const { position, totalCols } = event.data;
+                const current = (position?.x || 0) + 1;
+                const total = totalCols || 1;
+
+                posIndicator.innerHTML = `Capítulo <strong>${current}</strong> de ${total}`;
+            }
+        });
+    </script>
+</body>
+</html>
