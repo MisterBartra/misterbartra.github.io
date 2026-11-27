@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sitio Web Anfitrión - Visor Reactivo Embebido</title>
+    <style>
+        :root {
+            --bg-color: #09090b;
+            --surface-color: #18181b;
+            --surface-hover: #27272a;
+            --border-color: #27272a;
+            --text-primary: #f4f4f5;
+            --text-secondary: #a1a1aa;
+            --accent: #3b82f6;
+            --accent-hover: #2563eb;
+            --header-height: 58px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Barra de navegación superior del sitio padre */
+        header {
+            height: var(--header-height);
+            background-color: var(--surface-color);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 18px;
+            position: relative;
+            z-index: 100;
+            transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        header.immersive-hidden {
+            transform: translateY(-100%);
+        }
+
+        .brand-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-logo {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 14px;
+            color: #ffffff;
+            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+        }
+
+        .brand-title {
+            font-size: 15px;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+            color: var(--text-primary);
+        }
+
+        .brand-badge {
+            font-size: 11px;
+            font-weight: 500;
+            padding: 2px 8px;
+            border-radius: 12px;
+            background-color: rgba(59, 130, 246, 0.15);
+            color: #60a5fa;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+
+        /* Controles centrales de navegación (Parent UI) */
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-nav {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 7px 14px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-primary);
+            background-color: var(--surface-hover);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-nav:hover:not(:disabled) {
+            background-color: #3f3f46;
+            border-color: #52525b;
+            color: #ffffff;
+        }
+
+        .btn-nav:active:not(:disabled) {
+            transform: scale(0.97);
+        }
+
+        .btn-nav:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .btn-nav svg {
+            width: 16px;
+            height: 16px;
+            stroke-width: 2.2;
+        }
+
+        .status-pill {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background-color: #121214;
+            padding: 5px 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-secondary);
+        }
+
+        .status-pill strong {
+            color: var(--text-primary);
+        }
+
+        /* Selector directo de capítulos / celdas */
+        .chapter-select {
+            background-color: var(--surface-hover);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            padding: 6px 10px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            outline: none;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+
+        .chapter-select:hover {
+            border-color: #52525b;
+        }
+
+        /* Acciones a la derecha */
+        .actions-section {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-icon {
+            width: 34px;
+            height: 34px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            background-color: var(--surface-hover);
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-icon:hover {
+            color: var(--text-primary);
+            border-color: #52525b;
+            background-color: #3f3f46;
+        }
+
+        .btn-icon svg {
+            width: 17px;
+            height: 17px;
+        }
+
+        /* Barra de progreso interactiva superior */
+        .progress-line-container {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+
+        .progress-line-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            transition: width 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        /* Contenedor principal donde se aloja el iframe */
+        .main-viewport {
+            flex: 1;
+            position: relative;
+            width: 100%;
+            height: calc(100vh - var(--header-height));
+            background-color: #000000;
+            overflow: hidden;
+        }
+
+        /* Iframe embebido: limpio, sin bordes, 100% full-bleed en el lienzo */
+        #matrixIframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+            background-color: transparent;
+        }
+
+        /* Botones laterales flotantes del sitio padre (modernos chevrons translúcidos) */
+        .parent-side-chevron {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 44px;
+            height: 74px;
+            background-color: rgba(24, 24, 27, 0.65);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 50;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s ease, background-color 0.2s ease, transform 0.2s ease;
+        }
+
+        .parent-side-chevron.left {
+            left: 0;
+            border-radius: 0 12px 12px 0;
+            border-left: none;
+        }
+
+        .parent-side-chevron.right {
+            right: 0;
+            border-radius: 12px 0 0 12px;
+            border-right: none;
+        }
+
+        .main-viewport:hover .parent-side-chevron {
+            opacity: 0.7;
+            pointer-events: auto;
+        }
+
+        .parent-side-chevron:hover {
+            opacity: 1 !important;
+            background-color: rgba(39, 39, 42, 0.9);
+            transform: translateY(-50%) scale(1.05);
+        }
+
+        .parent-side-chevron svg {
+            width: 22px;
+            height: 22px;
+            stroke-width: 2.2;
+        }
+
+        /* Zona reactiva para revelar el header en modo inmersivo */
+        .top-reveal-trigger {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 14px;
+            z-index: 99;
+            display: none;
+        }
+
+        .top-reveal-trigger.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="top-reveal-trigger" id="topTrigger"></div>
+
+    <!-- Barra Superior del Sitio Padre -->
+    <header id="siteHeader">
+        <div class="brand-section">
+            <div class="brand-logo">∞</div>
+            <div class="brand-title">Lector Reactivo</div>
+            <span class="brand-badge">Sitio Web Padre</span>
+        </div>
+
+        <div class="nav-controls">
+            <button class="btn-nav" id="prevBtn" title="Anterior (Flecha Izquierda)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+                Anterior
+            </button>
+
+            <div class="status-pill">
+                <span>Posición:</span>
+                <strong id="posLabel">1 / 1</strong>
+            </div>
+
+            <select class="chapter-select" id="chapterSelect" title="Ir directamente al capítulo">
+                <option value="0">Cargando...</option>
+            </select>
+
+            <button class="btn-nav" id="nextBtn" title="Siguiente (Flecha Derecha)">
+                Siguiente
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+            </button>
+        </div>
+
+        <div class="actions-section">
+            <button class="btn-icon" id="immersiveToggle" title="Alternar modo inmersivo (Ocultar cabecera)">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <polyline points="4 14 10 14 10 20"></polyline>
+                    <polyline points="20 10 14 10 14 4"></polyline>
+                    <line x1="14" y1="10" x2="21" y2="3"></line>
+                    <line x1="3" y1="21" x2="10" y2="14"></line>
+                </svg>
+            </button>
+            <button class="btn-icon" id="fullscreenToggle" title="Pantalla completa">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                    <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Línea de progreso reactiva -->
+        <div class="progress-line-container">
+            <div class="progress-line-fill" id="progressFill"></div>
+        </div>
+    </header>
+
+    <!-- Área principal con iframe y chevrons del padre -->
+    <main class="main-viewport" id="viewport">
+        <!-- Chevron izquierdo lateral del sitio padre -->
+        <div class="parent-side-chevron left" id="sidePrev" title="Anterior">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+        </div>
+
+        <!-- El Iframe Matrix embebido en modo mimetizado/esclavo -->
+        <iframe 
+            id="matrixIframe" 
+            src="./index.html?embedded=true"
+            allow="fullscreen; autoplay; encrypted-media; picture-in-picture">
+        </iframe>
+
+        <!-- Chevron derecho lateral del sitio padre -->
+        <div class="parent-side-chevron right" id="sideNext" title="Siguiente">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <polyline points="9 18 15 12 9 6"></polyline>
+            </svg>
+        </div>
+    </main>
+
+    <script>
+        // Elementos de la interfaz del sitio padre
+        const iframe = document.getElementById('matrixIframe');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const sidePrev = document.getElementById('sidePrev');
+        const sideNext = document.getElementById('sideNext');
+        const posLabel = document.getElementById('posLabel');
+        const chapterSelect = document.getElementById('chapterSelect');
+        const progressFill = document.getElementById('progressFill');
+        const header = document.getElementById('siteHeader');
+        const topTrigger = document.getElementById('topTrigger');
+        const immersiveToggle = document.getElementById('immersiveToggle');
+        const fullscreenToggle = document.getElementById('fullscreenToggle');
+
+        // Estado local del controlador
+        let currentPos = { x: 0, y: 0, depth: 0 };
+        let totalColumns = 1;
+        let isImmersive = false;
+
+        // ═══════════════════════════════════════════════════════════════════
+        // 1. Comunicación Padre -> Hijo (Comandos postMessage)
+        // ═══════════════════════════════════════════════════════════════════
+
+        function sendNavDirection(direction) {
+            if (!iframe.contentWindow) return;
+            iframe.contentWindow.postMessage({
+                type: 'NAVIGATE_COMMAND',
+                direction: direction // 'left' | 'right' | 'up' | 'down'
+            }, '*');
+        }
+
+        function goToColumn(colIndex) {
+            if (!iframe.contentWindow) return;
+            iframe.contentWindow.postMessage({
+                type: 'NAVIGATE_COMMAND',
+                action: 'goToPosition',
+                x: colIndex,
+                y: currentPos.y
+            }, '*');
+        }
+
+        // Asignación de clics en botones de la interfaz padre
+        prevBtn.addEventListener('click', () => sendNavDirection('left'));
+        nextBtn.addEventListener('click', () => sendNavDirection('right'));
+        sidePrev.addEventListener('click', () => sendNavDirection('left'));
+        sideNext.addEventListener('click', () => sendNavDirection('right'));
+
+        chapterSelect.addEventListener('change', (e) => {
+            const targetX = parseInt(e.target.value, 10);
+            if (!isNaN(targetX)) {
+                goToColumn(targetX);
+            }
+        });
+
+        // Soporte de navegación por teclado desde el sitio padre
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') {
+                sendNavDirection('left');
+            } else if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') {
+                sendNavDirection('right');
+            }
+        });
+
+        // ═══════════════════════════════════════════════════════════════════
+        // 2. Reactividad Hijo -> Padre (Escucha de MATRIX_NAVIGATION_EVENT)
+        // ═══════════════════════════════════════════════════════════════════
+
+        window.addEventListener('message', (event) => {
+            const data = event.data;
+            if (!data || typeof data !== 'object') return;
+
+            if (data.type === 'MATRIX_NAVIGATION_EVENT') {
+                const { position, totalCols, totalRows, currentUrl } = data;
+                currentPos = position || { x: 0, y: 0, depth: 0 };
+                totalColumns = totalCols || 1;
+
+                // Actualizar etiqueta de posición
+                const currentIdx = currentPos.x + 1;
+                posLabel.textContent = `${currentIdx} / ${totalColumns}`;
+
+                // Actualizar barra de progreso interactiva
+                const progressPct = totalColumns > 1 
+                    ? ((currentPos.x) / (totalColumns - 1)) * 100 
+                    : 100;
+                progressFill.style.width = `${progressPct}%`;
+
+                // Poblar o actualizar el select de capítulos si cambió el número de columnas
+                if (chapterSelect.children.length !== totalColumns) {
+                    chapterSelect.innerHTML = '';
+                    for (let i = 0; i < totalColumns; i++) {
+                        const opt = document.createElement('option');
+                        opt.value = i;
+                        opt.textContent = `Capítulo ${i + 1}`;
+                        chapterSelect.appendChild(opt);
+                    }
+                }
+                chapterSelect.value = currentPos.x;
+
+                // Actualizar título del documento padre
+                document.title = `Capítulo ${currentIdx} de ${totalColumns} - Lector Reactivo`;
+
+                console.log(`[Padre] Posición sincronizada: [${currentPos.y}][${currentPos.x}], URL activa:`, currentUrl);
+            }
+        });
+
+        // ═══════════════════════════════════════════════════════════════════
+        // 3. Funciones de Pantalla Completa y Modo Inmersivo
+        // ═══════════════════════════════════════════════════════════════════
+
+        immersiveToggle.addEventListener('click', () => {
+            isImmersive = !isImmersive;
+            header.classList.toggle('immersive-hidden', isImmersive);
+            topTrigger.classList.toggle('active', isImmersive);
+            document.getElementById('viewport').style.height = isImmersive ? '100vh' : 'calc(100vh - var(--header-height))';
+        });
+
+        // En modo inmersivo, acercar el cursor a la parte superior reaparece la cabecera
+        topTrigger.addEventListener('mouseenter', () => {
+            if (isImmersive) {
+                header.classList.remove('immersive-hidden');
+            }
+        });
+
+        header.addEventListener('mouseleave', () => {
+            if (isImmersive) {
+                header.classList.add('immersive-hidden');
+            }
+        });
+
+        fullscreenToggle.addEventListener('click', () => {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(() => {});
+            } else {
+                document.exitFullscreen().catch(() => {});
+            }
+        });
+    </script>
+</body>
+</html>
