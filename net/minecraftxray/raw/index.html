@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>XRay Downloads &middot; Raw Matrix Host</title>
+    <script src="raw-bridge.js"></script>
+    <script src="raw-catalog.js"></script>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            background-color: #F8F8F8;
+            font-family: Arial, Helvetica, sans-serif;
+            color: #222;
+        }
+        .suite-bar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: stretch;
+            background: #DDD;
+            border-bottom: 1px solid #C0C0C0;
+            margin-bottom: 4px;
+        }
+        .suite-bar .tab-btn {
+            padding: 6px 14px;
+            border: none;
+            border-right: 1px solid #CCC;
+            background: #DDD;
+            color: #111;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.92em;
+            letter-spacing: 0.5px;
+        }
+        .suite-bar .tab-btn:hover { background: #D0D0D0; text-decoration: underline; }
+        .suite-bar .tab-btn.active { background: #C0C0C0; font-weight: bold; }
+        .suite-bar .tab-btn.suite-ao.active { border-bottom: 2px solid #a94442; }
+        .suite-bar .tab-btn.suite-dlb.active { border-bottom: 2px solid #31708f; }
+        .suite-bar .tab-btn.suite-mb.active { border-bottom: 2px solid #3c763d; }
+
+        .ver-bar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 4px 8px;
+            padding: 4px 6px;
+            background: #E5E5E5;
+            margin-bottom: 2px;
+            font-size: 0.88em;
+        }
+        .ver-label { font-variant: small-caps; font-weight: bold; margin-right: 2px; }
+        .ver-link {
+            padding: 1px 6px;
+            border: none;
+            background: transparent;
+            color: #00E;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 1em;
+            text-decoration: underline;
+        }
+        .ver-link:hover { color: #a94442; }
+        .ver-link.active { color: #000; font-weight: bold; text-decoration: none; background: #D5D5D5; }
+        .ver-select {
+            margin-left: auto;
+            font-family: inherit;
+            font-size: 0.92em;
+            background: #F8F8F8;
+            border: 1px solid #BBB;
+            padding: 1px 4px;
+        }
+
+        .subframe-wrap { position: relative; }
+        .raw-direct {
+            position: absolute;
+            top: 3px;
+            right: 4px;
+            z-index: 2;
+            padding: 1px 6px;
+            font-size: 0.76em;
+            color: #444;
+            background: rgba(248, 248, 248, 0.92);
+            border: 1px solid #CCC;
+            text-decoration: none;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.15s ease;
+        }
+        .subframe-wrap:hover .raw-direct,
+        .raw-direct:focus-visible { opacity: 1; pointer-events: auto; }
+        .raw-direct:hover { color: #00E; border-color: #999; background: #FFF; }
+        #release-subframe {
+            width: 100%;
+            min-height: 120px;
+            border: none;
+            background: #F8F8F8;
+            display: block;
+        }
+        body.scoped-suite #suite-bar { display: none; }
+    </style>
+</head>
+<body>
+    <div id="suite-bar" class="suite-bar"></div>
+    <div id="ver-bar" class="ver-bar"></div>
+
+    <div class="subframe-wrap">
+        <a id="raw-direct-link" class="raw-direct" href="mb/1.21.6.html" target="_blank" title="Abrir esta subtabla raw independiente">raw &#8599;</a>
+        <iframe id="release-subframe" name="release-subframe" scrolling="no" title="Release Downloads Table"></iframe>
+    </div>
+
+    <script>
+    (function () {
+        'use strict';
+
+        var SUITES = window.XRAY_RAW_SUITES || {};
+        var suiteKeys = Object.keys(SUITES);
+        var currentSuite = suiteKeys[0] || 'mb';
+        var currentVer = SUITES[currentSuite] ? SUITES[currentSuite].defaultVer : 'all';
+        var scopedSuite = false;
+
+        var suiteBar = document.getElementById('suite-bar');
+        var verBar = document.getElementById('ver-bar');
+        var subframe = document.getElementById('release-subframe');
+        var directLink = document.getElementById('raw-direct-link');
+
+        var params = XRayFrameBridge.readParams();
+        if (params.suite && SUITES[params.suite.toLowerCase()]) {
+            currentSuite = params.suite.toLowerCase();
+        }
+        if (params.ver) currentVer = params.ver;
+        if (params.scope === 'suite') {
+            scopedSuite = true;
+            document.body.classList.add('scoped-suite');
+        }
+
+        function syncRoute() {
+            if (scopedSuite) return;
+            var target = '#suite=' + currentSuite + '&ver=' + currentVer;
+            if (window.location.hash !== target) history.replaceState(null, '', target);
+            if (window.parent && window.parent !== window) {
+                window.parent.postMessage({ type: 'xray-route-sync', suite: currentSuite, ver: currentVer }, '*');
+            }
+        }
+
+        function buildSuiteTabs() {
+            suiteKeys.forEach(function (id) {
+                var btn = document.createElement('button');
+                btn.type = 'button';
+                btn.className = 'tab-btn suite-' + id;
+                btn.setAttribute('data-suite', id);
+                btn.textContent = SUITES[id].label || id.toUpperCase();
+                btn.addEventListener('click', function () {
+                    if (scopedSuite) return;
+                    currentSuite = id;
+                    currentVer = SUITES[id].defaultVer;
+                    renderAll();
+                });
+                suiteBar.appendChild(btn);
+            });
+        }
+
+        function renderVersions() {
+            var spec = SUITES[currentSuite];
+            if (!spec) return;
+            if (!spec.versions.some(function (v) { return v.id === currentVer; })) currentVer = spec.defaultVer;
+
+            verBar.innerHTML = '';
+            var lbl = document.createElement('span');
+            lbl.className = 'ver-label';
+            lbl.textContent = currentSuite.toUpperCase() + ' Versions:';
+            verBar.appendChild(lbl);
+
+            var sel = document.createElement('select');
+            sel.className = 'ver-select';
+            sel.setAttribute('aria-label', 'Select version');
+
+            spec.versions.forEach(function (v) {
+                if (v.quick || v.id === currentVer) {
+                    var btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.className = 'ver-link' + (v.id === currentVer ? ' active' : '');
+                    btn.textContent = v.label;
+                    btn.addEventListener('click', function () { currentVer = v.id; renderAll(); });
+                    verBar.appendChild(btn);
+                }
+                var opt = document.createElement('option');
+                opt.value = v.id;
+                opt.textContent = v.label;
+                if (v.id === currentVer) opt.selected = true;
+                sel.appendChild(opt);
+            });
+
+            sel.addEventListener('change', function () { currentVer = sel.value; renderAll(); });
+            verBar.appendChild(sel);
+        }
+
+        function renderAll() {
+            suiteBar.querySelectorAll('button[data-suite]').forEach(function (b) {
+                b.classList.toggle('active', b.getAttribute('data-suite') === currentSuite);
+            });
+            renderVersions();
+            var url = currentSuite + '/' + currentVer + '.html';
+            if (subframe.getAttribute('src') !== url) subframe.setAttribute('src', url);
+            directLink.setAttribute('href', url);
+            syncRoute();
+            XRayFrameBridge.publishHeight('xray-baseframe-height');
+        }
+
+        buildSuiteTabs();
+        XRayFrameBridge.bindHost(subframe, 'xray-subframe-height', {
+            minHeight: 100,
+            padding: 4,
+            onResize: function () { XRayFrameBridge.publishHeight('xray-baseframe-height'); },
+            onLoad: function () { XRayFrameBridge.publishHeight('xray-baseframe-height'); }
+        });
+        renderAll();
+    })();
+    </script>
+</body>
+</html>

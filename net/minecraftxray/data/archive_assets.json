@@ -1,5 +1,5 @@
 {
-  "description": "Mapeo canónico unificado de recursos gráficos de X-Ray: Escalera de sucesión (ao -> dlb -> mb) con resolución implícita y enlaces dirigidos al portal https://misterbartra.github.io/net/minecraftxray/",
+  "description": "Catálogo canónico de recursos gráficos de X-Ray: Procedencia histórica de Web Archive (AO) encapsulada en archive_source y escalera de sucesión (ao -> dlb -> mb) en tiers",
   "portal_url": "https://misterbartra.github.io/net/minecraftxray/",
   "succession_ladder": [
     "ao",
@@ -7,6 +7,7 @@
     "mb"
   ],
   "inheritance_rule": "Resolución en escalera: si un escalón superior no define un recurso en 'tiers', hereda implícitamente de su predecesor hasta alcanzar la base canónica 'ao'. DLB, como capa de infraestructura, hereda 100% de AO sin duplicación.",
+  "notes_provenance": "Los recursos con 'archive_source' provienen de snapshots históricos de Wayback Machine (minecraftxray.net). Los recursos de evolución de suite (como javawindow o keybindings) son nativos del repositorio/portal y no llevan campos de archive nulos al ser ajenos a la arqueología web.",
   "wayback_base": "https://web.archive.org/web/",
   "assets": [
     {
@@ -15,8 +16,10 @@
       "filename": "xray.jpg",
       "mime_type": "image/jpeg",
       "file_size_bytes": 117563,
-      "raw_archive_direct_url": "https://web.archive.org/web/20170606053539im_/http://minecraftxray.net/img/xray.jpg",
-      "archive_browse_url": "https://web.archive.org/web/20170606053539/http://minecraftxray.net/img/xray.jpg",
+      "archive_source": {
+        "direct_raw": "https://web.archive.org/web/20170606053539im_/http://minecraftxray.net/img/xray.jpg",
+        "browse": "https://web.archive.org/web/20170606053539/http://minecraftxray.net/img/xray.jpg"
+      },
       "tiers": {
         "ao": "ao/img/xray.jpg"
       },
@@ -28,8 +31,10 @@
       "filename": "cavefinder.jpg",
       "mime_type": "image/jpeg",
       "file_size_bytes": 123482,
-      "raw_archive_direct_url": "https://web.archive.org/web/20161106152709im_/http://minecraftxray.net/img/cavefinder.jpg",
-      "archive_browse_url": "https://web.archive.org/web/20161106152709/http://minecraftxray.net/img/cavefinder.jpg",
+      "archive_source": {
+        "direct_raw": "https://web.archive.org/web/20161106152709im_/http://minecraftxray.net/img/cavefinder.jpg",
+        "browse": "https://web.archive.org/web/20161106152709/http://minecraftxray.net/img/cavefinder.jpg"
+      },
       "tiers": {
         "ao": "ao/img/cavefinder.jpg"
       },
@@ -41,8 +46,10 @@
       "filename": "coords.jpg",
       "mime_type": "image/jpeg",
       "file_size_bytes": 24477,
-      "raw_archive_direct_url": "https://web.archive.org/web/20210714174534im_/http://minecraftxray.net/img/coords.jpg",
-      "archive_browse_url": "https://web.archive.org/web/20210714174534/http://minecraftxray.net/img/coords.jpg",
+      "archive_source": {
+        "direct_raw": "https://web.archive.org/web/20210714174534im_/http://minecraftxray.net/img/coords.jpg",
+        "browse": "https://web.archive.org/web/20210714174534/http://minecraftxray.net/img/coords.jpg"
+      },
       "tiers": {
         "ao": "ao/img/coords.jpg"
       },
@@ -54,8 +61,10 @@
       "filename": "fullbright_gamma.jpg",
       "mime_type": "image/jpeg",
       "file_size_bytes": 4365,
-      "raw_archive_direct_url": "https://web.archive.org/web/20210714174534im_/http://minecraftxray.net/img/fullbright_gamma.jpg",
-      "archive_browse_url": "https://web.archive.org/web/20210714174534/http://minecraftxray.net/img/fullbright_gamma.jpg",
+      "archive_source": {
+        "direct_raw": "https://web.archive.org/web/20210714174534im_/http://minecraftxray.net/img/fullbright_gamma.jpg",
+        "browse": "https://web.archive.org/web/20210714174534/http://minecraftxray.net/img/fullbright_gamma.jpg"
+      },
       "tiers": {
         "ao": "ao/img/fullbright_gamma.jpg"
       },
@@ -67,8 +76,10 @@
       "filename": "fullbright_xray.jpg",
       "mime_type": "image/jpeg",
       "file_size_bytes": 11506,
-      "raw_archive_direct_url": "https://web.archive.org/web/20210714174534im_/http://minecraftxray.net/img/fullbright_xray.jpg",
-      "archive_browse_url": "https://web.archive.org/web/20210714174534/http://minecraftxray.net/img/fullbright_xray.jpg",
+      "archive_source": {
+        "direct_raw": "https://web.archive.org/web/20210714174534im_/http://minecraftxray.net/img/fullbright_xray.jpg",
+        "browse": "https://web.archive.org/web/20210714174534/http://minecraftxray.net/img/fullbright_xray.jpg"
+      },
       "tiers": {
         "ao": "ao/img/fullbright_xray.jpg"
       },
@@ -80,8 +91,10 @@
       "filename": "bug_report_step1.jpg",
       "mime_type": "image/jpeg",
       "file_size_bytes": 74812,
-      "raw_archive_direct_url": "https://web.archive.org/web/20190818165617im_/http://minecraftxray.net/img/bug_report_step1.jpg",
-      "archive_browse_url": "https://web.archive.org/web/20190818165617/http://minecraftxray.net/img/bug_report_step1.jpg",
+      "archive_source": {
+        "direct_raw": "https://web.archive.org/web/20190818165617im_/http://minecraftxray.net/img/bug_report_step1.jpg",
+        "browse": "https://web.archive.org/web/20190818165617/http://minecraftxray.net/img/bug_report_step1.jpg"
+      },
       "tiers": {
         "ao": "ao/img/bug_report_step1.jpg"
       },
@@ -93,8 +106,10 @@
       "filename": "bug_report_step2.jpg",
       "mime_type": "image/jpeg",
       "file_size_bytes": 45878,
-      "raw_archive_direct_url": "https://web.archive.org/web/20190818165617im_/http://minecraftxray.net/img/bug_report_step2.jpg",
-      "archive_browse_url": "https://web.archive.org/web/20190818165617/http://minecraftxray.net/img/bug_report_step2.jpg",
+      "archive_source": {
+        "direct_raw": "https://web.archive.org/web/20190818165617im_/http://minecraftxray.net/img/bug_report_step2.jpg",
+        "browse": "https://web.archive.org/web/20190818165617/http://minecraftxray.net/img/bug_report_step2.jpg"
+      },
       "tiers": {
         "ao": "ao/img/bug_report_step2.jpg"
       },
@@ -106,8 +121,10 @@
       "filename": "bug_report_step3.jpg",
       "mime_type": "image/jpeg",
       "file_size_bytes": 76992,
-      "raw_archive_direct_url": "https://web.archive.org/web/20190818165617im_/http://minecraftxray.net/img/bug_report_step3.jpg",
-      "archive_browse_url": "https://web.archive.org/web/20190818165617/http://minecraftxray.net/img/bug_report_step3.jpg",
+      "archive_source": {
+        "direct_raw": "https://web.archive.org/web/20190818165617im_/http://minecraftxray.net/img/bug_report_step3.jpg",
+        "browse": "https://web.archive.org/web/20190818165617/http://minecraftxray.net/img/bug_report_step3.jpg"
+      },
       "tiers": {
         "ao": "ao/img/bug_report_step3.jpg"
       },
@@ -119,8 +136,10 @@
       "filename": "bg.png",
       "mime_type": "image/png",
       "file_size_bytes": 245027,
-      "raw_archive_direct_url": "https://web.archive.org/web/20160521163523im_/http://minecraftxray.net/bg.png",
-      "archive_browse_url": "https://web.archive.org/web/20160521163523/http://minecraftxray.net/bg.png",
+      "archive_source": {
+        "direct_raw": "https://web.archive.org/web/20160521163523im_/http://minecraftxray.net/bg.png",
+        "browse": "https://web.archive.org/web/20160521163523/http://minecraftxray.net/bg.png"
+      },
       "tiers": {
         "ao": "ao/img/bg.png"
       },
@@ -132,8 +151,7 @@
       "filename": "javawindow.png",
       "mime_type": "image/png",
       "file_size_bytes": 625661,
-      "raw_archive_direct_url": null,
-      "archive_browse_url": null,
+      "provenance": "suite_evolution",
       "tiers": {
         "ao": "ao/img/javawindow.png",
         "mb": "mb/img/javawindow.png"
@@ -147,8 +165,7 @@
       "filename": "keybindings.png",
       "mime_type": "image/png",
       "file_size_bytes": 28989,
-      "raw_archive_direct_url": null,
-      "archive_browse_url": null,
+      "provenance": "suite_evolution",
       "tiers": {
         "ao": "ao/img/keybindings.png",
         "mb": "mb/img/keybindings.png"

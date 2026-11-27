@@ -1,141 +1,252 @@
-<!DOCTYPE html>
-<html>
-
-<head>
-    <title>Minecraft XRay Mod - Configuration</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <link rel="stylesheet" type="text/css" href="style.css">
-    
-    <style>
-        #coordstable {
-            border: 1px solid;
-        }
-        
-        tr:nth-child(even) {
-            background-color: #E5E5E5;
-        }
-        
-        td {
-            padding: 2px 4px;
-        }
-    </style>
+<!DOCTYPE html>
 
-<script>
-function applyImgFallback(img, primaryFallback) {
-    if (!img.dataset.failed) {
-        img.dataset.failed = '1';
-        if (primaryFallback && primaryFallback !== img.src) {
-            img.src = primaryFallback;
-        } else {
-            img.src = "data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='220' viewBox='0 0 400 220'%3E%3Crect width='100%25' height='100%25' fill='%23222' stroke='%23555' stroke-width='2' rx='6'/%3E%3Ctext x='50%25' y='45%25' dominant-baseline='middle' text-anchor='middle' fill='%23aaa' font-family='sans-serif' font-size='14'%3E[ " + (img.alt || 'Asset') + " ]%3C/text%3E%3Ctext x='50%25' y='60%25' dominant-baseline='middle' text-anchor='middle' fill='%23777' font-family='monospace' font-size='11'%3EResource unavailable - Local Fallback Engaged%3C/text%3E%3C/svg%3E";
+<html>
+
+
+
+<head>
+
+    <title>Minecraft XRay Mod - Configuration</title>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <link rel="stylesheet" type="text/css" href="style.css">
+
+
+
+    <style>
+        #coordstable {
+
+            border: 1px solid;
+
         }
-    }
-}
-</script>
 
-</head>
-
+
+
+        tr:nth-child(even) {
+
+            background-color: #E5E5E5;
+
+        }
+
+
+
+        td {
+
+            padding: 2px 4px;
+
+        }
+    </style>
+
+
+    <script>
+        function applyImgFallback(img, primaryFallback) {
+            if (!img.dataset.failed) {
+                img.dataset.failed = '1';
+                if (primaryFallback && primaryFallback !== img.src) {
+                    img.src = primaryFallback;
+                } else {
+                    img.src = "data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='220' viewBox='0 0 400 220'%3E%3Crect width='100%25' height='100%25' fill='%23222' stroke='%23555' stroke-width='2' rx='6'/%3E%3Ctext x='50%25' y='45%25' dominant-baseline='middle' text-anchor='middle' fill='%23aaa' font-family='sans-serif' font-size='14'%3E[ " + (img.alt || 'Asset') + " ]%3C/text%3E%3Ctext x='50%25' y='60%25' dominant-baseline='middle' text-anchor='middle' fill='%23777' font-family='monospace' font-size='11'%3EResource unavailable - Local Fallback Engaged%3C/text%3E%3C/svg%3E";
+                }
+            }
+        }
+    </script>
+
+</head>
+
+
+
 <body>
 
-	<div id="header">
-		<h1><i>X</i>-RAY FOR MINECRAFT</h1>
-		<i class="subtitle">Works on all versions of Minecraft from 1.6.4 up to 1.11<br>
-		Created by <a href="index.html" class="author-bypass" title="AmbientOcclusion Canonical Author">AmbientOcclusion</a></i>
-	</div>
+    <div id="header">
+        <h1><i>X</i>-RAY FOR MINECRAFT</h1>
+        <i class="subtitle">Works on all versions of Minecraft from 1.6.4 up to 1.11<br>
+            Created by <a href="index.html" class="author-bypass"
+                title="AmbientOcclusion Canonical Author">AmbientOcclusion</a></i>
+    </div>
 
-	<div id="menubar">
-		<ul>
-			<li><a href="index.html">Home</a></li>
-			<li><a href="downloads.html">Downloads</a></li>
-			<li><a href="configuration.html">Configuration</a></li>
-			<li><a href="http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/1292688-xray-mod-1-6-4-1-10-vanilla-forge-liteloader">Minecraft Forum Post</a></li>
-			<li><a href="reportbugs.html">Report Bugs</a></li>
-			<li><a href="changelog.html">Changelog</a></li>
-		</ul>
-	</div>
-	<div class="retro-env-bar">
-		<span class="retro-btn" onclick="window.location.reload();" title="Recargar cápsula canónica">[ &#8635; Reload Snapshot ]</span> &middot;
-		<a href="../index.html" title="Ir a la evolución multi-suite general">[ &larr; Multi-Suite Evolution: {AO &middot; DLB &middot; MB} ]</a> &middot;
-		<a href="../dlb/index.html" title="Siguiente contribuidor: Dromar">[ Siguiente Contributor: DLB &rarr; ]</a>
-	</div>
+    <div id="menubar">
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="downloads.html">Downloads</a></li>
+            <li><a href="configuration.html">Configuration</a></li>
+            <li><a
+                    href="http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/1292688-xray-mod-1-6-4-1-10-vanilla-forge-liteloader">Minecraft
+                    Forum Post</a></li>
+            <li><a href="reportbugs.html">Report Bugs</a></li>
+            <li><a href="changelog.html">Changelog</a></li>
+        </ul>
+    </div>
+    <div class="retro-env-bar">
+        <span class="retro-btn" onclick="window.location.reload();" title="Recargar cápsula canónica">[ &#8635; Reload
+            Snapshot ]</span> &middot;
+        <a href="../index.html" title="Ir a la evolución multi-suite general">[ &larr; Multi-Suite Evolution: {AO
+            &middot; DLB &middot; MB} ]</a> &middot;
+        <a href="../dlb/index.html" title="Siguiente contribuidor: Dromar">[ Siguiente Contributor: DLB &rarr; ]</a>
+    </div>
 
-<div id="main">
-        <h2>How do I change what blocks are visible?</h2>
-        <p>All configuration is done through the user interface. The default keybinding to open the user interface is J.</p>
-        <p>Inside the user interface you can select or deselect which blocks you want to be visible by simply checking or unchecking
-            the block you want. By default all blocks are rendered except for those on a built in blacklist of obvious blocks
-            you don't want in XRay.</p>
-        <h3 id="missingblocks">Missing blocks?</h3>
-        <p>It turns out that getting a complete list of all blocks in the game, especially when third party mods are involved,
-            is a bit difficult. XRay will prepopulate the list with some blocks it can easily detect; however, there still
-            may be some missing. To address this problem, XRay will add the missing blocks to the list as it filters them
-            when XRay is enabled.</p>
-
-        <h2>How do I change what is on the coordinates display?</h2>
-        <p>Open the user interface and at the bottom there is a text area where you can change what is on the coordinates display.
-            Below is a table of the possible options you can use.</p>
-
-        <table id="coordstable">
-            <tr>
-                <th>Coordinates option</th>
-                <th>Description</th>
-            </tr>
-            <tr>
-                <td>{X}, {Y}, {Z}</td>
-                <td>XYZ coordinates.</td>
-            </tr>
-            <tr>
-                <td>{X1}, {Y1}, {Z1}</td>
-                <td>XYZ coordinates with 1 decimal.</td>
-            </tr>
-            <tr>
-                <td>{X2}, {Y2}, {Z2}</td>
-                <td>XYZ coordinates with 2 decimals.</td>
-            </tr>
-            <tr>
-                <td>{ChunkX}, {ChunkY}, {ChunkZ}</td>
-                <td>the location of the chunk you're in.</td>
-            </tr>
-            <tr>
-                <td>{ChunkPosX}, {ChunkPosY}, {ChunkPosZ}</td>
-                <td>your location within the chunk.</td>
-            </tr>
-            <tr>
-                <td>{FPS}</td>
-                <td>the FPS string.</td>
-            </tr>
-            <tr>
-                <td>{Biome}</td>
-                <td>the current biome you're in.</td>
-            </tr>
-            <tr>
-                <td>{BlockLight}, {SkyLight}</td>
-                <td>the block light and skylight levels.</td>
-            </tr>
-            <tr>
-                <td>{LookingAt}</td>
-                <td>the coordinates of the block you are currently looking at.</td>
-            </tr>
-            <tr>
-                <td>{Compass}</td>
-                <td>the current direction you are facing (north/south/etc).</td>
-            </tr>
-            <tr>
-                <td>{RenderedEntities}, {TotalEntities}</td>
-                <td>entity information.</td>
-            </tr>
-            <tr>
-                <td>{Clock}, {24Clock}</td>
-                <td>shows the current in-game time.</td>
-            </tr>
-            <tr>
-                <td>{Fly}</td>
-                <td>if fly is enabled, and your current fly speed.</td>
-            </tr>
-        </table>
-        <p>You can also use <a href="http://minecraft.gamepedia.com/Formatting_codes">formatting codes</a>. However, instead
-            of the section sign (&sect;) you can use the dollar sign ($) for convenience.</p>
-    </div>
-</body>
-
+    <div id="main">
+
+        <h2>How do I change what blocks are visible?</h2>
+
+        <p>All configuration is done through the user interface. The default keybinding to open the user interface is J.
+        </p>
+
+        <p>Inside the user interface you can select or deselect which blocks you want to be visible by simply checking
+            or unchecking
+
+            the block you want. By default all blocks are rendered except for those on a built in blacklist of obvious
+            blocks
+
+            you don't want in XRay.</p>
+
+        <h3 id="missingblocks">Missing blocks?</h3>
+
+        <p>It turns out that getting a complete list of all blocks in the game, especially when third party mods are
+            involved,
+
+            is a bit difficult. XRay will prepopulate the list with some blocks it can easily detect; however, there
+            still
+
+            may be some missing. To address this problem, XRay will add the missing blocks to the list as it filters
+            them
+
+            when XRay is enabled.</p>
+
+
+
+        <h2>How do I change what is on the coordinates display?</h2>
+
+        <p>Open the user interface and at the bottom there is a text area where you can change what is on the
+            coordinates display.
+
+            Below is a table of the possible options you can use.</p>
+
+
+
+        <table id="coordstable">
+
+            <tr>
+
+                <th>Coordinates option</th>
+
+                <th>Description</th>
+
+            </tr>
+
+            <tr>
+
+                <td>{X}, {Y}, {Z}</td>
+
+                <td>XYZ coordinates.</td>
+
+            </tr>
+
+            <tr>
+
+                <td>{X1}, {Y1}, {Z1}</td>
+
+                <td>XYZ coordinates with 1 decimal.</td>
+
+            </tr>
+
+            <tr>
+
+                <td>{X2}, {Y2}, {Z2}</td>
+
+                <td>XYZ coordinates with 2 decimals.</td>
+
+            </tr>
+
+            <tr>
+
+                <td>{ChunkX}, {ChunkY}, {ChunkZ}</td>
+
+                <td>the location of the chunk you're in.</td>
+
+            </tr>
+
+            <tr>
+
+                <td>{ChunkPosX}, {ChunkPosY}, {ChunkPosZ}</td>
+
+                <td>your location within the chunk.</td>
+
+            </tr>
+
+            <tr>
+
+                <td>{FPS}</td>
+                <td>the FPS string.</td>
+            </tr>
+
+            <tr>
+
+                <td>{Biome}</td>
+
+                <td>the current biome you're in.</td>
+
+            </tr>
+
+            <tr>
+
+                <td>{BlockLight}, {SkyLight}</td>
+
+                <td>the block light and skylight levels.</td>
+
+            </tr>
+
+            <tr>
+
+                <td>{LookingAt}</td>
+
+                <td>the coordinates of the block you are currently looking at.</td>
+
+            </tr>
+
+            <tr>
+
+                <td>{Compass}</td>
+
+                <td>the current direction you are facing (north/south/etc).</td>
+
+            </tr>
+
+            <tr>
+
+                <td>{RenderedEntities}, {TotalEntities}</td>
+
+                <td>entity information.</td>
+
+            </tr>
+
+            <tr>
+
+                <td>{Clock}, {24Clock}</td>
+
+                <td>shows the current in-game time.</td>
+
+            </tr>
+
+            <tr>
+
+                <td>{Fly}</td>
+
+                <td>if fly is enabled, and your current fly speed.</td>
+
+            </tr>
+
+        </table>
+
+        <p>You can also use <a href="http://minecraft.gamepedia.com/Formatting_codes">formatting codes</a>. However,
+            instead
+
+            of the section sign (&sect;) you can use the dollar sign ($) for convenience.</p>
+
+    </div>
+
+</body>
+
+
+
 </html>

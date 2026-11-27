@@ -6,12 +6,13 @@
 	<link rel="stylesheet" type="text/css" href="style.css">
 	<script src="js/xray-fallback.js"></script>
 	<script src="js/xray-core.js"></script>
+	<script src="raw/raw-bridge.js"></script>
 </head>
 <body>
 
 	<div id="header">
 		<h1><i>X</i>-RAY FOR MINECRAFT</h1>
-		<i class="subtitle">Works on all versions of Minecraft from 1.6.4 up to 1.21.6+<br>
+		<i class="subtitle">Works on all versions of Minecraft from 1.6.4 up to 26.3<br>
 		Created by <a href="ao/index.html" class="author-bypass" title="Ver suite canónica de AmbientOcclusion">AmbientOcclusion</a> &middot; 
 		Extended by <a href="dlb/index.html" class="author-bypass" title="Ver suite de infraestructura de Dromar">DromarLeBanisseur</a> &middot; 
 		Modernized by <a href="mb/index.html" class="author-bypass" title="Ver suite moderna de MisterBartra">MisterBartra</a></i>
@@ -41,96 +42,13 @@
 
 	<div id="main">
 		<div class="bypass-nav">
-			<strong>Descargas Multi-Suite:</strong> Selecciona el paquete correspondiente a tu versi&oacute;n de Minecraft y entorno de ejecuci&oacute;n.
+			<strong>Descargas Multi-Suite:</strong> Selecciona la suite y la versi&oacute;n dentro del panel base para intercambiar la tabla <em>raw</em> embebida y consultar el historial cronol&oacute;gico por fecha.
 		</div>
 
-		<!-- DOWNLOADS: MB SUITE -->
-		<div class="timeline-section timeline-mb">
-			<h3 style="margin-top:0;"><span class="era-badge era-mb">MB Suite</span> Minecraft 1.21.6+ <sub>(Moderna &middot; Autor: MisterBartra)</sub></h3>
-			<p>Compatible con lanzadores modernos, GLFW sanitizado, shaders persistentes y protecci&oacute;n contra da&ntilde;o de ca&iacute;da.</p>
-			<table class="ao-table">
-				<tr>
-					<th>Artefacto</th>
-					<th>Versi&oacute;n</th>
-					<th>Tipo / Descripci&oacute;n</th>
-					<th>Enlace de Descarga</th>
-				</tr>
-				<tr>
-					<td><strong>xray-mb-76-1216.jar</strong></td>
-					<td>76-1216</td>
-					<td>Cliente universal 1.21.6+ (Fabric / NeoForge / Vanilla)</td>
-					<td><a href="downloads/xray-mb-76-1216.jar" class="retro-btn">[ Descargar JAR ]</a></td>
-				</tr>
-				<tr>
-					<td><strong>xray-mb-75-1215.jar</strong></td>
-					<td>75-1215</td>
-					<td>Cliente universal para Minecraft 1.21.5</td>
-					<td><a href="downloads/xray-mb-75-1215.jar" class="retro-btn">[ Descargar JAR ]</a></td>
-				</tr>
-			</table>
-			<p><strong>Coordenadas Maven / Gradle:</strong><br>
-			<code>implementation 'net.minecraftxray:mb:76-1216'</code></p>
-		</div>
+		<iframe class="downloads-base-frame" src="raw/index.html" scrolling="no" title="XRay Downloads Matrix"
+		        data-xray-frame-host="xray-baseframe-height" data-xray-min-height="240" data-xray-route-sync="true"></iframe>
 
-		<!-- DOWNLOADS: DLB SUITE -->
-		<div class="timeline-section timeline-dlb">
-			<h3 style="margin-top:0;"><span class="era-badge era-dlb">DLB Suite</span> Minecraft 1.12.2 &ndash; 1.20.x <sub>(Infraestructura &middot; Autor: DromarLeBanisseur)</sub></h3>
-			<p>Contenedor de arranque aut&oacute;nomo optimizado a 27.2 KB para entornos LaunchWrapper intermedios.</p>
-			<table class="ao-table">
-				<tr>
-					<th>Artefacto</th>
-					<th>Versi&oacute;n</th>
-					<th>Tama&ntilde;o</th>
-					<th>Enlace de Descarga</th>
-				</tr>
-				<tr>
-					<td><strong>launchwrapper-2.4.1.jar</strong></td>
-					<td>2.4.1</td>
-					<td>27.2 KB</td>
-					<td><a href="downloads/launchwrapper-2.4.1.jar" class="retro-btn">[ Descargar LaunchWrapper ]</a></td>
-				</tr>
-			</table>
-		</div>
-
-		<!-- DOWNLOADS: AO CANON -->
-		<div class="timeline-section timeline-ao">
-			<h3 style="margin-top:0;"><span class="era-badge era-ao">AO Canon</span> Minecraft 1.6.4 &ndash; 1.11.x <sub>(Hist&oacute;rico &middot; Autor: AmbientOcclusion)</sub></h3>
-			<p>Archivos hist&oacute;ricos originales conservados para preservaci&oacute;n y retro-compatibilidad.</p>
-			<table class="ao-table">
-				<tr>
-					<th>Versi&oacute;n de Minecraft</th>
-					<th>Tipo de Instalador</th>
-					<th>Descarga</th>
-				</tr>
-				<tr>
-					<td><strong>1.11.2</strong></td>
-					<td>Instalador Gr&aacute;fico Autom&aacute;tico</td>
-					<td><a href="ao/downloads.html" class="retro-btn">[ Ver en C&aacute;psula AO ]</a></td>
-				</tr>
-				<tr>
-					<td><strong>1.10.2</strong></td>
-					<td>Instalador Gr&aacute;fico Autom&aacute;tico</td>
-					<td><a href="ao/downloads.html" class="retro-btn">[ Ver en C&aacute;psula AO ]</a></td>
-				</tr>
-				<tr>
-					<td><strong>1.9.4 &ndash; 1.9.0</strong></td>
-					<td>Instalador Gr&aacute;fico Autom&aacute;tico</td>
-					<td><a href="ao/downloads.html" class="retro-btn">[ Ver en C&aacute;psula AO ]</a></td>
-				</tr>
-				<tr>
-					<td><strong>1.8.9 &ndash; 1.8.0</strong></td>
-					<td>Instalador Gr&aacute;fico Autom&aacute;tico</td>
-					<td><a href="ao/downloads.html" class="retro-btn">[ Ver en C&aacute;psula AO ]</a></td>
-				</tr>
-				<tr>
-					<td><strong>1.7.10 &ndash; 1.6.4</strong></td>
-					<td>Instalador Universal Legacy</td>
-					<td><a href="ao/downloads.html" class="retro-btn">[ Ver en C&aacute;psula AO ]</a></td>
-				</tr>
-			</table>
-			<p><a href="ao/downloads.html"><strong>Ver la lista hist&oacute;rica completa de descargas de AmbientOcclusion &rarr;</strong></a></p>
-		</div>
-
+		<p style="margin-top:1.2em;"><strong>Archivo Can&oacute;nico Original AO:</strong> <a href="ao/downloads.html"><strong>Ver p&aacute;gina hist&oacute;rica completa de AmbientOcclusion &rarr;</strong></a></p>
 	</div>
 </body>
 </html>

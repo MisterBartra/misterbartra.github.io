@@ -74,14 +74,21 @@
 			<tr><td><code>{X2}, {Y2}, {Z2}</code></td><td>Coordenadas con 2 decimales de precisi&oacute;n.</td><td>128.42, 64.00, -256.71</td></tr>
 			<tr><td><code>{ChunkX}, {ChunkY}, {ChunkZ}</code></td><td>Coordenadas del chunk en el que te encuentras.</td><td>8, 4, -16</td></tr>
 			<tr><td><code>{ChunkPosX}, {ChunkPosY}, {ChunkPosZ}</code></td><td>Posici&oacute;n relativa (0&ndash;15) dentro del chunk.</td><td>0, 0, 15</td></tr>
-			<tr><td><code>{FPS}</code></td><td>Cuadros por segundo actuales.</td><td>144 fps</td></tr>
-			<tr><td><code>{Biome}</code></td><td>Nombre del bioma actual.</td><td>Plains, Deep Dark</td></tr>
-			<tr><td><code>{BlockLight}, {SkyLight}</code></td><td>Nivel de luz de bloque y luz del cielo.</td><td>0, 15</td></tr>
-			<tr><td><code>{LookingAt}</code></td><td>Coordenadas del bloque al que est&aacute;s apuntando.</td><td>130, 63, -255</td></tr>
-			<tr><td><code>{Compass}</code></td><td>Direcci&oacute;n cardinal hacia la que miras.</td><td>North, South-East</td></tr>
+			<tr><td><code>{FPS}</code></td><td>Cuadros por segundo con recuento de chunk updates.</td><td>144 fps (0 chunk updates)</td></tr>
+			<tr><td><code>{FPS-only}</code> <sub>(Solo MB)</sub></td><td>Cuadros por segundo sin mostrar chunk updates (presente &uacute;nicamente en MB Suite).</td><td>144 fps</td></tr>
+			<tr><td><code>{Biome}</code></td><td>Nombre del bioma actual.</td><td>deep_dark, plains</td></tr>
+			<tr><td><code>{BlockLight}, {SkyLight}</code></td><td>Nivel de luz de bloque y luz del cielo.</td><td>7, 15</td></tr>
+			<tr><td><code>{LookingAt}</code></td><td>Coordenadas del bloque al que est&aacute;s apuntando.</td><td>130 63 -255</td></tr>
+			<tr><td><code>{Compass}</code></td><td>Direcci&oacute;n cardinal hacia la que miras.</td><td>North (-Z)</td></tr>
 			<tr><td><code>{RenderedEntities}, {TotalEntities}</code></td><td>Entidades renderizadas y totales en memoria.</td><td>12 / 85</td></tr>
-			<tr><td><code>{Clock}, {24Clock}</code></td><td>Hora actual del juego en formato 12h o 24h.</td><td>14:30</td></tr>
-			<tr><td><code>{Fly}</code></td><td>Estado del modo de vuelo y multiplicador de velocidad.</td><td>Fly: ON (2.0x)</td></tr>
+			<tr><td><code>{Clock}, {24Clock}</code></td><td>Hora actual del juego en formato 12h o 24h.</td><td>06:00 AM / 06:00</td></tr>
+			<tr><td><code>{Fly}</code></td><td>Estado del modo de vuelo y multiplicador de velocidad.</td><td>Flying [speed: 100%]</td></tr>
+			<tr><td><code>{LookingAtFluid}</code> <sub>(Solo DLB+)</sub></td><td>Coordenadas del fluido apuntado (presente en DLB / MB).</td><td>10 62 -20</td></tr>
+			<tr><td><code>{TargetedBlock}</code> <sub>(Solo DLB+)</sub></td><td>ID de registro del bloque apuntado (presente en DLB / MB).</td><td>diamond_ore</td></tr>
+			<tr><td><code>{TargetedFluid}</code> <sub>(Solo DLB+)</sub></td><td>ID de registro del fluido apuntado (presente en DLB / MB).</td><td>water</td></tr>
+			<tr><td><code>{TargetedEntity}</code> <sub>(Solo DLB+)</sub></td><td>ID de registro de la entidad bajo la mira (presente en DLB / MB).</td><td>creeper</td></tr>
+			<tr><td><code>{Days}</code> <sub>(Solo DLB+)</sub></td><td>D&iacute;as transcurridos en el mundo (presente en DLB / MB).</td><td>2</td></tr>
+			<tr><td><code>{Dimension}</code> <sub>(Solo DLB+)</sub></td><td>Dimensi&oacute;n actual del jugador (presente en DLB / MB).</td><td>overworld</td></tr>
 		</table>
 		<p><em>Tip de formato:</em> Puedes utilizar c&oacute;digos de color usando el signo de d&oacute;lar (<code>$</code>) en lugar de la secci&oacute;n (<code>&sect;</code>). Por ejemplo: <code>$aX: {X} $bY: {Y} $cZ: {Z}</code>.</p>
 
