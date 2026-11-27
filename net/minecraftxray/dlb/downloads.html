@@ -6,31 +6,35 @@
 	<link rel="stylesheet" type="text/css" href="../style.css">
 	<script src="../js/xray-fallback.js"></script>
 	<script src="../js/xray-core.js"></script>
-	<script src="../raw/raw-bridge.js"></script>
+	<script src="../js/matrix-bridge.js"></script>
 </head>
 <body>
 	<div id="header">
 		<h1><i>X</i>-RAY FOR MINECRAFT</h1>
-		<i class="subtitle">Works on all versions of Minecraft from 1.12.2 up to 26.3 via LaunchWrapper 2.4.1<br>
-		Infrastructure &amp; LaunchWrapper by <a href="index.html" class="author-bypass">DromarLeBanisseur</a> &middot; <a href="../downloads.html" class="author-bypass" style="opacity:0.75;">[ All Suites Downloads &rarr; ]</a></i>
+		<i class="subtitle">Suite DromarLeBanisseur (DLB v76 &middot; LaunchWrapper Embebido)<br>
+		Created by <a href="../ao/index.html">AmbientOcclusion</a> &middot; Extended by DromarLeBanisseur</i>
 	</div>
 
 	<div id="menubar">
 		<ul>
 			<li><a href="../index.html">&larr; Multi-Suite Home</a></li>
-			<li><a href="downloads.html" class="active">DLB Downloads</a></li>
-			<li><a href="../configuration.html">Configuration</a></li>
-			<li><a href="../ao/index.html"><span class="era-badge era-ao">AO Canon</span></a></li>
-			<li><a href="index.html"><span class="era-badge era-dlb">DLB Suite</span></a></li>
-			<li><a href="../mb/index.html"><span class="era-badge era-mb">MB Suite</span></a></li>
+			<li><a href="../downloads.html">Downloads</a></li>
+			<li><a href="../ao/downloads.html"><span class="era-badge era-ao">AO Canon</span></a></li>
+			<li><a href="downloads.html" class="active">DLB Suite</a></li>
+			<li><a href="../mb/downloads.html"><span class="era-badge era-mb">MB Suite</span></a></li>
 		</ul>
 	</div>
 
 	<div id="main">
-		<p>Descargas dedicadas exclusivamente a la suite <strong>DLB (v76)</strong> y su contenedor <code>LaunchWrapper 2.4.1</code>.</p>
-		<iframe class="downloads-base-frame" src="../raw/index.html?suite=dlb&scope=suite" scrolling="no" title="DLB Downloads Matrix"
-		        data-xray-frame-host="xray-baseframe-height" data-xray-min-height="180"></iframe>
-		<p style="margin-top:1.2em;"><a href="../downloads.html"><strong>Ver matriz completa multi-suite (MB &middot; DLB &middot; AO) &rarr;</strong></a></p>
+		<div class="bypass-nav">
+			<strong>Suite DLB (DromarLeBanisseur v76):</strong> Motor LaunchWrapper embebido en cada JAR y herramienta core independiente en <code>downloads/launchwrapper/</code>. Bifurcación entre builds modernos y builds Java 8 legacy.
+		</div>
+
+		<!-- Direct 1-level iframe to local all.html -->
+		<iframe class="downloads-base-frame" src="all.html" scrolling="no" title="DLB Downloads Table"
+		        data-xray-frame-host="xray-baseframe-height" data-xray-min-height="240"></iframe>
+
+		<p style="margin-top:1.2em;"><a href="../downloads.html"><strong>Ver matriz completa comparativa multi-suite (AO &middot; DLB &middot; MB) &rarr;</strong></a></p>
 	</div>
 </body>
 </html>

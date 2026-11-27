@@ -1,0 +1,157 @@
+/* ==========================================================================
+   MINECRAFTXRAY CANONICAL MATRIX TABLE STYLESHEET (AO / DLB / MB)
+   Faithful reproduction of official AmbientOcclusion snapshots (2015 - 2022)
+   ========================================================================== */
+
+html, body {
+    margin: 0;
+    padding: 0;
+    background-color: #F8F8F8;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #222;
+}
+
+/* Master Canon Table */
+table.canon-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #FFF;
+    border: 1px solid #CCC;
+    margin-top: 6px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+table.canon-table tr:first-child,
+table.canon-table thead tr {
+    background-color: #E5E5E5;
+    border-bottom: 2px solid #D0D0D0;
+}
+
+table.canon-table th {
+    padding: 8px 10px;
+    text-align: left;
+    font-weight: bold;
+    color: #111;
+    font-size: 13.5px;
+    letter-spacing: 0.3px;
+    border: 1px solid #DDD;
+}
+
+table.canon-table td {
+    padding: 7px 10px;
+    border: 1px solid #E0E0E0;
+    font-size: 13px;
+    vertical-align: middle;
+}
+
+table.canon-table td:first-child {
+    font-variant: small-caps;
+    font-weight: bold;
+    color: #111;
+    white-space: nowrap;
+}
+
+/* Authentic Zebra-striping matching WayBack snapshot */
+table.canon-table tr.zebra-even {
+    background-color: #F5F5F5;
+}
+
+table.canon-table tr:hover {
+    background-color: #EDF7ED;
+}
+
+/* Collapsible release history rows */
+table.canon-table tr.rel-history {
+    display: none;
+}
+
+table.canon-table tr.rel-history.is-open {
+    display: table-row;
+}
+
+table.canon-table tr.rel-history td:first-child {
+    padding-left: 20px;
+    color: #555;
+    font-weight: normal;
+}
+
+/* Accordion expand/collapse link */
+a.rel-toggle {
+    margin-left: 6px;
+    font-variant: normal;
+    font-size: 0.85em;
+    color: #00E;
+    text-decoration: underline;
+    cursor: pointer;
+    font-weight: normal;
+}
+
+a.rel-toggle:hover {
+    color: #a94442;
+}
+
+/* Era Header Section (Java 17/21 vs Java 8 Bifurcation) */
+tr.era-header td {
+    background-color: #ECECEC !important;
+    font-weight: bold;
+    color: #111;
+    font-size: 12.5px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    padding: 9px 12px;
+    border-top: 2px solid #C0C0C0;
+    border-bottom: 1px solid #CCC;
+}
+
+/* Runtime badges */
+.runtime-tag {
+    display: inline-block;
+    font-size: 11px;
+    padding: 2px 7px;
+    border-radius: 3px;
+    margin-left: 8px;
+    font-weight: bold;
+    letter-spacing: 0.3px;
+    vertical-align: middle;
+    text-transform: none;
+}
+.tag-modern {
+    background-color: #E8F5E9;
+    color: #2E7D32;
+    border: 1px solid #A5D6A7;
+}
+.tag-legacy {
+    background-color: #FFF3E0;
+    color: #E65100;
+    border: 1px solid #FFCC80;
+}
+
+/* Slot placeholder for pending legacy builds */
+.slot-pending {
+    color: #888;
+    font-style: italic;
+    font-family: Consolas, monospace;
+    font-size: 12px;
+}
+
+/* Download button / link */
+table.canon-table a {
+    color: #00E;
+    text-decoration: underline;
+    font-weight: 500;
+}
+table.canon-table a:hover {
+    color: #A94442;
+}
+
+table.canon-table code {
+    font-family: Consolas, "Courier New", monospace;
+    font-size: 12px;
+    background: #EFEFEF;
+    padding: 1px 4px;
+    border-radius: 3px;
+    border: 1px solid #DDD;
+    color: #333;
+}

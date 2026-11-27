@@ -1,371 +1,40 @@
 <!DOCTYPE html>
-
 <html>
-
-
-
 <head>
-
-    <title>Minecraft XRay Mod - Downloads</title>
-
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-
-    <link rel="stylesheet" type="text/css" href="style.css">
-
-    
-
-    <style>
-
-        tr:first-child {
-
-            background-color: #E5E5E5;
-
-        }
-
-        td:first-child {
-
-            font-variant: small-caps;
-
-        }
-
-    </style>
-
-
-<script>
-function applyImgFallback(img, primaryFallback) {
-    if (!img.dataset.failed) {
-        img.dataset.failed = '1';
-        if (primaryFallback && primaryFallback !== img.src) {
-            img.src = primaryFallback;
-        } else {
-            img.src = "data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='220' viewBox='0 0 400 220'%3E%3Crect width='100%25' height='100%25' fill='%23222' stroke='%23555' stroke-width='2' rx='6'/%3E%3Ctext x='50%25' y='45%25' dominant-baseline='middle' text-anchor='middle' fill='%23aaa' font-family='sans-serif' font-size='14'%3E[ " + (img.alt || 'Asset') + " ]%3C/text%3E%3Ctext x='50%25' y='60%25' dominant-baseline='middle' text-anchor='middle' fill='%23777' font-family='monospace' font-size='11'%3EResource unavailable - Local Fallback Engaged%3C/text%3E%3C/svg%3E";
-        }
-    }
-}
-</script>
-
+	<title>Minecraft XRay Mod &middot; AO Canonical Downloads</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<link rel="stylesheet" type="text/css" href="../style.css">
+	<script src="../js/xray-fallback.js"></script>
+	<script src="../js/xray-core.js"></script>
+	<script src="../js/matrix-bridge.js"></script>
 </head>
-
-
-
 <body>
-
 	<div id="header">
 		<h1><i>X</i>-RAY FOR MINECRAFT</h1>
-		<i class="subtitle">Works on all versions of Minecraft from 1.6.4 up to 1.11<br>
-		Created by <a href="index.html" class="author-bypass" title="AmbientOcclusion Canonical Author">AmbientOcclusion</a></i>
+		<i class="subtitle">Official Canonical Releases &middot; Pure AmbientOcclusion v47 Architecture<br>
+		Created by <a href="index.html" class="author-bypass">AmbientOcclusion</a></i>
 	</div>
 
 	<div id="menubar">
 		<ul>
-			<li><a href="index.html">Home</a></li>
-			<li><a href="downloads.html">Downloads</a></li>
-			<li><a href="configuration.html">Configuration</a></li>
-			<li><a href="http://www.minecraftforum.net/forums/mapping-and-modding/minecraft-mods/1292688-xray-mod-1-6-4-1-10-vanilla-forge-liteloader">Minecraft Forum Post</a></li>
-			<li><a href="reportbugs.html">Report Bugs</a></li>
-			<li><a href="changelog.html">Changelog</a></li>
+			<li><a href="../index.html">&larr; Multi-Suite Home</a></li>
+			<li><a href="../downloads.html">Downloads</a></li>
+			<li><a href="downloads.html" class="active"><span class="era-badge era-ao">AO Canon</span></a></li>
+			<li><a href="../dlb/downloads.html"><span class="era-badge era-dlb">DLB Suite</span></a></li>
+			<li><a href="../mb/downloads.html"><span class="era-badge era-mb">MB Suite</span></a></li>
 		</ul>
 	</div>
-	<div class="retro-env-bar">
-		<span class="retro-btn" onclick="window.location.reload();" title="Recargar cápsula canónica">[ &#8635; Reload Snapshot ]</span> &middot;
-		<a href="../index.html" title="Ir a la evolución multi-suite general">[ &larr; Multi-Suite Evolution: {AO &middot; DLB &middot; MB} ]</a> &middot;
-		<a href="../dlb/index.html" title="Siguiente contribuidor: Dromar">[ Siguiente Contributor: DLB &rarr; ]</a>
+
+	<div id="main">
+		<div class="bypass-nav">
+			<strong>Suite Canónica AO (v47):</strong> Nomenclatura oficial <code>XRay-&#123;mcVersion&#125;-v47.jar</code>. Dividido entre la <em>Era Moderna</em> (Java 17/21, MC 1.17+) y la <em>Era Legacy</em> (Java 8, MC 1.5.2 &ndash; 1.16.5).
+		</div>
+
+		<!-- Direct 1-level iframe to local all.html -->
+		<iframe class="downloads-base-frame" src="all.html" scrolling="no" title="AO Canonical Downloads Table"
+		        data-xray-frame-host="xray-baseframe-height" data-xray-min-height="240"></iframe>
+
+		<p style="margin-top:1.2em;"><a href="../downloads.html"><strong>Ver matriz completa comparativa multi-suite (AO &middot; DLB &middot; MB) &rarr;</strong></a></p>
 	</div>
-
-<div id="main">
-
-        <p>Canonical standalone releases of the <strong>AO</strong> suite use version identifier <strong>47</strong> (<code>xray-47.jar</code> universal and <code>xray-47-&lt;ver&gt;.jar</code> per-version builds).</p>
-
-
-
-        <table>
-            <tr>
-                <th>Release</th>
-                <th>XRay Version</th>
-                <th>Download</th>
-                <th>Supported Minecraft Versions</th>
-                <th>Release Date</th>
-            </tr>
-            <tr>
-                <td>Canonical Universal</td>
-                <td>Version 47 (<code>XRay-v47.jar</code>)</td>
-                <td><a href="../downloads/XRay-v47.jar" class="author-bypass">XRay-v47.jar</a></td>
-                <td>1.16.5 &ndash; 26.3 (All-in-One, AO Pure)</td>
-                <td>2026-11-26</td>
-            </tr>
-            <tr>
-                <td>Release 26.3</td>
-                <td>Version 47 (<code>XRay-26.3-v47.jar</code>)</td>
-                <td><a href="../downloads/XRay-26.3-v47.jar" class="author-bypass">Download (XRay-26.3-v47.jar)</a></td>
-                <td>Minecraft 26.3 (Vanilla Pura)</td>
-                <td>2026-11-26</td>
-            </tr>            <tr>
-                <td>Release 26.2</td>
-                <td>Version 47 (<code>XRay-26.2-v47.jar</code>)</td>
-                <td><a href="../downloads/XRay-26.2-v47.jar" class="author-bypass">Download (XRay-26.2-v47.jar)</a></td>
-                <td>Minecraft 26.2 (Vanilla Pura)</td>
-                <td>2026-11-26</td>
-            </tr>            <tr>
-                <td>Release 26.1.2</td>
-                <td>Version 47 (<code>XRay-26.1.2-v47.jar</code>)</td>
-                <td><a href="../downloads/XRay-26.1.2-v47.jar" class="author-bypass">Download (XRay-26.1.2-v47.jar)</a></td>
-                <td>Minecraft 26.1.2 (Vanilla Pura)</td>
-                <td>2026-11-26</td>
-            </tr>            <tr>
-                <td>Release 26.1.1</td>
-                <td>Version 47 (<code>XRay-26.1.1-v47.jar</code>)</td>
-                <td><a href="../downloads/XRay-26.1.1-v47.jar" class="author-bypass">Download (XRay-26.1.1-v47.jar)</a></td>
-                <td>Minecraft 26.1.1 (Vanilla Pura)</td>
-                <td>2026-11-26</td>
-            </tr>            <tr>
-                <td>Release 26.1</td>
-                <td>Version 47 (<code>XRay-26.1-v47.jar</code>)</td>
-                <td><a href="../downloads/XRay-26.1-v47.jar" class="author-bypass">Download (XRay-26.1-v47.jar)</a></td>
-                <td>Minecraft 26.1 (Vanilla Pura)</td>
-                <td>2026-11-26</td>
-            </tr>            <tr>
-                <td>Release 1.21.9</td>
-                <td>Version 47 (<code>XRay-1.21.9-v47.jar</code>)</td>
-                <td><a href="../downloads/XRay-1.21.9-v47.jar" class="author-bypass">Download (XRay-1.21.9-v47.jar)</a></td>
-                <td>Minecraft 1.21.9 (Vanilla Pura)</td>
-                <td>2026-11-26</td>
-            </tr>            <tr>
-                <td>Release 1.21.8</td>
-                <td>Version 47 (<code>XRay-1.21.8-v47.jar</code>)</td>
-                <td><a href="../downloads/XRay-1.21.8-v47.jar" class="author-bypass">Download (XRay-1.21.8-v47.jar)</a></td>
-                <td>Minecraft 1.21.8 (Vanilla Pura)</td>
-                <td>2026-11-26</td>
-            </tr>            <tr>
-                <td>Release 1.21.7</td>
-                <td>Version 47 (<code>XRay-1.21.7-v47.jar</code>)</td>
-                <td><a href="../downloads/XRay-1.21.7-v47.jar" class="author-bypass">Download (XRay-1.21.7-v47.jar)</a></td>
-                <td>Minecraft 1.21.7 (Vanilla Pura)</td>
-                <td>2026-11-26</td>
-            </tr>            <tr>
-                <td>Release 1.21.6</td>
-                <td>Version 47 (<code>XRay-1.21.6-v47.jar</code>)</td>
-                <td><a href="../downloads/XRay-1.21.6-v47.jar" class="author-bypass">Download (XRay-1.21.6-v47.jar)</a></td>
-                <td>Minecraft 1.21.6 (Vanilla Pura)</td>
-                <td>2026-11-26</td>
-            </tr>            <tr>
-                <td>Release 1.21.5</td>
-                <td>Version 47 (<code>XRay-1.21.5-v47.jar</code>)</td>
-                <td><a href="../downloads/XRay-1.21.5-v47.jar" class="author-bypass">Download (XRay-1.21.5-v47.jar)</a></td>
-                <td>Minecraft 1.21.5 (Vanilla Pura)</td>
-                <td>2026-11-26</td>
-            </tr>            <tr>
-                <td>Release 1.21.4</td>
-                <td>Version 47 (<code>XRay-1.21.4-v47.jar</code>)</td>
-                <td><a href="../downloads/XRay-1.21.4-v47.jar" class="author-bypass">Download (XRay-1.21.4-v47.jar)</a></td>
-                <td>Minecraft 1.21.4 (Vanilla Pura)</td>
-                <td>2026-11-26</td>
-            </tr>            <tr>
-                <td>Release 1.21.3</td>
-                <td>Version 47 (<code>XRay-1.21.3-v47.jar</code>)</td>
-                <td><a href="../downloads/XRay-1.21.3-v47.jar" class="author-bypass">Download (XRay-1.21.3-v47.jar)</a></td>
-                <td>Minecraft 1.21.3 (Vanilla Pura)</td>
-                <td>2026-11-26</td>
-            </tr>            <tr>
-                <td>Release 1.21.2</td>
-                <td>Version 47 (<code>XRay-1.21.2-v47.jar</code>)</td>
-                <td><a href="../downloads/XRay-1.21.2-v47.jar" class="author-bypass">Download (XRay-1.21.2-v47.jar)</a></td>
-                <td>Minecraft 1.21.2 (Vanilla Pura)</td>
-                <td>2026-11-26</td>
-            </tr>            <tr>
-                <td>Release 1.21.11</td>
-                <td>Version 47 (<code>XRay-1.21.11-v47.jar</code>)</td>
-                <td><a href="../downloads/XRay-1.21.11-v47.jar" class="author-bypass">Download (XRay-1.21.11-v47.jar)</a></td>
-                <td>Minecraft 1.21.11 (Vanilla Pura)</td>
-                <td>2026-11-26</td>
-            </tr>            <tr>
-                <td>Release 1.21.10</td>
-                <td>Version 47 (<code>XRay-1.21.10-v47.jar</code>)</td>
-                <td><a href="../downloads/XRay-1.21.10-v47.jar" class="author-bypass">Download (XRay-1.21.10-v47.jar)</a></td>
-                <td>Minecraft 1.21.10 (Vanilla Pura)</td>
-                <td>2026-11-26</td>
-            </tr>            <tr>
-                <td>Release 1.21.1</td>
-                <td>Version 47 (<code>XRay-1.21.1-v47.jar</code>)</td>
-                <td><a href="../downloads/XRay-1.21.1-v47.jar" class="author-bypass">Download (XRay-1.21.1-v47.jar)</a></td>
-                <td>Minecraft 1.21.1 (Vanilla Pura)</td>
-                <td>2026-11-26</td>
-            </tr>            <tr>
-                <td>Release 1.21</td>
-                <td>Version 47 (<code>XRay-1.21-v47.jar</code>)</td>
-                <td><a href="../downloads/XRay-1.21-v47.jar" class="author-bypass">Download (XRay-1.21-v47.jar)</a></td>
-                <td>Minecraft 1.21 (Vanilla Pura)</td>
-                <td>2026-11-26</td>
-            </tr>            <tr>
-                <td>Release 1.20.6</td>
-                <td>Version 47 (<code>XRay-1.20.6-v47.jar</code>)</td>
-                <td><a href="../downloads/XRay-1.20.6-v47.jar" class="author-bypass">Download (XRay-1.20.6-v47.jar)</a></td>
-                <td>Minecraft 1.20.6 (Vanilla Pura)</td>
-                <td>2026-11-26</td>
-            </tr>            <tr>
-                <td>Release 1.20.5</td>
-                <td>Version 47 (<code>XRay-1.20.5-v47.jar</code>)</td>
-                <td><a href="../downloads/XRay-1.20.5-v47.jar" class="author-bypass">Download (XRay-1.20.5-v47.jar)</a></td>
-                <td>Minecraft 1.20.5 (Vanilla Pura)</td>
-                <td>2026-11-26</td>
-            </tr>            <tr>
-                <td>Release 1.20.4</td>
-                <td>Version 47 (<code>XRay-1.20.4-v47.jar</code>)</td>
-                <td><a href="../downloads/XRay-1.20.4-v47.jar" class="author-bypass">Download (XRay-1.20.4-v47.jar)</a></td>
-                <td>Minecraft 1.20.4 (Vanilla Pura)</td>
-                <td>2026-11-26</td>
-            </tr>            <tr>
-                <td>Release 1.20.3</td>
-                <td>Version 47 (<code>XRay-1.20.3-v47.jar</code>)</td>
-                <td><a href="../downloads/XRay-1.20.3-v47.jar" class="author-bypass">Download (XRay-1.20.3-v47.jar)</a></td>
-                <td>Minecraft 1.20.3 (Vanilla Pura)</td>
-                <td>2026-11-26</td>
-            </tr>            <tr>
-                <td>Release 1.20.2</td>
-                <td>Version 47 (<code>XRay-1.20.2-v47.jar</code>)</td>
-                <td><a href="../downloads/XRay-1.20.2-v47.jar" class="author-bypass">Download (XRay-1.20.2-v47.jar)</a></td>
-                <td>Minecraft 1.20.2 (Vanilla Pura)</td>
-                <td>2026-11-26</td>
-            </tr>            <tr>
-                <td>Release 1.20.1</td>
-                <td>Version 47 (<code>XRay-1.20.1-v47.jar</code>)</td>
-                <td><a href="../downloads/XRay-1.20.1-v47.jar" class="author-bypass">Download (XRay-1.20.1-v47.jar)</a></td>
-                <td>Minecraft 1.20.1 (Vanilla Pura)</td>
-                <td>2026-11-26</td>
-            </tr>            <tr>
-                <td>Release 1.20</td>
-                <td>Version 47 (<code>XRay-1.20-v47.jar</code>)</td>
-                <td><a href="../downloads/XRay-1.20-v47.jar" class="author-bypass">Download (XRay-1.20-v47.jar)</a></td>
-                <td>Minecraft 1.20 (Vanilla Pura)</td>
-                <td>2026-11-26</td>
-            </tr>            <tr>
-                <td>Release 1.19.4</td>
-                <td>Version 47 (<code>XRay-1.19.4-v47.jar</code>)</td>
-                <td><a href="../downloads/XRay-1.19.4-v47.jar" class="author-bypass">Download (XRay-1.19.4-v47.jar)</a></td>
-                <td>Minecraft 1.19.4 (Vanilla Pura)</td>
-                <td>2026-11-26</td>
-            </tr>            <tr>
-                <td>Release 1.19.3</td>
-                <td>Version 47 (<code>XRay-1.19.3-v47.jar</code>)</td>
-                <td><a href="../downloads/XRay-1.19.3-v47.jar" class="author-bypass">Download (XRay-1.19.3-v47.jar)</a></td>
-                <td>Minecraft 1.19.3 (Vanilla Pura)</td>
-                <td>2026-11-26</td>
-            </tr>            <tr>
-                <td>Release 1.19.2</td>
-                <td>Version 47 (<code>XRay-1.19.2-v47.jar</code>)</td>
-                <td><a href="../downloads/XRay-1.19.2-v47.jar" class="author-bypass">Download (XRay-1.19.2-v47.jar)</a></td>
-                <td>Minecraft 1.19.2 (Vanilla Pura)</td>
-                <td>2026-11-26</td>
-            </tr>            <tr>
-                <td>Release 1.19.1</td>
-                <td>Version 47 (<code>XRay-1.19.1-v47.jar</code>)</td>
-                <td><a href="../downloads/XRay-1.19.1-v47.jar" class="author-bypass">Download (XRay-1.19.1-v47.jar)</a></td>
-                <td>Minecraft 1.19.1 (Vanilla Pura)</td>
-                <td>2026-11-26</td>
-            </tr>            <tr>
-                <td>Release 1.19</td>
-                <td>Version 47 (<code>XRay-1.19-v47.jar</code>)</td>
-                <td><a href="../downloads/XRay-1.19-v47.jar" class="author-bypass">Download (XRay-1.19-v47.jar)</a></td>
-                <td>Minecraft 1.19 (Vanilla Pura)</td>
-                <td>2026-11-26</td>
-            </tr>            <tr>
-                <td>Release 1.18.2</td>
-                <td>Version 47 (<code>XRay-1.18.2-v47.jar</code>)</td>
-                <td><a href="../downloads/XRay-1.18.2-v47.jar" class="author-bypass">Download (XRay-1.18.2-v47.jar)</a></td>
-                <td>Minecraft 1.18.2 (Vanilla Pura)</td>
-                <td>2026-11-26</td>
-            </tr>            <tr>
-                <td>Release 1.18.1</td>
-                <td>Version 47 (<code>XRay-1.18.1-v47.jar</code>)</td>
-                <td><a href="../downloads/XRay-1.18.1-v47.jar" class="author-bypass">Download (XRay-1.18.1-v47.jar)</a></td>
-                <td>Minecraft 1.18.1 (Vanilla Pura)</td>
-                <td>2026-11-26</td>
-            </tr>            <tr>
-                <td>Release 1.18</td>
-                <td>Version 47 (<code>XRay-1.18-v47.jar</code>)</td>
-                <td><a href="../downloads/XRay-1.18-v47.jar" class="author-bypass">Download (XRay-1.18-v47.jar)</a></td>
-                <td>Minecraft 1.18 (Vanilla Pura)</td>
-                <td>2026-11-26</td>
-            </tr>            <tr>
-                <td>Release 1.17.1</td>
-                <td>Version 47 (<code>XRay-1.17.1-v47.jar</code>)</td>
-                <td><a href="../downloads/XRay-1.17.1-v47.jar" class="author-bypass">Download (XRay-1.17.1-v47.jar)</a></td>
-                <td>Minecraft 1.17.1 (Vanilla Pura)</td>
-                <td>2026-11-26</td>
-            </tr>            <tr>
-                <td>Release 1.17</td>
-                <td>Version 47 (<code>XRay-1.17-v47.jar</code>)</td>
-                <td><a href="../downloads/XRay-1.17-v47.jar" class="author-bypass">Download (XRay-1.17-v47.jar)</a></td>
-                <td>Minecraft 1.17 (Vanilla Pura)</td>
-                <td>2026-11-26</td>
-            </tr>            <tr>
-                <td>Release 1.16.5</td>
-                <td>Version 47 (<code>XRay-1.16.5-v47.jar</code>)</td>
-                <td><a href="../downloads/XRay-1.16.5-v47.jar" class="author-bypass">Download (XRay-1.16.5-v47.jar)</a></td>
-                <td>Minecraft 1.16.5 (Vanilla Pura)</td>
-                <td>2026-11-26</td>
-            </tr>
-        </table>
-
-
-
-        <p>Report bugs on my post on the Minecraft forums. I'm very active there and fix them very quickly. Feature requests
-
-            are also welcome.</p>
-
-
-
-        <h2>How do I install it?</h2>
-
-        <p>The mod comes with an installer. Simply double click on the downloaded file, and select a profile to install it into.
-
-            You can select a vanilla profile, a modded profile, a Forge profile, or even a LiteLoader profile! It will also
-
-            detect Technic mod packs and ATLauncher instances.</p>
-
-
-
-        <p><b>Note:</b> if you double click on the installer, and it opens in WinRAR (or similar program), you will need to
-
-            <u>right click</u> on the downloaded file, and go to <i>Open with</i> &#8594; <i>Java(TM) Platform SE binary</i>.
-
-            If that option is not available you may need to install or reinstall <a href="https://www.java.com/">Java</a>.</p>
-
-
-
-        <h3>Manual installation</h3>
-
-        <p>If you are using Forge, LiteLoader, or any launcher that utilizes one of these modding platforms (such as Technic),
-
-            you can install XRay manually by placing the downloaded file into your <b>mods folder</b> - just like you would
-
-            do any other mod. LiteLoader is the same as Forge except you must place it into a <i>versioned mods folder</i>.
-
-            (e.g. <b>.minecraft/mods/1.8.4/XRay.jar</b>).</p>
-
-
-
-        <h3>Disclaimer &amp; Copyright</h3>
-
-        <p><b><u>Disclaimer</u></b>
-
-            <br>It is very simple: I am not responsible with what you do with my mod.</p>
-
-        <p><b><u>Copyright</u></b>
-
-            <br>You may distribute my mod with the original links, and only the original links, on any website or forum you
-
-            wish. You may not download and then re-upload my mod to any site without my written permission. If you feature
-
-            my mod in a video, you must include a link back to this page.</p>
-
-        <p>If you're going to link to my mod from somewhere, I would really prefer it if you linked to this page rather than
-
-            directly to the download. This way the user can download an updated version and read about the mod a little bit.</p>
-
-    </div>
-
 </body>
-
-
-
 </html>
