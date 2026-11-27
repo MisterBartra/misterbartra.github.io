@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>∞Iframes Matrix Viewer</title>
+	<link rel="stylesheet" type="text/css" href="./src/style.css">
+	<script>
+		// =========================================================================
+		// Banderas de Configuración Global (window.*) reconocidas por el visor
+		// =========================================================================
+
+		// 1. Mimetización y Modo Embebido / Esclavo (Headless Canvas)
+		// Si es true, el visor cubre el 100% de la ventana (sin márgenes ni bordes redondeados)
+		// y apaga todos los controles flotantes para ser controlado externamente vía postMessage.
+		window.embedded = false;
+
+		// 2. Control de Inset y Pantalla Completa (Full-Bleed)
+		// window.fullBleed: true elimina el margen/inset de los iframes (100vw × 100vh puro).
+		// window.insetSize: define el grosor del margen cuando no es fullBleed (ej. "22px", "0px").
+		window.fullBleed = false;
+		// window.insetSize = "22px";
+
+		// 3. Controles Direccionales y Bordes de Navegación (Edges & Buttons)
+		// window.showEdges: activa o anula los detectores de proximidad en los 4 bordes.
+		// window.showButtons: muestra u oculta los botones circulares direccionales dentro del borde.
+		window.showEdges = true;
+		window.showButtons = true;
+
+		// 4. Cruceta Flotante para Dispositivos Móviles
+		// window.showCruceta: activa o anula la cruceta táctil invocable por deslizamiento.
+		window.showCruceta = true;
+
+		// 5. Notificaciones y Toasts
+		// window.showNotifications: permite o silencia los mensajes flotantes de estado.
+		window.showNotifications = true;
+
+		// 6. Entradas de Usuario (Teclado y Rueda del Ratón)
+		window.enableKeyboard = true;
+		window.enableWheel = true;
+
+		// 7. Definición de la Matriz y Título
+		window.title = "∞Iframes Matrix Viewer";
+		window.urlRowsIframe = [
+			["https://www.youtube.com/embed/dQw4w9WgXcQ#d=90&op=00:00&ed=03:20", "https://example.org"], 
+			[
+				["https://www.youtube.com/embed/dQw4w9WgXcQ#d=120&loop=[00:10-00:15]&speed=1.5@[00:00-00:30]", "https://www.youtube.com/embed/dQw4w9WgXcQ#mute=[00:00-00:20]"],
+				["https://www.youtube.com/embed/dQw4w9WgXcQ#ch=Intro(00:00),Coro(00:43),Outro(03:20)", "https://example.com"]
+			],
+			"https://www.youtube.com/embed/dQw4w9WgXcQ#!op=[00:00-01:00]",
+			["https://example.com", "https://www.youtube.com/embed/dQw4w9WgXcQ#ed=00:45"]
+		];
+	</script>
+	<!-- DLC Modular System -->
+	<script src="./src/dlc/skip-buttons.js"></script>
+	<script src="./src/dlc/auto-skip.js"></script>
+	<script src="./src/dlc/auto-advance.js"></script>
+	<script src="./src/dlc/video-loop.js"></script>
+	<script src="./src/dlc/video-modifiers.js"></script>
+	<script src="./src/dlc/video-chapters.js"></script>
+</head>
+<body>
+	<script src="./src/script.js"></script>
+</body>
+</html>

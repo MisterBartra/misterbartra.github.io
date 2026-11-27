@@ -850,3 +850,36 @@ iframe {
 .hierarchy-path-separator {
 	color: rgba(255, 255, 255, 0.5);
 }
+
+/* ═══════════════════════════════════════════════════════════════════
+   Modo Embebido / Mimetizado (Headless / Slave Mode / Full-Bleed)
+   ═══════════════════════════════════════════════════════════════════ */
+.embedded-mode .edge-detector,
+.embedded-mode .edge-nav-button,
+.embedded-mode .mobile-cruceta,
+.embedded-mode .mobile-cruceta-touch-receiver,
+.embedded-mode .notification,
+.embedded-mode .toggle-button-container,
+.embedded-mode .json-selector,
+.embedded-mode .theme-toggle,
+.embedded-mode .settings-button,
+.embedded-mode .depth-indicator,
+.embedded-mode .hierarchy-path {
+	display: none !important;
+	pointer-events: none !important;
+}
+
+.embedded-mode .iframe-cell {
+	background-color: transparent !important;
+	box-shadow: none !important;
+}
+
+.embedded-mode .iframe-wrapper,
+.iframe-wrapper.full-bleed {
+	top: 0 !important;
+	bottom: 0 !important;
+	left: 0 !important;
+	right: 0 !important;
+	border-radius: 0 !important;
+	box-shadow: none !important;
+}

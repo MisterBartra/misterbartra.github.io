@@ -1,7 +1,40 @@
 <!DOCTYPE html>
 <html lang="es"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><link rel="stylesheet" type="text/css" href="./src/style.css">
 	<script>
-		// Define las variables globales para la matriz y establecer el titulo del sitio web
+		// =========================================================================
+		// Banderas de Configuración Global (window.*) reconocidas por el visor
+		// =========================================================================
+
+		// 1. Mimetización y Modo Embebido / Esclavo (Headless Canvas)
+		// Si es true, el visor cubre el 100% de la ventana (sin márgenes ni bordes redondeados)
+		// y apaga todos los controles flotantes para ser controlado externamente vía postMessage.
+		window.embedded = false;
+
+		// 2. Control de Inset y Pantalla Completa (Full-Bleed)
+		// window.fullBleed: true elimina el margen/inset de los iframes (100vw × 100vh puro).
+		// window.insetSize: define el grosor del margen cuando no es fullBleed (ej. "22px", "0px").
+		window.fullBleed = false;
+		// window.insetSize = "22px";
+
+		// 3. Controles Direccionales y Bordes de Navegación (Edges & Buttons)
+		// window.showEdges: activa o anula los detectores de proximidad en los 4 bordes.
+		// window.showButtons: muestra u oculta los botones circulares direccionales dentro del borde.
+		window.showEdges = true;
+		window.showButtons = true;
+
+		// 4. Cruceta Flotante para Dispositivos Móviles
+		// window.showCruceta: activa o anula la cruceta táctil invocable por deslizamiento.
+		window.showCruceta = true;
+
+		// 5. Notificaciones y Toasts
+		// window.showNotifications: permite o silencia los mensajes flotantes de estado.
+		window.showNotifications = true;
+
+		// 6. Entradas de Usuario (Teclado y Rueda del Ratón)
+		window.enableKeyboard = true;
+		window.enableWheel = true;
+
+		// 7. Definición de la Matriz y Título
 		window.title = "∞Iframes Matrix Viewer";
 		window.urlRowsIframe = [
 			["https://www.youtube.com/embed/dQw4w9WgXcQ#d=90&op=00:00&ed=03:20", "https://example.org"], 

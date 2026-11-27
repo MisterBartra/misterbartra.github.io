@@ -44,6 +44,40 @@ class IframeMatrixViewer {
 		this.loadingTimeouts = {}; // Para almacenar timeouts de carga
 		this.hierarchyPath = []; // Para almacenar la ruta jerárquica
 
+		// Lectura unificada de banderas de configuración desde URL search params o window.*
+		const searchParams = typeof window !== 'undefined' && window.location ? new URLSearchParams(window.location.search) : null;
+		const readBoolConfig = (keys, fallback) => {
+			for (const key of keys) {
+				if (searchParams && searchParams.has(key)) {
+					const val = searchParams.get(key);
+					return val !== 'false' && val !== '0' && val !== 'null';
+				}
+				if (typeof window !== 'undefined' && window[key] !== undefined) {
+					return Boolean(window[key]);
+				}
+			}
+			return fallback;
+		};
+
+		// Modo mimetizado/esclavo (Headless / Embedded):
+		// Permite que el iframe cubra ancho y alto completo sin márgenes y desactiva controles flotantes
+		this.embedded = readBoolConfig(['embedded', 'headless', 'slaveMode'], false);
+
+		// Banderas booleanas granulares para componentes invocables y visibles
+		this.showEdges = readBoolConfig(['showEdges', 'enableEdges', 'edgeControls'], !this.embedded);
+		this.showButtons = readBoolConfig(['showButtons', 'enableButtons'], !this.embedded && this.showEdges);
+		this.showCruceta = readBoolConfig(['showCruceta', 'enableCruceta', 'enableMobileCruceta'], !this.embedded);
+		this.showNotifications = readBoolConfig(['showNotifications', 'enableNotifications'], !this.embedded);
+		this.fullBleed = readBoolConfig(['fullBleed', 'zeroInset', 'noInset'], this.embedded);
+		this.enableKeyboard = readBoolConfig(['enableKeyboard', 'keyboardControls'], true);
+		this.enableWheel = readBoolConfig(['enableWheel', 'wheelControls'], true);
+
+		// Si está mimetizado, marcar clase en el documento
+		if (this.embedded && typeof document !== 'undefined') {
+			if (document.documentElement) document.documentElement.classList.add('embedded-mode');
+			if (document.body) document.body.classList.add('embedded-mode');
+		}
+
 		// Aplicar inmediatamente color base a variables CSS y fondo si se definió en window
 		if (this.baseColor) {
 			document.documentElement.style.setProperty('--margin-base-color', this.baseColor);
@@ -64,6 +98,7 @@ class IframeMatrixViewer {
 
 			// Detectar la profundidad actual
 			this.initialDepth = this.detectCurrentDepth();
+			this.currentPosition.depth = this.initialDepth;
 
 			// Obtener datos de la matriz
 			await this.loadMatrixData();
@@ -105,6 +140,9 @@ class IframeMatrixViewer {
 
 			// Iniciar detección de matrices anidadas
 			this.startNestedMatrixDetection();
+
+			// Notificar al contenedor padre sobre la posición inicial
+			this.notifyNavigationObservers();
 		} catch (error) {
 			console.error("Error initializing application:", error);
 			this.root.innerHTML = `<p>Error initializing application: ${error.message}</p>`;
@@ -139,6 +177,9 @@ class IframeMatrixViewer {
 	}
 
 	showNotification(message, duration = 3000) {
+		// Silenciar notificaciones si están desactivadas o si está en modo mimetizado
+		if (!this.showNotifications || this.embedded) return;
+
 		// Eliminar notificación existente
 		const existingNotification = document.querySelector('.notification');
 		if (existingNotification) {
@@ -160,7 +201,11 @@ class IframeMatrixViewer {
 		setTimeout(() => {
 			notification.classList.remove('show');
 			setTimeout(() => {
-				notification.remove();
+				if (notification && notification.parentNode) {
+					notification.parentNode.removeChild(notification);
+				} else if (notification && typeof notification.remove === 'function') {
+					notification.remove();
+				}
 			}, 300);
 		}, duration);
 	}
@@ -871,6 +916,7 @@ class IframeMatrixViewer {
 	setupEventListeners() {
 		// Manejar teclas de navegación
 		document.addEventListener('keydown', (e) => {
+			if (!this.enableKeyboard) return;
 			if (this.isLoading || this.animationInProgress) return;
 
 			switch (e.key) {
@@ -1032,13 +1078,45 @@ class IframeMatrixViewer {
 
 		switch (data.type) {
 			case 'NAVIGATE_COMMAND':
-				// Comando para navegar
-				if (data.action === 'navigate' && typeof data.dx === 'number' && typeof data.dy === 'number') {
+				// Comando para navegar (soporta { action: 'navigate', dx, dy }, { direction: 'left'|'right'|'up'|'down' }, { action: 'goToPosition', x, y }, { action: 'exit' })
+				if (data.direction) {
+					const dirMap = {
+						'left': [-1, 0],
+						'right': [1, 0],
+						'up': [0, -1],
+						'down': [0, 1]
+					};
+					const delta = dirMap[data.direction.toLowerCase()];
+					if (delta) this.navigate(delta[0], delta[1]);
+				} else if (data.action === 'navigate' && typeof data.dx === 'number' && typeof data.dy === 'number') {
 					this.navigate(data.dx, data.dy);
 				} else if (data.action === 'goToPosition' && typeof data.x === 'number' && typeof data.y === 'number') {
 					this.goToPosition(data.x, data.y);
 				} else if (data.action === 'exit') {
 					this.exitNestedMatrix();
+				}
+				break;
+
+			case 'CONFIGURE_COMMAND':
+				// Permite al sitio padre reconfigurar banderas de visualización en tiempo real
+				if (typeof data.embedded === 'boolean') {
+					this.embedded = data.embedded;
+					this.showEdges = !data.embedded;
+					this.fullBleed = data.embedded;
+					if (document.documentElement) document.documentElement.classList.toggle('embedded-mode', data.embedded);
+					if (document.body) document.body.classList.toggle('embedded-mode', data.embedded);
+					this.render();
+				}
+				if (typeof data.showEdges === 'boolean') {
+					this.showEdges = data.showEdges;
+					document.querySelectorAll('.edge-detector').forEach(d => d.style.display = data.showEdges ? '' : 'none');
+				}
+				if (typeof data.showNotifications === 'boolean') {
+					this.showNotifications = data.showNotifications;
+				}
+				if (typeof data.fullBleed === 'boolean') {
+					this.fullBleed = data.fullBleed;
+					this.render();
 				}
 				break;
 
@@ -1125,11 +1203,13 @@ class IframeMatrixViewer {
 		}
 	}
 
-	// Notificar a los observadores sobre la navegación
+	// Notificar a los observadores sobre la navegación (notifica al sitio web padre estático o contenedor)
 	notifyNavigationObservers() {
 		try {
 			// Notificar al padre si estamos en un iframe
 			if (window !== window.top) {
+				const currentMatrix = this.matrixStack[this.currentPosition.depth - this.initialDepth] || [];
+				const currentRow = currentMatrix[this.currentPosition.y] || [];
 				window.parent.postMessage({
 					type: 'MATRIX_NAVIGATION_EVENT',
 					position: {
@@ -1137,6 +1217,10 @@ class IframeMatrixViewer {
 						y: this.currentPosition.y,
 						depth: this.currentPosition.depth
 					},
+					totalRows: currentMatrix.length,
+					totalCols: currentRow.length,
+					currentUrl: currentRow[this.currentPosition.x] || '',
+					hash: window.location.hash,
 					matrixId: window.frameElement ? window.frameElement.id : null
 				}, '*');
 			}
@@ -1412,6 +1496,7 @@ class IframeMatrixViewer {
 
 			// Navegación sensitiva con rueda del mouse / trackpad sobre el borde (vectorizada e inteligente)
 			detector.addEventListener('wheel', (e) => {
+				if (!this.enableWheel) return;
 				if (this.isLoading || this.animationInProgress) return;
 				if (!this.activeEdges[edge]) return;
 
@@ -1863,6 +1948,11 @@ class IframeMatrixViewer {
 	}
 
 	loadMobileCruceta() {
+		// No cargar la cruceta si está desactivada por bandera o en modo mimetizado
+		if (!this.showCruceta || this.embedded) {
+			return Promise.resolve();
+		}
+
 		return new Promise((resolve) => {
 			if (typeof window.MobileCrucetaController !== 'undefined') {
 				this.mobileCruceta = new window.MobileCrucetaController(this);
@@ -2047,6 +2137,10 @@ class IframeMatrixViewer {
 
 	// Método para calcular el inset basado en la profundidad (optimizado y esbelto para desktop)
 	calculateInset(depth) {
+		// Modo fullBleed o mimetizado: 0px para cubrir ancho y alto completo sin bordes
+		if (this.fullBleed || this.embedded || window.insetSize === '0' || window.insetSize === '0px' || window.marginSize === '0' || window.marginSize === '0px') {
+			return '0px';
+		}
 		// Soporte para personalización vía window (ej. window.insetSize = "22px")
 		if (window.insetSize || window.marginSize) {
 			return window.insetSize || window.marginSize;
@@ -2057,6 +2151,9 @@ class IframeMatrixViewer {
 
 	// Inset reducido reactivo cuando se activa el botón/círculo ("Punto Fuente")
 	calculateReducedInset(depth) {
+		if (this.fullBleed || this.embedded || window.insetSize === '0' || window.insetSize === '0px') {
+			return '0px';
+		}
 		if (window.reducedInsetSize) {
 			return window.reducedInsetSize;
 		}
@@ -2066,6 +2163,10 @@ class IframeMatrixViewer {
 
 	// Método para renderizar los detectores de bordes (instanciación inteligente)
 	renderEdgeDetectors() {
+		// Si los bordes están desactivados por bandera o modo mimetizado, no renderizar detectores
+		if (!this.showEdges || this.embedded) {
+			return;
+		}
 		const inset = this.calculateInset(this.currentPosition.depth);
 
 		// Analizar dimensiones de la matriz para instanciación inteligente
@@ -2122,23 +2223,25 @@ class IframeMatrixViewer {
 				detector.style.width = inset;
 			}
 
-			// Crear el botón direccional interactivo
-			const navBtn = document.createElement('div');
-			navBtn.className = 'edge-nav-button';
+			// Crear el botón direccional interactivo si está habilitado por bandera
+			if (this.showButtons) {
+				const navBtn = document.createElement('div');
+				navBtn.className = 'edge-nav-button';
 
-			navBtn.innerHTML = `
-				<svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-					<path d="${iconPaths[edge]}"></path>
-				</svg>
-			`;
+				navBtn.innerHTML = `
+					<svg viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+						<path d="${iconPaths[edge]}"></path>
+					</svg>
+				`;
 
-			navBtn.addEventListener('click', (e) => {
-				e.preventDefault();
-				e.stopPropagation();
-				this.handleEdgeClick(edge);
-			});
+				navBtn.addEventListener('click', (e) => {
+					e.preventDefault();
+					e.stopPropagation();
+					this.handleEdgeClick(edge);
+				});
 
-			detector.appendChild(navBtn);
+				detector.appendChild(navBtn);
+			}
 			this.root.appendChild(detector);
 		});
 
@@ -2392,8 +2495,8 @@ class IframeMatrixViewer {
 					iframeCell.style.gridColumn = x + 1;
 					iframeCell.style.gridRow = y + 1;
 
-					// Pintar inmediatamente la celda y el inset con el color base configurado en window
-					if (this.baseColor) {
+					// Pintar inmediatamente la celda y el inset con el color base configurado en window (si no es fullBleed ni embebido)
+					if (this.baseColor && !this.fullBleed && !this.embedded) {
 						iframeCell.style.backgroundColor = this.baseColor;
 						iframeCell.style.boxShadow = `inset 0 0 0 ${inset} ${this.baseColor}`;
 					}
@@ -2401,6 +2504,9 @@ class IframeMatrixViewer {
 					// Crear el wrapper para el iframe con inset dinámico basado en la profundidad
 					const iframeWrapper = document.createElement('div');
 					iframeWrapper.className = 'iframe-wrapper';
+					if (this.fullBleed || this.embedded) {
+						iframeWrapper.classList.add('full-bleed');
+					}
 					this.iWrapperInsetSetter(iframeWrapper, inset);
 
 					// Si es una matriz anidada, mostrar un contenedor especial
@@ -2528,26 +2634,31 @@ class IframeMatrixViewer {
 
 			this.root.appendChild(iframeContainer);
 
-			// Crear los detectores de bordes
-			this.renderEdgeDetectors();
+			// Crear los detectores de bordes (solo si están habilitados y no en modo mimetizado)
+			if (this.showEdges && !this.embedded) {
+				this.renderEdgeDetectors();
+			}
 
 			// Crear los botones de navegación
 			//this.renderNavigationButtons();
 
-			// Crear el botón de alternar visibilidad (toggle para acceso a settings/json/theme en 1D)
-			this.renderToggleButton();
+			// Si no está en modo mimetizado/esclavo, renderizar elementos auxiliares de interfaz
+			if (!this.embedded) {
+				// Crear el botón de alternar visibilidad (toggle para acceso a settings/json/theme en 1D)
+				this.renderToggleButton();
 
-			// Crear el selector de JSON
-			this.renderJsonSelector();
+				// Crear el selector de JSON
+				this.renderJsonSelector();
 
-			// Crear el botón de tema
-			this.renderThemeToggle();
+				// Crear el botón de tema
+				this.renderThemeToggle();
 
-			// Crear el botón de configuración y panel
-			this.renderSettingsButton();
+				// Crear el botón de configuración y panel
+				this.renderSettingsButton();
 
-			// Renderizar la ruta jerárquica
-			this.renderHierarchyPath();
+				// Renderizar la ruta jerárquica
+				this.renderHierarchyPath();
+			}
 
 			// Aplicar el modo oscuro/claro
 			document.body.classList.toggle('light-mode', !this.darkMode);
